@@ -1,0 +1,33 @@
+{
+  "name": "szn-select",
+  "version": "0.0.0",
+  "description": "Accessible HTML selectbox with customizable UI. Based on web components and easy to integrate with various frameworks like React or Angular.",
+  "main": "szn-select.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jurca/szn-select.git"
+  },
+  "keywords": [
+    "html",
+    "web",
+    "component",
+    "components",
+    "select",
+    "selectbox",
+    "szn",
+    "seznam",
+    "seznam.cz",
+    "accessible",
+    "accessibility",
+    "a11y"
+  ],
+  "author": "Martin Jurča <martin.jurca@firma.seznam.cz>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jurca/szn-select/issues"
+  },
+  "homepage": "https://github.com/jurca/szn-select#readme"
+}
