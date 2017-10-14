@@ -29,5 +29,10 @@
   "bugs": {
     "url": "https://github.com/jurca/szn-select/issues"
   },
-  "homepage": "https://github.com/jurca/szn-select#readme"
+  "homepage": "https://github.com/jurca/szn-select#readme",
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "eslint-config-fbjs-opensource": "^1.0.0",
+    "jest": "^21.2.1"
+  }
 }
