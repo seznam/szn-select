@@ -1,0 +1,9 @@
+{
+  "extends": "fbjs-opensource",
+  "parserOptions": {
+    "sourceType": "script"
+  },
+  "rules": {
+    "semi": ["error", "never"]
+  }
+}
