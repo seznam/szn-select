@@ -4,7 +4,7 @@
 
   // TODO: open on click
   // TODO: skip disabled options
-  // TODO: fix selecting option from dropdown using mouse
+  // TODO: fix selecting option from a detached dropdown using mouse
   SznElements['szn-select'] = class SznSelect {
     constructor(rootElement, uiContainer) {
       this._rootElement = rootElement
@@ -64,6 +64,10 @@
         this._currentOptionLabel.nodeValue = options[this._select.selectedIndex].innerText
       }
 
+      this.onDropDownOptionClicked = () => {
+        this._close()
+      }
+
       this.onFocus = () => {
         this._isFocused = true
       }
@@ -92,6 +96,7 @@
       this._rootElement.addEventListener('focus', this.onFocus)
       this._rootElement.addEventListener('blur', this.onBlur)
       this._rootElement.addEventListener('change', this.onChange)
+      this._rootElement.addEventListener('szn-options-selected', this.onDropDownOptionClicked)
       addEventListener('keypress', this.onKeyPress)
       addEventListener('keyup', this.onKeyUp)
 
@@ -107,6 +112,7 @@
       this._rootElement.removeEventListener('focus', this.onFocus)
       this._rootElement.removeEventListener('blur', this.onBlur)
       this._rootElement.removeEventListener('change', this.onChange)
+      this._rootElement.removeEventListener('szn-options-selected', this.onDropDownOptionClicked)
       removeEventListener('keypress', this.onKeyPress)
       removeEventListener('keyup', this.onKeyUp)
     }
@@ -127,6 +133,9 @@
 
     _open() {
       const optionsElement = document.createElement('szn-options')
+      const optionsUiContainer = document.createElement('div')
+      optionsUiContainer.setAttribute('data-szn-options-ui', '')
+      optionsElement.appendChild(optionsUiContainer)
       this._uiContainer.appendChild(optionsElement)
       const options = optionsElement._broker
       options.setOptionsContainerElement(this._select)
