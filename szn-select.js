@@ -2,8 +2,8 @@
 ;(global => {
   const SznElements = global.SznElements = global.SznElements || {}
 
-  // TODO: skip disabled options
   // TODO: fix selecting option from a detached dropdown using mouse
+  // TODO: disabled select
   SznElements['szn-select'] = class SznSelect {
     constructor(rootElement, uiContainer) {
       this._rootElement = rootElement
@@ -124,9 +124,23 @@
     }
 
     _changeSelectedOption(indexDelta) {
-      const newSelectedIndex = Math.max(0, Math.min(this._select.selectedIndex + indexDelta, this._select.length - 1))
-      this._select.selectedIndex = newSelectedIndex
-      this._select.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
+      const options = this._select.querySelectorAll('option')
+      let newSelectedIndex = this._select.selectedIndex + indexDelta
+
+      let newSelectedOption = options[newSelectedIndex]
+      while (
+        newSelectedIndex > -1 &&
+        newSelectedIndex < this._select.length &&
+        (newSelectedOption.disabled || newSelectedOption.parentNode.disabled)
+      ) {
+        newSelectedIndex += indexDelta
+        newSelectedOption = options[newSelectedIndex]
+      }
+
+      if (newSelectedOption) {
+        this._select.selectedIndex = newSelectedIndex
+        this._select.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
+      }
     }
 
     _toggle() {
