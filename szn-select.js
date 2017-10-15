@@ -13,6 +13,7 @@
       this._currentOptionLabel = null
       this._isOpened = false
       this._isFocused = false
+      this._optionsPollingIntervalId = null
 
       this.onKeyPress = event => {
         if (!this._isFocused) {
@@ -22,11 +23,6 @@
         switch (event.keyCode) {
           case 13: // enter
             this._toggle()
-            break
-          case 32: // space
-            if (!this._isOpened) {
-              this._open()
-            }
             break
         }
       }
@@ -40,6 +36,11 @@
           case 27: // escape
             if (this._isOpened) {
               this._close()
+            }
+            break
+          case 32: // space
+            if (!this._isOpened) {
+              this._open()
             }
             break
           case 38: // up
@@ -152,18 +153,41 @@
     }
 
     _open() {
+      this._isOpened = true
       const optionsElement = document.createElement('szn-options')
       const optionsUiContainer = document.createElement('div')
       optionsUiContainer.setAttribute('data-szn-options-ui', '')
       optionsElement.appendChild(optionsUiContainer)
       this._uiContainer.appendChild(optionsElement)
-      const options = optionsElement._broker
-      options.setOptionsContainerElement(this._select)
+
       this._toggleButton.setAttribute('data-drop-down-opened', '')
-      this._isOpened = true
+      const select = this._select
+
+      // the mutation observer runtime cannot initialize the elements synchronously, we have to wait
+      if (!checkAndInitOptions()) {
+        this._optionsPollingIntervalId = setInterval(() => {
+          if (checkAndInitOptions()) {
+            clearInterval(this._optionsPollingIntervalId)
+            this._optionsPollingIntervalId = null
+          }
+        }, 10)
+      }
+
+      function checkAndInitOptions() {
+        if (optionsElement._broker) {
+          optionsElement._broker.setOptionsContainerElement(select)
+          return true
+        }
+
+        return false
+      }
     }
 
     _close() {
+      if (this._optionsPollingIntervalId) {
+        clearInterval(this._optionsPollingIntervalId)
+        this._optionsPollingIntervalId = null
+      }
       this._toggleButton.removeAttribute('data-drop-down-opened')
       this._uiContainer.removeChild(this._uiContainer.lastChild)
       this._isOpened = false
