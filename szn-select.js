@@ -2,7 +2,6 @@
 ;(global => {
   const SznElements = global.SznElements = global.SznElements || {}
 
-  // TODO: open on click
   // TODO: skip disabled options
   // TODO: fix selecting option from a detached dropdown using mouse
   SznElements['szn-select'] = class SznSelect {
@@ -10,6 +9,7 @@
       this._rootElement = rootElement
       this._select = rootElement.querySelector('select')
       this._uiContainer = uiContainer
+      this._toggleButton = null
       this._currentOptionLabel = null
       this._isOpened = false
       this._isFocused = false
@@ -64,6 +64,10 @@
         this._currentOptionLabel.nodeValue = options[this._select.selectedIndex].innerText
       }
 
+      this.onToggleDropDown = () => {
+        this._toggle()
+      }
+
       this.onDropDownOptionClicked = () => {
         this._close()
       }
@@ -82,7 +86,7 @@
 
     onMount() {
       this._currentOptionLabel = document.createTextNode('')
-      const button = makeElement({'data-button': ''},
+      this._toggleButton = makeElement({'data-button': ''},
         makeElement({'data-text': ''},
           this._currentOptionLabel,
         ),
@@ -90,9 +94,10 @@
       )
       this.onChange()
       this._uiContainer.appendChild(
-        button,
+        this._toggleButton,
       )
 
+      this._toggleButton.addEventListener('click', this.onToggleDropDown)
       this._rootElement.addEventListener('focus', this.onFocus)
       this._rootElement.addEventListener('blur', this.onBlur)
       this._rootElement.addEventListener('change', this.onChange)
@@ -109,6 +114,7 @@
     }
 
     onUnmount() {
+      this._toggleButton.removeEventListener('click', this.onToggleDropDown)
       this._rootElement.removeEventListener('focus', this.onFocus)
       this._rootElement.removeEventListener('blur', this.onBlur)
       this._rootElement.removeEventListener('change', this.onChange)
@@ -139,10 +145,12 @@
       this._uiContainer.appendChild(optionsElement)
       const options = optionsElement._broker
       options.setOptionsContainerElement(this._select)
+      this._toggleButton.setAttribute('data-drop-down-opened', '')
       this._isOpened = true
     }
 
     _close() {
+      this._toggleButton.removeAttribute('data-drop-down-opened')
       this._uiContainer.removeChild(this._uiContainer.lastChild)
       this._isOpened = false
     }
