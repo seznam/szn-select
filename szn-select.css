@@ -38,3 +38,13 @@ szn-select[tabindex][role='combobox'] select {
 
   background: red;
 }
+
+[data-szn-select-ui] [data-caret]::before {
+  content: '∨';
+  font-weight: bold;
+  color: white;
+}
+
+[data-szn-select-ui] [data-drop-down-opened] [data-caret]::before {
+  content: '∧';
+}
