@@ -34,5 +34,10 @@
     "eslint": "^4.8.0",
     "eslint-config-fbjs-opensource": "^1.0.0",
     "jest": "^21.2.1"
+  },
+  "dependencies": {
+    "@jurca/szn-elements": "0.0.2",
+    "@jurca/szn-options": "0.0.3",
+    "@jurca/szn-tethered": "0.0.3"
   }
 }
