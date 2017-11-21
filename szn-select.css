@@ -1,3 +1,82 @@
 szn-select {
   display: inline-block;
 }
+
+szn-select[data-szn-select-ready] select {
+  position: fixed;
+  right: 999999px;
+  right: 1000vw;
+}
+
+szn-select[data-szn-select-single] {
+  min-width: 109px;
+  height: 2em;
+}
+
+szn-select [data-szn-select-ui] {
+  width: 100%;
+  height: 100%;
+}
+
+szn-select [data-szn-select-button] {
+  display: block;
+
+  position: relative;
+
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  color: #000000;
+
+  background: #ffffff;
+}
+
+szn-select [data-szn-select-label] {
+  display: block;
+
+  border-right: 2em transparent solid;
+  padding: 5px 5px 5px 12px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  line-height: 22px;
+  line-height: calc(2em - 10px);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+szn-select [data-szn-select-mark] {
+  display: block;
+
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  width: 2em;
+  height: 100%;
+
+  line-height: 30px;
+  line-height: calc(2em - 2px);
+  text-align: center;
+}
+
+szn-select [data-szn-select-mark]:after {
+  display: inline;
+
+  content: "▼";
+}
+
+szn-select [data-szn-select-open] [data-szn-select-mark]:after {
+  content: "▲";
+}
+
+[data-szn-select-dropdown] {
+  display: block;
+
+  min-width: 109px;
+}
