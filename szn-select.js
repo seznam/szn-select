@@ -2,7 +2,6 @@
 ;(global => {
   const SznElements = global.SznElements = global.SznElements || {}
 
-  // TODO: disabled select
   // TODO: resize dropdown to be always fully visible
   // TODO: observe the disabled, multiple, and dom changes (the label must reflect an *existing* currently selected
   //       option)
@@ -151,6 +150,10 @@
   }
 
   function onToggleDropdown(instance, event) {
+    if (instance._select.disabled) {
+      return
+    }
+
     instance._select.focus()
 
     if (instance._select.multiple) {
@@ -210,6 +213,9 @@
   function initSingleSelectButton(instance) {
     const button = document.createElement('szn-')
     button.setAttribute('data-szn-select-button', '')
+    if (instance._select.disabled) {
+      button.setAttribute('disabled', '')
+    }
     const label = document.createElement('szn-')
     label.setAttribute('data-szn-select-label', '')
     label.innerText = instance._select.options.item(instance._select.selectedIndex).text

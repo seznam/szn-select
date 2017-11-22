@@ -32,6 +32,8 @@ szn-select [data-szn-select-button] {
   color: #000000;
 
   background: #ffffff;
+
+  cursor: pointer;
 }
 
 szn-select [data-szn-select-button][data-szn-select-active],
@@ -42,6 +44,12 @@ szn-select szn-options[data-szn-select-active] {
 
 szn-select [data-szn-select-button][data-szn-select-open] {
   border-radius: 4px 4px 0 0; /* TODO: top-positioning */
+}
+
+szn-select [data-szn-select-button][disabled] {
+  color: #cccccc;
+
+  cursor: default;
 }
 
 szn-select [data-szn-select-label] {
