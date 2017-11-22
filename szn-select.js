@@ -25,6 +25,7 @@
       this._onCloseDropdown = () => onCloseDropdown(this)
       this._onFocus = () => onFocus(this)
       this._onBlur = () => onBlur(this)
+      this._onKeyDown = event => onKeyDown(this, event)
 
       createUI(this)
     }
@@ -66,6 +67,7 @@
     instance._select.addEventListener('change', instance._onUpdateNeeded)
     instance._select.addEventListener('focus', instance._onFocus)
     instance._select.addEventListener('blur', instance._onBlur)
+    instance._select.addEventListener('keydown', instance._onKeyDown)
     addEventListener('click', instance._onCloseDropdown)
   }
 
@@ -74,7 +76,31 @@
     instance._select.removeEventListener('change', instance._onUpdateNeeded)
     instance._select.removeEventListener('focus', instance._onFocus)
     instance._select.removeEventListener('blur', instance._onBlur)
+    instance._select.removeEventListener('keydown', instance._onKeyDown)
     removeEventListener('click', instance._onCloseDropdown)
+  }
+
+  function onKeyDown(instance, event) {
+    let shouldToggleDropdown = false
+    switch (event.keyCode) {
+      case 38: // up
+      case 40: // down
+        shouldToggleDropdown = event.altKey
+        break
+      case 32: // space
+        shouldToggleDropdown = instance._button && !instance._button.hasAttribute('data-szn-select-open')
+        break
+      case 13: // enter
+        shouldToggleDropdown = true
+        break
+      default:
+        break // nothing to do
+    }
+
+    if (shouldToggleDropdown) {
+      event.preventDefault() // Prevent Safari from opening the native dropdown
+      onToggleDropdown(instance, event)
+    }
   }
 
   function onFocus(instance) {
