@@ -18,10 +18,13 @@
       this._dropdownContent.setAttribute('data-szn-select-dropdown', '')
       this._dropdownOptions = null
       this._dropdownContainer = document.body
+      this._blurTimeout = null
 
       this._onUpdateNeeded = () => onUpdateNeeded(this)
       this._onToggleDropdown = event => onToggleDropdown(this, event)
       this._onCloseDropdown = () => onCloseDropdown(this)
+      this._onFocus = () => onFocus(this)
+      this._onBlur = () => onBlur(this)
 
       createUI(this)
     }
@@ -49,6 +52,10 @@
       if (this._dropdown) {
         this._dropdown.parentNode.removeChild(this._dropdown)
       }
+      if (this._blurTimeout) {
+        clearTimeout(this._blurTimeout)
+        this._blurTimeout = null
+      }
 
       removeEventListeners(this)
     }
@@ -57,13 +64,43 @@
   function addEventListeners(instance) {
     instance._uiContainer.addEventListener('click', instance._onToggleDropdown)
     instance._select.addEventListener('change', instance._onUpdateNeeded)
+    instance._select.addEventListener('focus', instance._onFocus)
+    instance._select.addEventListener('blur', instance._onBlur)
     addEventListener('click', instance._onCloseDropdown)
   }
 
   function removeEventListeners(instance) {
     instance._uiContainer.removeEventListener('click', instance._onToggleDropdown)
     instance._select.removeEventListener('change', instance._onUpdateNeeded)
+    instance._select.removeEventListener('focus', instance._onFocus)
+    instance._select.removeEventListener('blur', instance._onBlur)
     removeEventListener('click', instance._onCloseDropdown)
+  }
+
+  function onFocus(instance) {
+    if (instance._blurTimeout) {
+      clearTimeout(instance._blurTimeout)
+      instance._blurTimeout = null
+    }
+
+    if (instance._select.multiple) {
+      instance._uiContainer.firstElementChild.setAttribute('data-szn-select-active', '')
+    } else {
+      instance._button.setAttribute('data-szn-select-active', '')
+    }
+  }
+
+  function onBlur(instance) {
+    if (instance._blurTimeout) {
+      clearTimeout(instance._blurTimeout)
+    }
+    instance._blurTimeout = setTimeout(() => {
+      if (instance._select.multiple) {
+        instance._uiContainer.firstElementChild.removeAttribute('data-szn-select-active')
+      } else {
+        instance._button.removeAttribute('data-szn-select-active')
+      }
+    }, 1000 / 30)
   }
 
   function onCloseDropdown(instance) {
