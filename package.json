@@ -38,6 +38,6 @@
   "dependencies": {
     "@jurca/szn-elements": "0.0.2",
     "@jurca/szn-options": "0.0.6",
-    "@jurca/szn-tethered": "0.0.4"
+    "@jurca/szn-tethered": "0.0.5"
   }
 }
