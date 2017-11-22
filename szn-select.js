@@ -15,6 +15,7 @@
       this._dropdown = null
       this._dropdownContent = document.createElement('szn-')
       this._dropdownContent.setAttribute('data-szn-select-dropdown', '')
+      this._dropdownContent.setAttribute('data-szn-tethered-content', '')
       this._dropdownOptions = null
       this._dropdownContainer = document.body
       this._blurTimeout = null
@@ -25,6 +26,7 @@
       this._onFocus = () => onFocus(this)
       this._onBlur = () => onBlur(this)
       this._onKeyDown = event => onKeyDown(this, event)
+      this._onDropdownPositionChange = verticalAlignment => onDropdownPositionChange(this, verticalAlignment)
 
       createUI(this)
     }
@@ -134,6 +136,7 @@
     }
 
     instance._button.removeAttribute('data-szn-select-open')
+    instance._button.removeAttribute('data-szn-select-open-at-top')
     instance._dropdown.parentNode.removeChild(instance._dropdown)
   }
 
@@ -163,6 +166,7 @@
     event.stopPropagation()
     if (instance._button.hasAttribute('data-szn-select-open')) {
       instance._button.removeAttribute('data-szn-select-open')
+      instance._button.removeAttribute('data-szn-select-open-at-top')
       instance._dropdown.parentNode.removeChild(instance._dropdown)
     } else {
       instance._button.setAttribute('data-szn-select-open', '')
@@ -182,6 +186,14 @@
           initDropdown(instance, instance._dropdown, instance._dropdownOptions)
         }
       })
+    }
+  }
+
+  function onDropdownPositionChange(instance, verticalAlignment) {
+    if (verticalAlignment === instance._dropdown.VERTICAL_ALIGN.TOP) {
+      instance._button.setAttribute('data-szn-select-open-at-top', '')
+    } else {
+      instance._button.removeAttribute('data-szn-select-open-at-top')
     }
   }
 
@@ -232,6 +244,8 @@
   function initDropdown(instance, dropdown, options) {
     dropdown.setTether(instance._uiContainer)
     options.setOptions(instance._select)
+    dropdown.onVerticalAlignmentChange = instance._onDropdownPositionChange
+    instance._onDropdownPositionChange(dropdown.verticalAlignment)
   }
 
   function createMultiSelectUi(instance) {

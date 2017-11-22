@@ -43,7 +43,11 @@ szn-select szn-options[data-szn-select-active] {
 }
 
 szn-select [data-szn-select-button][data-szn-select-open] {
-  border-radius: 4px 4px 0 0; /* TODO: top-positioning */
+  border-radius: 4px 4px 0 0;
+}
+
+szn-select [data-szn-select-button][data-szn-select-open-at-top] {
+  border-radius: 0 0 4px 4px;
 }
 
 szn-select [data-szn-select-button][disabled] {
@@ -93,9 +97,14 @@ szn-select [data-szn-select-open] [data-szn-select-mark]:after {
   content: "▲";
 }
 
-[data-szn-select-dropdown] {
+szn-tethered > [data-szn-select-dropdown] {
   display: block;
 
-  margin-top: -1px;
+  top: -1px;
+
   min-width: 109px;
+}
+
+szn-tethered[data-vertical-align='top'] > [data-szn-select-dropdown] {
+  bottom: -1px;
 }
