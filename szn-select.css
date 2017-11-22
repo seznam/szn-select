@@ -34,6 +34,10 @@ szn-select [data-szn-select-button] {
   background: #ffffff;
 }
 
+szn-select [data-szn-select-button][data-szn-select-open] {
+  border-radius: 4px 4px 0 0; /* TODO: top-positioning */
+}
+
 szn-select [data-szn-select-label] {
   display: block;
 
@@ -78,5 +82,6 @@ szn-select [data-szn-select-open] [data-szn-select-mark]:after {
 [data-szn-select-dropdown] {
   display: block;
 
+  margin-top: -1px;
   min-width: 109px;
 }
