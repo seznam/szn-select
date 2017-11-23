@@ -5,8 +5,6 @@
   const MIN_BOTTOM_SPACE = 160 // px
   const OBSERVED_DOM_EVENTS = ['resize', 'scroll', 'wheel', 'touchmove']
 
-  // TODO: observe the disabled, multiple, and dom changes (the label must reflect an *existing* currently selected
-  //       option)
   SznElements['szn-select'] = class SznSelect {
     constructor(rootElement, uiContainer) {
       if (!rootElement.hasOwnProperty('minBottomSpace')) {
@@ -34,6 +32,7 @@
       this._dropdownContainer = document.body
       this._blurTimeout = null
       this._minBottomSpace = MIN_BOTTOM_SPACE
+      this._observer = new MutationObserver(() => onDomMutated(this))
 
       this._onUpdateNeeded = () => onUpdateNeeded(this)
       this._onToggleDropdown = event => onToggleDropdown(this, event)
@@ -64,6 +63,13 @@
       }
 
       addEventListeners(this)
+      this._observer.observe(this._root, {
+        childList: true,
+        attributes: true,
+        characterData: true,
+        subtree: true,
+        attributeFilter: ['disabled', 'multiple', 'selected'],
+      })
     }
 
     onUnmount() {
@@ -76,6 +82,7 @@
       }
 
       removeEventListeners(this)
+      this._observer.disconnect()
     }
   }
 
@@ -102,6 +109,30 @@
 
     for (const eventType of OBSERVED_DOM_EVENTS) {
       removeEventListener(eventType, instance._onDropdownSizeUpdateNeeded)
+    }
+  }
+
+  function onDomMutated(instance) {
+    // Since we are mutating our subtree, there will be false positives, so we always need to check what has changed
+
+    const select = instance._select
+
+    if ((select.multiple && instance._button) || (!select.multiple && !instance._button)) {
+      createUI(instance)
+      return
+    }
+
+    if (select.disabled && instance._button && !instance._button.hasAttribute('disabled')) {
+      instance._button.setAttribute('disabled', '')
+    } else if (!select.disabled && instance._button && instance._button.hasAttribute('disabled')) {
+      instance._button.removeAttribute('disabled')
+    }
+
+    if (instance._label) {
+      const selectedItemText = select.options.item(select.selectedIndex).text
+      if (instance._label.innerText !== selectedItemText) {
+        instance._label.innerText = selectedItemText
+      }
     }
   }
 
@@ -312,9 +343,7 @@
     const rootAttributes = {
       'data-szn-select-ready': '',
     }
-    if (!instance._select.multiple) {
-      rootAttributes['data-szn-select-single'] = ''
-    }
+    rootAttributes['data-szn-select-single'] = instance._select.multiple ? null : ''
 
     if (instance._root.hasAttribute('data-szn-select-standalone')) {
       setAttributes(instance._root, rootAttributes)
@@ -332,15 +361,22 @@
   function clearUi(instance) {
     instance._uiContainer.innerHTML = ''
     instance._dropdownContent.innerHTML = ''
-    if (instance._dropdown) {
+    if (instance._dropdown && instance._dropdown.parentNode) {
       instance._dropdown.parentNode.removeChild(instance._dropdown)
-      instance._dropdown = null
     }
+    instance._button = null
+    instance._label = null
+    instance._dropdown = null
+    instance._dropdownOptions = null
   }
 
   function setAttributes(element, attributes) {
     for (const attributeName of Object.keys(attributes)) {
-      element.setAttribute(attributeName, attributes[attributeName])
+      if (attributes[attributeName] === null) {
+        element.removeAttribute(attributeName)
+      } else {
+        element.setAttribute(attributeName, attributes[attributeName])
+      }
     }
   }
 
