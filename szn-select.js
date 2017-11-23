@@ -2,11 +2,25 @@
 ;(global => {
   const SznElements = global.SznElements = global.SznElements || {}
 
-  // TODO: resize dropdown to be always fully visible
+  const MIN_BOTTOM_SPACE = 160 // px
+  const OBSERVED_DOM_EVENTS = ['resize', 'scroll', 'wheel', 'touchmove']
+
   // TODO: observe the disabled, multiple, and dom changes (the label must reflect an *existing* currently selected
   //       option)
   SznElements['szn-select'] = class SznSelect {
     constructor(rootElement, uiContainer) {
+      if (!rootElement.hasOwnProperty('minBottomSpace')) {
+        Object.defineProperty(rootElement, 'minBottomSpace', {
+          get: () => rootElement._broker._minBottomSpace,
+          set: value => {
+            rootElement._broker._minBottomSpace = value
+            if (rootElement._broker._dropdown && rootElement._broker._dropdown._broker) {
+              this._dropdown.minBottomSpace = value
+            }
+          },
+        })
+      }
+
       this._root = rootElement
       this._select = rootElement.querySelector('select')
       this._uiContainer = uiContainer
@@ -19,6 +33,7 @@
       this._dropdownOptions = null
       this._dropdownContainer = document.body
       this._blurTimeout = null
+      this._minBottomSpace = MIN_BOTTOM_SPACE
 
       this._onUpdateNeeded = () => onUpdateNeeded(this)
       this._onToggleDropdown = event => onToggleDropdown(this, event)
@@ -27,6 +42,7 @@
       this._onBlur = () => onBlur(this)
       this._onKeyDown = event => onKeyDown(this, event)
       this._onDropdownPositionChange = verticalAlignment => onDropdownPositionChange(this, verticalAlignment)
+      this._onDropdownSizeUpdateNeeded = () => onDropdownSizeUpdateNeeded(this)
 
       createUI(this)
     }
@@ -70,6 +86,10 @@
     instance._select.addEventListener('blur', instance._onBlur)
     instance._select.addEventListener('keydown', instance._onKeyDown)
     addEventListener('click', instance._onCloseDropdown)
+
+    for (const eventType of OBSERVED_DOM_EVENTS) {
+      addEventListener(eventType, instance._onDropdownSizeUpdateNeeded)
+    }
   }
 
   function removeEventListeners(instance) {
@@ -79,6 +99,36 @@
     instance._select.removeEventListener('blur', instance._onBlur)
     instance._select.removeEventListener('keydown', instance._onKeyDown)
     removeEventListener('click', instance._onCloseDropdown)
+
+    for (const eventType of OBSERVED_DOM_EVENTS) {
+      removeEventListener(eventType, instance._onDropdownSizeUpdateNeeded)
+    }
+  }
+
+  function onDropdownSizeUpdateNeeded(instance) {
+    if (!instance._dropdown || !instance._dropdown._broker || !instance._dropdownOptions._broker) {
+      return
+    }
+
+    const contentHeight = instance._dropdownOptions.scrollHeight
+    const dropdownStyle = getComputedStyle(instance._dropdownOptions)
+    const maxHeight = (
+      contentHeight + parseInt(dropdownStyle.borderTopWidth, 10) + parseInt(dropdownStyle.borderBottomWidth, 10)
+    )
+    const dropdownBounds = instance._dropdownContent.getBoundingClientRect()
+    const isTopAligned = instance._dropdown.verticalAlignment === instance._dropdown.VERTICAL_ALIGN.TOP
+    const viewportHeight = window.innerHeight
+
+    const suggestedHeight = isTopAligned ?
+      Math.min(maxHeight, dropdownBounds.bottom)
+      :
+      Math.min(maxHeight, viewportHeight - dropdownBounds.top)
+
+    const currentHeight = dropdownBounds.height || dropdownBounds.bottom - dropdownBounds.top
+
+    if (suggestedHeight !== currentHeight) {
+      instance._dropdownContent.style.height = `${suggestedHeight}px`
+    }
   }
 
   function onKeyDown(instance, event) {
@@ -195,6 +245,7 @@
     } else {
       instance._button.removeAttribute('data-szn-select-open-at-top')
     }
+    onDropdownSizeUpdateNeeded(instance)
   }
 
   function createUI(instance) {
@@ -244,8 +295,10 @@
   function initDropdown(instance, dropdown, options) {
     dropdown.setTether(instance._uiContainer)
     options.setOptions(instance._select)
+    dropdown.minBottomSpace = instance._minBottomSpace
     dropdown.onVerticalAlignmentChange = instance._onDropdownPositionChange
     instance._onDropdownPositionChange(dropdown.verticalAlignment)
+    onDropdownSizeUpdateNeeded(instance)
   }
 
   function createMultiSelectUi(instance) {
