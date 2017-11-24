@@ -4,7 +4,10 @@
   "description": "Accessible HTML selectbox with customizable UI. Based on web components and easy to integrate with various frameworks like React or Angular.",
   "main": "szn-select.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "gulp",
+    "prepublishOnly": "echo Run \\'npm run publish-package\\' instead && exit 1",
+    "publish-package": "npm run build && npm publish --ignore-scripts dist"
   },
   "repository": {
     "type": "git",
@@ -31,9 +34,19 @@
   },
   "homepage": "https://github.com/jurca/szn-select#readme",
   "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-minify": "^0.2.0",
+    "del": "^3.0.0",
     "eslint": "^4.8.0",
     "eslint-config-fbjs-opensource": "^1.0.0",
-    "jest": "^21.2.1"
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-postcss": "^7.0.0",
+    "gulp-rename": "^1.2.2",
+    "jest": "^21.2.1",
+    "postcss-calc": "^6.0.1",
+    "postcss-custom-properties": "^6.2.0",
+    "postcss-import": "^11.0.0"
   },
   "dependencies": {
     "@jurca/szn-elements": "0.0.2",
