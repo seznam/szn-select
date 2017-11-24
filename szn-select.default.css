@@ -1,0 +1,20 @@
+@import "szn-select.css";
+
+:root {
+  --szn-select-border-width: 1px;
+  --szn-select-border-radius: 4px;
+  --szn-select-min-width: 109px;
+  --szn-select-single-height-px: 32px; /* 2 * (16px == 1em default) */
+  --szn-select-single-height: 2em;
+  --szn-select-button-padding: 0 5px 0 12px; /* do not use vertical padding because of line height issues */
+
+  --szn-select-border-color: #cccccc;
+  --szn-select-background-color: #ffffff;
+  --szn-select-text-color: #000000;
+  --szn-select-active-border-color: #7dbfff;
+  --szn-select-active-box-shadow: 0 0 3px rgba(0, 132, 255, .4);
+  --szn-select-disabled-text-color: #cccccc;
+
+  --szn-select-button-icon-closed: "▼";
+  --szn-select-button-icon-opened: "▲";
+}
