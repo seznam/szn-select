@@ -2,6 +2,28 @@ szn-select {
   display: inline-block;
 }
 
+szn-select select {
+  border: var(--szn-select-border-width, 1px) solid var(--szn-select-border-color, #cccccc);
+  border-radius: var(--szn-select-border-radius, 4px);
+  min-width: var(--szn-select-min-width, 109px);
+  height: var(--szn-select-single-height, 2em);
+
+  color: var(--szn-select-text-color, #000000);
+
+  background: var(--szn-select-background-color, #ffffff);
+}
+
+szn-select select[multiple] {
+  height: auto;
+}
+
+szn-select select:focus {
+  border-color: var(--szn-select-active-border-color, #7dbfff);
+
+  box-shadow: var(--szn-select-active-box-shadow, 0 0 3px rgba(0, 132, 255, .4));
+  outline: none;
+}
+
 szn-select[data-szn-select-ready] select {
   position: fixed;
   right: 999999px;
@@ -39,6 +61,7 @@ szn-select [data-szn-select-button] {
 szn-select [data-szn-select-button][data-szn-select-active],
 szn-select szn-options[data-szn-select-active] {
   border-color: var(--szn-select-active-border-color, #7dbfff);
+
   box-shadow: var(--szn-select-active-box-shadow, 0 0 3px rgba(0, 132, 255, .4));
 }
 
