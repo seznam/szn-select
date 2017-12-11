@@ -171,6 +171,25 @@
       case 38: // up
       case 40: // down
         shouldToggleDropdown = event.altKey
+        if (instance._button && !event.altKey && navigator.platform === 'MacIntel') {
+          // The macOS browsers rely on the native select dropdown, which is opened whenever the user wants to change
+          // the selected value, so we have to do the change ourselves.
+          event.preventDefault()
+          const selectedIndexDelta = event.keyCode === 38 ? -1 : 1
+          const select = instance._select
+          let newIndex = select.selectedIndex
+          let lastNewIndex = newIndex
+          do {
+            newIndex = Math.max(0, Math.min(newIndex + selectedIndexDelta, select.options.length - 1))
+            if (newIndex === lastNewIndex) {
+              // all options in the chosen direction are disabled
+              return
+            }
+            lastNewIndex = newIndex
+          } while (select.options.item(newIndex).disabled || select.options.item(newIndex).parentNode.disabled)
+          select.selectedIndex = Math.max(0, Math.min(newIndex, select.options.length - 1))
+          select.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
+        }
         break
       case 32: // space
         shouldToggleDropdown = instance._button && !instance._button.hasAttribute('data-szn-select-open')
