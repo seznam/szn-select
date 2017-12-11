@@ -174,6 +174,9 @@
         break
       case 32: // space
         shouldToggleDropdown = instance._button && !instance._button.hasAttribute('data-szn-select-open')
+        if (instance._button && instance._button.hasAttribute('data-szn-select-open')) {
+          event.preventDefault() // Prevent Safari from opening the native dropdown
+        }
         break
       case 13: // enter
         shouldToggleDropdown = true
