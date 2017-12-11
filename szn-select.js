@@ -165,6 +165,9 @@
   function onKeyDown(instance, event) {
     let shouldToggleDropdown = false
     switch (event.keyCode) {
+      case 27: // escape
+        shouldToggleDropdown = instance._button && instance._button.hasAttribute('data-szn-select-open')
+        break
       case 38: // up
       case 40: // down
         shouldToggleDropdown = event.altKey
