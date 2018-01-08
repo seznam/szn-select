@@ -2,8 +2,15 @@
 ;(global => {
   const SznElements = global.SznElements = global.SznElements || {}
 
+  const CSS_STYLES = `
+%{CSS_STYLES}%
+  `
+  const CSS_STYLES_TAG = 'data-styles--szn-select'
+
   const MIN_BOTTOM_SPACE = 160 // px
   const OBSERVED_DOM_EVENTS = ['resize', 'scroll', 'wheel', 'touchmove']
+
+  let stylesInjected = false
 
   SznElements['szn-select'] = class SznSelect {
     constructor(rootElement, uiContainer) {
@@ -42,6 +49,14 @@
       this._onKeyDown = event => onKeyDown(this, event)
       this._onDropdownPositionChange = verticalAlignment => onDropdownPositionChange(this, verticalAlignment)
       this._onDropdownSizeUpdateNeeded = () => onDropdownSizeUpdateNeeded(this)
+
+      if (!stylesInjected) {
+        const stylesContainer = document.createElement('style')
+        stylesContainer.innerHTML = CSS_STYLES
+        stylesContainer.setAttribute(CSS_STYLES_TAG, '')
+        document.head.appendChild(stylesContainer)
+        stylesInjected = true
+      }
 
       createUI(this)
     }

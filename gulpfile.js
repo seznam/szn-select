@@ -1,6 +1,7 @@
 'use strict'
 
 const del = require('del')
+const fs = require('fs')
 const gulp = require('gulp')
 const babel = require('gulp-babel')
 const rename = require('gulp-rename')
@@ -8,10 +9,25 @@ const postCss = require('gulp-postcss')
 const postCssCalc = require('postcss-calc')
 const postCustomProperties = require('postcss-custom-properties')
 const postCssImport = require('postcss-import')
+const util = require('util')
 
-function compile() {
+async function injectCss(done) {
+  const readFile = util.promisify(fs.readFile)
+  const writeFile = util.promisify(fs.writeFile)
+
+  const [css, es6] = await Promise.all([
+    readFile('./dist/szn-select.css', 'utf-8'),
+    readFile('./dist/szn-select.es6.js', 'utf-8'),
+  ])
+
+  await writeFile('./dist/szn-select.es6.js', es6.replace('%{CSS_STYLES}%', css), 'utf-8')
+
+  done()
+}
+
+function compileJS() {
   return gulp
-    .src('./szn-select.js')
+    .src('./dist/szn-select.es6.js')
     .pipe(babel({
       presets: [['env', {
         targets: {
@@ -19,27 +35,18 @@ function compile() {
         },
       }]],
     }))
-    .pipe(rename({
-      suffix: '.es3',
-    }))
+    .pipe(rename('szn-select.es3.js'))
     .pipe(gulp.dest('./dist'))
 }
 
 const copy = gulp.parallel(
   copyES6Implementation,
   copyPackageMetaFiles,
-  copyCSS,
 )
 
 function copyPackageMetaFiles() {
   return gulp
     .src(['./LICENSE', './package.json', './README.md'])
-    .pipe(gulp.dest('./dist'))
-}
-
-function copyCSS() {
-  return gulp
-    .src('./szn-select.css')
     .pipe(gulp.dest('./dist'))
 }
 
@@ -50,12 +57,14 @@ function copyES6Implementation() {
     .pipe(gulp.dest('./dist'))
 }
 
-function compileDefaultCss() {
+function compileCss() {
   return gulp
-    .src('./szn-select.default.css')
+    .src('./szn-select.css')
     .pipe(postCss([
       postCssImport(),
-      postCustomProperties(),
+      postCustomProperties({
+        preserve: true,
+      }),
       postCssCalc(),
     ]))
     .pipe(gulp.dest('./dist'))
@@ -77,12 +86,18 @@ function clean() {
   return del('./dist')
 }
 
+function cleanup() {
+  return del('./dist/szn-select.css')
+}
+
 exports.default = gulp.series(
   clean,
   gulp.parallel(
-    compile,
-    compileDefaultCss,
+    compileCss,
     copy,
   ),
+  injectCss,
+  compileJS,
   minify,
+  cleanup,
 )
