@@ -49,8 +49,8 @@
     "postcss-import": "^11.0.0"
   },
   "dependencies": {
-    "@jurca/szn-elements": "0.0.2",
-    "@jurca/szn-options": "0.0.7",
-    "@jurca/szn-tethered": "0.0.5"
+    "@jurca/szn-elements": "0.0.4",
+    "@jurca/szn-options": "0.0.8",
+    "@jurca/szn-tethered": "0.0.6"
   }
 }
