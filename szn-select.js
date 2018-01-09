@@ -30,11 +30,9 @@
       this._select = rootElement.querySelector('select')
       this._uiContainer = uiContainer
       this._button = null
-      this._label = null
       this._dropdown = null
-      this._dropdownContent = document.createElement('szn-')
-      this._dropdownContent.setAttribute('data-szn-select-dropdown', '')
-      this._dropdownContent.setAttribute('data-szn-tethered-content', '')
+      this._dropdownPosition = null
+      this._dropdownContent = SznElements.buildDom('<szn- data-szn-select-dropdown data-szn-tethered-content></szn->')
       this._dropdownOptions = null
       this._dropdownContainer = document.body
       this._blurTimeout = null
@@ -131,23 +129,8 @@
     // Since we are mutating our subtree, there will be false positives, so we always need to check what has changed
 
     const select = instance._select
-
     if ((select.multiple && instance._button) || (!select.multiple && !instance._button)) {
       createUI(instance)
-      return
-    }
-
-    if (select.disabled && instance._button && !instance._button.hasAttribute('disabled')) {
-      instance._button.setAttribute('disabled', '')
-    } else if (!select.disabled && instance._button && instance._button.hasAttribute('disabled')) {
-      instance._button.removeAttribute('disabled')
-    }
-
-    if (instance._label) {
-      const selectedItemText = select.options.item(select.selectedIndex).text
-      if (instance._label.innerText !== selectedItemText) {
-        instance._label.innerText = selectedItemText
-      }
     }
   }
 
@@ -181,12 +164,12 @@
     let shouldToggleDropdown = false
     switch (event.keyCode) {
       case 27: // escape
-        shouldToggleDropdown = instance._button && instance._button.hasAttribute('data-szn-select-open')
+        shouldToggleDropdown = instance._dropdown && instance._dropdown.parentNode
         break
       case 38: // up
       case 40: // down
         shouldToggleDropdown = event.altKey
-        if (instance._button && !event.altKey && navigator.platform === 'MacIntel') {
+        if (!instance._select.multiple && !event.altKey && navigator.platform === 'MacIntel') {
           // The macOS browsers rely on the native select dropdown, which is opened whenever the user wants to change
           // the selected value, so we have to do the change ourselves.
           event.preventDefault()
@@ -207,8 +190,8 @@
         }
         break
       case 32: // space
-        shouldToggleDropdown = instance._button && !instance._button.hasAttribute('data-szn-select-open')
-        if (instance._button && instance._button.hasAttribute('data-szn-select-open')) {
+        shouldToggleDropdown = instance._dropdown && !instance._dropdown.parentNode
+        if (instance._dropdown && instance._dropdown.parentNode) {
           event.preventDefault() // Prevent Safari from opening the native dropdown
         }
         break
@@ -252,12 +235,13 @@
   }
 
   function onCloseDropdown(instance) {
-    if (instance._select.multiple || !instance._button.hasAttribute('data-szn-select-open')) {
+    if (instance._select.multiple || !instance._dropdown.parentNode) {
       return
     }
 
-    instance._button.removeAttribute('data-szn-select-open')
-    instance._button.removeAttribute('data-szn-select-open-at-top')
+    if (instance._button._broker) {
+      instance._button.setOpen(false)
+    }
     instance._dropdown.parentNode.removeChild(instance._dropdown)
   }
 
@@ -267,7 +251,6 @@
     }
 
     const select = instance._select
-    instance._label.innerText = select.options.item(select.selectedIndex).text
     if (document.activeElement !== select) {
       select.focus()
     }
@@ -285,12 +268,15 @@
     }
 
     event.stopPropagation()
-    if (instance._button.hasAttribute('data-szn-select-open')) {
-      instance._button.removeAttribute('data-szn-select-open')
-      instance._button.removeAttribute('data-szn-select-open-at-top')
+    if (instance._dropdown.parentNode) {
+      if (instance._button._broker) {
+        instance._button.setOpen(false)
+      }
       instance._dropdown.parentNode.removeChild(instance._dropdown)
     } else {
-      instance._button.setAttribute('data-szn-select-open', '')
+      if (instance._button._broker) {
+        instance._button.setOpen(true)
+      }
       instance._dropdownContainer.appendChild(instance._dropdown)
 
       let dropdownReady = false
@@ -311,10 +297,11 @@
   }
 
   function onDropdownPositionChange(instance, verticalAlignment) {
-    if (verticalAlignment === instance._dropdown.VERTICAL_ALIGN.TOP) {
-      instance._button.setAttribute('data-szn-select-open-at-top', '')
-    } else {
-      instance._button.removeAttribute('data-szn-select-open-at-top')
+    const isOpenedAtTop = verticalAlignment === instance._dropdown.VERTICAL_ALIGN.TOP
+    instance._dropdownPosition = verticalAlignment
+    if (instance._button && instance._button._broker) {
+      const {OPENING_POSITION} = instance._button
+      instance._button.setOpeningPosition(isOpenedAtTop ? OPENING_POSITION.UP : OPENING_POSITION.DOWN)
     }
     onDropdownSizeUpdateNeeded(instance)
   }
@@ -345,20 +332,21 @@
   }
 
   function initSingleSelectButton(instance) {
-    const button = document.createElement('szn-')
-    button.setAttribute('data-szn-select-button', '')
-    if (instance._select.disabled) {
-      button.setAttribute('disabled', '')
-    }
-    const label = document.createElement('szn-')
-    label.setAttribute('data-szn-select-label', '')
-    label.innerText = instance._select.options.item(instance._select.selectedIndex).text
-    button.appendChild(label)
-    const mark = document.createElement('szn-')
-    mark.setAttribute('data-szn-select-mark', '')
-    button.appendChild(mark)
+    const button = document.createElement('szn-select-button')
+    SznElements.awaitElementReady(button, () => {
+      if (instance._button !== button) {
+        return
+      }
 
-    instance._label = label
+      instance._button.setSelectElement(instance._select)
+      if (instance._dropdown.parentNode) {
+        instance._button.setOpen(true)
+      }
+      if (instance._dropdownPosition) {
+        onDropdownPositionChange(instance, instance._dropdownPosition)
+      }
+    })
+
     instance._button = button
     instance._uiContainer.appendChild(button)
   }
@@ -405,8 +393,8 @@
       instance._dropdown.parentNode.removeChild(instance._dropdown)
     }
     instance._button = null
-    instance._label = null
     instance._dropdown = null
+    instance._dropdownPosition = null
     instance._dropdownOptions = null
   }
 
