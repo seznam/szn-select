@@ -50,8 +50,6 @@
   },
   "dependencies": {
     "@jurca/szn-elements": "0.0.5",
-    "@jurca/szn-options": "0.0.8",
-    "@jurca/szn-select-button": "0.0.2",
-    "@jurca/szn-tethered": "0.0.6"
+    "@jurca/szn-select-ui": "0.0.2"
   }
 }

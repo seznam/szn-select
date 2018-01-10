@@ -8,7 +8,6 @@
   const CSS_STYLES_TAG = 'data-styles--szn-select'
 
   const MIN_BOTTOM_SPACE = 160 // px
-  const OBSERVED_DOM_EVENTS = ['resize', 'scroll', 'wheel', 'touchmove']
 
   let stylesInjected = false
 
@@ -19,8 +18,8 @@
           get: () => rootElement._broker._minBottomSpace,
           set: value => {
             rootElement._broker._minBottomSpace = value
-            if (rootElement._broker._dropdown && rootElement._broker._dropdown._broker) {
-              this._dropdown.minBottomSpace = value
+            if (rootElement._broker._ui && rootElement._broker._ui._broker) {
+              rootElement._broker._ui.minBottomSpace = value
             }
           },
         })
@@ -29,15 +28,11 @@
       this._root = rootElement
       this._select = rootElement.querySelector('select')
       this._uiContainer = uiContainer
-      this._button = null
-      this._dropdown = null
-      this._dropdownPosition = null
-      this._dropdownContent = SznElements.buildDom('<szn- data-szn-select-dropdown data-szn-tethered-content></szn->')
-      this._dropdownOptions = null
-      this._dropdownContainer = document.body
+      this._ui = document.createElement('szn-select-ui')
       this._blurTimeout = null
+      this._isOpen = false
+      this._hasFocus = false
       this._minBottomSpace = MIN_BOTTOM_SPACE
-      this._observer = new MutationObserver(() => onDomMutated(this))
 
       this._onUpdateNeeded = () => onUpdateNeeded(this)
       this._onToggleDropdown = event => onToggleDropdown(this, event)
@@ -45,8 +40,6 @@
       this._onFocus = () => onFocus(this)
       this._onBlur = () => onBlur(this)
       this._onKeyDown = event => onKeyDown(this, event)
-      this._onDropdownPositionChange = verticalAlignment => onDropdownPositionChange(this, verticalAlignment)
-      this._onDropdownSizeUpdateNeeded = () => onDropdownSizeUpdateNeeded(this)
 
       if (!stylesInjected) {
         const stylesContainer = document.createElement('style')
@@ -56,46 +49,51 @@
         stylesInjected = true
       }
 
-      createUI(this)
+      this._ui.onUiInteracted = () => {
+        // the mousedown event happens before the blur event, so we need to delay the callback invocation
+        setTimeout(() => {
+          if (this._blurTimeout) {
+            clearTimeout(this._blurTimeout)
+            this._blurTimeout = null
+          }
+          if (this._select && document.activeElement !== this._select) {
+            this._select.focus()
+          }
+        }, 0)
+      }
+      if (this._uiContainer) {
+        this._uiContainer.appendChild(this._ui)
+      }
     }
 
     onMount() {
-      let updateNeeded = false
       if (!this._uiContainer) {
         this._uiContainer = this._root.querySelector('[data-szn-select-ui]')
-        updateNeeded = true
+        this._uiContainer.appendChild(this._ui)
       }
 
       if (!this._select) {
         this._select = this._root.querySelector('select')
-        updateNeeded = true
       }
 
-      if (updateNeeded) {
-        createUI(this)
-      }
+      SznElements.awaitElementReady(this._ui, () => {
+        this._ui.minBottomSpace = this._minBottomSpace
+        this._ui.setSelectElement(this._select)
+        this._ui.setOpen(this._isOpen)
+        this._ui.setFocus(this._hasFocus)
+      })
 
       addEventListeners(this)
-      this._observer.observe(this._root, {
-        childList: true,
-        attributes: true,
-        characterData: true,
-        subtree: true,
-        attributeFilter: ['disabled', 'multiple', 'selected'],
-      })
+      finishInitialization(this)
     }
 
     onUnmount() {
-      if (this._dropdown) {
-        this._dropdown.parentNode.removeChild(this._dropdown)
-      }
       if (this._blurTimeout) {
         clearTimeout(this._blurTimeout)
         this._blurTimeout = null
       }
 
       removeEventListeners(this)
-      this._observer.disconnect()
     }
   }
 
@@ -106,10 +104,6 @@
     instance._select.addEventListener('blur', instance._onBlur)
     instance._select.addEventListener('keydown', instance._onKeyDown)
     addEventListener('click', instance._onCloseDropdown)
-
-    for (const eventType of OBSERVED_DOM_EVENTS) {
-      addEventListener(eventType, instance._onDropdownSizeUpdateNeeded)
-    }
   }
 
   function removeEventListeners(instance) {
@@ -119,52 +113,13 @@
     instance._select.removeEventListener('blur', instance._onBlur)
     instance._select.removeEventListener('keydown', instance._onKeyDown)
     removeEventListener('click', instance._onCloseDropdown)
-
-    for (const eventType of OBSERVED_DOM_EVENTS) {
-      removeEventListener(eventType, instance._onDropdownSizeUpdateNeeded)
-    }
-  }
-
-  function onDomMutated(instance) {
-    // Since we are mutating our subtree, there will be false positives, so we always need to check what has changed
-
-    const select = instance._select
-    if ((select.multiple && instance._button) || (!select.multiple && !instance._button)) {
-      createUI(instance)
-    }
-  }
-
-  function onDropdownSizeUpdateNeeded(instance) {
-    if (!instance._dropdown || !instance._dropdown._broker || !instance._dropdownOptions._broker) {
-      return
-    }
-
-    const contentHeight = instance._dropdownOptions.scrollHeight
-    const dropdownStyle = getComputedStyle(instance._dropdownOptions)
-    const maxHeight = (
-      contentHeight + parseInt(dropdownStyle.borderTopWidth, 10) + parseInt(dropdownStyle.borderBottomWidth, 10)
-    )
-    const dropdownBounds = instance._dropdownContent.getBoundingClientRect()
-    const isTopAligned = instance._dropdown.verticalAlignment === instance._dropdown.VERTICAL_ALIGN.TOP
-    const viewportHeight = window.innerHeight
-
-    const suggestedHeight = isTopAligned ?
-      Math.min(maxHeight, dropdownBounds.bottom)
-      :
-      Math.min(maxHeight, viewportHeight - dropdownBounds.top)
-
-    const currentHeight = dropdownBounds.height || dropdownBounds.bottom - dropdownBounds.top
-
-    if (suggestedHeight !== currentHeight) {
-      instance._dropdownContent.style.height = `${suggestedHeight}px`
-    }
   }
 
   function onKeyDown(instance, event) {
     let shouldToggleDropdown = false
     switch (event.keyCode) {
       case 27: // escape
-        shouldToggleDropdown = instance._dropdown && instance._dropdown.parentNode
+        shouldToggleDropdown = instance._isOpen
         break
       case 38: // up
       case 40: // down
@@ -190,8 +145,8 @@
         }
         break
       case 32: // space
-        shouldToggleDropdown = instance._dropdown && !instance._dropdown.parentNode
-        if (instance._dropdown && instance._dropdown.parentNode) {
+        shouldToggleDropdown = !instance._isOpen
+        if (instance._isOpen) {
           event.preventDefault() // Prevent Safari from opening the native dropdown
         }
         break
@@ -214,10 +169,8 @@
       instance._blurTimeout = null
     }
 
-    if (instance._select.multiple) {
-      instance._uiContainer.firstElementChild.setAttribute('data-szn-select-active', '')
-    } else {
-      instance._button.setAttribute('data-szn-select-active', '')
+    if (instance._ui._broker) {
+      instance._ui.setFocus(true)
     }
   }
 
@@ -226,23 +179,22 @@
       clearTimeout(instance._blurTimeout)
     }
     instance._blurTimeout = setTimeout(() => {
-      if (instance._select.multiple) {
-        instance._uiContainer.firstElementChild.removeAttribute('data-szn-select-active')
-      } else {
-        instance._button.removeAttribute('data-szn-select-active')
+      if (instance._ui._broker) {
+        instance._ui.setFocus(false)
       }
+      onCloseDropdown(instance)
     }, 1000 / 30)
   }
 
   function onCloseDropdown(instance) {
-    if (instance._select.multiple || !instance._dropdown.parentNode) {
+    if (!instance._isOpen) {
       return
     }
 
-    if (instance._button._broker) {
-      instance._button.setOpen(false)
+    if (instance._ui._broker) {
+      instance._ui.setOpen(false)
+      instance._isOpen = false
     }
-    instance._dropdown.parentNode.removeChild(instance._dropdown)
   }
 
   function onUpdateNeeded(instance) {
@@ -261,110 +213,19 @@
       return
     }
 
-    instance._select.focus()
+    if (document.activeElement !== instance._select) {
+      instance._select.focus()
+    }
 
     if (instance._select.multiple) {
       return
     }
 
     event.stopPropagation()
-    if (instance._dropdown.parentNode) {
-      if (instance._button._broker) {
-        instance._button.setOpen(false)
-      }
-      instance._dropdown.parentNode.removeChild(instance._dropdown)
-    } else {
-      if (instance._button._broker) {
-        instance._button.setOpen(true)
-      }
-      instance._dropdownContainer.appendChild(instance._dropdown)
-
-      let dropdownReady = false
-      let optionsReady = false
-      SznElements.awaitElementReady(instance._dropdown, () => {
-        dropdownReady = true
-        if (optionsReady) {
-          initDropdown(instance, instance._dropdown, instance._dropdownOptions)
-        }
-      })
-      SznElements.awaitElementReady(instance._dropdownOptions, () => {
-        optionsReady = true
-        if (dropdownReady) {
-          initDropdown(instance, instance._dropdown, instance._dropdownOptions)
-        }
-      })
+    instance._isOpen = !instance._isOpen
+    if (instance._ui._broker) {
+      instance._ui.setOpen(instance._isOpen)
     }
-  }
-
-  function onDropdownPositionChange(instance, verticalAlignment) {
-    const isOpenedAtTop = verticalAlignment === instance._dropdown.VERTICAL_ALIGN.TOP
-    instance._dropdownPosition = verticalAlignment
-    if (instance._button && instance._button._broker) {
-      const {OPENING_POSITION} = instance._button
-      instance._button.setOpeningPosition(isOpenedAtTop ? OPENING_POSITION.UP : OPENING_POSITION.DOWN)
-    }
-    onDropdownSizeUpdateNeeded(instance)
-  }
-
-  function createUI(instance) {
-    if (!instance._select || !instance._uiContainer) {
-      return
-    }
-
-    clearUi(instance)
-
-    if (instance._select.multiple) {
-      createMultiSelectUi(instance)
-    } else {
-      createSingleSelectUi(instance)
-    }
-
-    finishInitialization(instance)
-  }
-
-  function createSingleSelectUi(instance) {
-    initSingleSelectButton(instance)
-
-    instance._dropdownOptions = document.createElement('szn-options')
-    instance._dropdown = document.createElement('szn-tethered')
-    instance._dropdown.appendChild(instance._dropdownContent)
-    instance._dropdownContent.appendChild(instance._dropdownOptions)
-  }
-
-  function initSingleSelectButton(instance) {
-    const button = document.createElement('szn-select-button')
-    SznElements.awaitElementReady(button, () => {
-      if (instance._button !== button) {
-        return
-      }
-
-      instance._button.setSelectElement(instance._select)
-      if (instance._dropdown.parentNode) {
-        instance._button.setOpen(true)
-      }
-      if (instance._dropdownPosition) {
-        onDropdownPositionChange(instance, instance._dropdownPosition)
-      }
-    })
-
-    instance._button = button
-    instance._uiContainer.appendChild(button)
-  }
-
-  function initDropdown(instance, dropdown, options) {
-    dropdown.setTether(instance._uiContainer)
-    options.setOptions(instance._select)
-    dropdown.minBottomSpace = instance._minBottomSpace
-    dropdown.onVerticalAlignmentChange = instance._onDropdownPositionChange
-    instance._onDropdownPositionChange(dropdown.verticalAlignment)
-    onDropdownSizeUpdateNeeded(instance)
-  }
-
-  function createMultiSelectUi(instance) {
-    const select = instance._select
-    const options = document.createElement('szn-options')
-    instance._uiContainer.appendChild(options)
-    SznElements.awaitElementReady(options, () => options.setOptions(select))
   }
 
   function finishInitialization(instance) {
@@ -384,18 +245,6 @@
         },
       }))
     }
-  }
-
-  function clearUi(instance) {
-    instance._uiContainer.innerHTML = ''
-    instance._dropdownContent.innerHTML = ''
-    if (instance._dropdown && instance._dropdown.parentNode) {
-      instance._dropdown.parentNode.removeChild(instance._dropdown)
-    }
-    instance._button = null
-    instance._dropdown = null
-    instance._dropdownPosition = null
-    instance._dropdownOptions = null
   }
 
   function setAttributes(element, attributes) {
