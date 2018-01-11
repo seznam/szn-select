@@ -44,9 +44,7 @@
     "gulp-postcss": "^7.0.0",
     "gulp-rename": "^1.2.2",
     "jest": "^21.2.1",
-    "postcss-calc": "^6.0.1",
-    "postcss-custom-properties": "^6.2.0",
-    "postcss-import": "^11.0.0"
+    "postcss-custom-properties": "^6.2.0"
   },
   "dependencies": {
     "@jurca/szn-elements": "0.0.5",

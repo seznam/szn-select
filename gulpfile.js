@@ -6,9 +6,7 @@ const gulp = require('gulp')
 const babel = require('gulp-babel')
 const rename = require('gulp-rename')
 const postCss = require('gulp-postcss')
-const postCssCalc = require('postcss-calc')
 const postCustomProperties = require('postcss-custom-properties')
-const postCssImport = require('postcss-import')
 const util = require('util')
 
 async function injectCss(done) {
@@ -61,11 +59,9 @@ function compileCss() {
   return gulp
     .src('./szn-select.css')
     .pipe(postCss([
-      postCssImport(),
       postCustomProperties({
         preserve: true,
       }),
-      postCssCalc(),
     ]))
     .pipe(gulp.dest('./dist'))
 }
