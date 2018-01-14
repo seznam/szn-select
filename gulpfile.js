@@ -2,6 +2,7 @@
 
 const del = require('del')
 const fs = require('fs')
+const glob = require('glob')
 const gulp = require('gulp')
 const babel = require('gulp-babel')
 const rename = require('gulp-rename')
@@ -19,6 +20,22 @@ async function injectCss(done) {
   ])
 
   await writeFile('./dist/szn-select.es6.js', es6.replace('%{CSS_STYLES}%', css), 'utf-8')
+
+  done()
+}
+
+async function injectA11yImplementations(done) {
+  const readFile = util.promisify(fs.readFile)
+  const writeFile = util.promisify(fs.writeFile)
+
+  const baseClass = await readFile('./a11y/AccessibilityBroker.js', 'utf-8')
+  const implementationSources = await util.promisify(glob)('./a11y/!(AccessibilityBroker).js')
+  const implementations = await Promise.all(implementationSources.map(sourceFile => readFile(sourceFile, 'utf-8')))
+
+  const selectSource = await readFile('./dist/szn-select.es6.js', 'utf-8')
+  const newSource = selectSource.replace('// %{A11Y_IMPLEMENTATIONS}%', [baseClass, ...implementations].join('\n'))
+
+  await writeFile('./dist/szn-select.es6.js', newSource, 'utf-8')
 
   done()
 }
@@ -93,6 +110,7 @@ exports.default = gulp.series(
     copy,
   ),
   injectCss,
+  injectA11yImplementations,
   compileJS,
   minify,
   cleanup,
