@@ -40,6 +40,12 @@ szn-select[data-szn-select-single] {
 }
 
 szn-select [data-szn-select-ui] {
+  display: none;
+
   width: 100%;
   height: 100%;
+}
+
+szn-select[data-szn-select-ready] [data-szn-select-ui] {
+  display: block;
 }

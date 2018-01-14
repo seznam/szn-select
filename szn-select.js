@@ -25,21 +25,18 @@
         })
       }
 
+      this.isOpen = false
+
       this._root = rootElement
       this._select = rootElement.querySelector('select')
       this._uiContainer = uiContainer
       this._ui = document.createElement('szn-select-ui')
-      this._blurTimeout = null
-      this._isOpen = false
-      this._hasFocus = false
       this._minBottomSpace = MIN_BOTTOM_SPACE
+      this._accessiblityBroker = null
+      this._mounted = false
 
-      this._onUpdateNeeded = () => onUpdateNeeded(this)
-      this._onToggleDropdown = event => onToggleDropdown(this, event)
-      this._onCloseDropdown = () => onCloseDropdown(this)
-      this._onFocus = () => onFocus(this)
-      this._onBlur = () => onBlur(this)
-      this._onKeyDown = event => onKeyDown(this, event)
+      this._onUiClicked = onUiClicked.bind(null, this)
+      this._onChange = onChange.bind(null, this)
 
       if (!stylesInjected) {
         const stylesContainer = document.createElement('style')
@@ -50,16 +47,9 @@
       }
 
       this._ui.onUiInteracted = () => {
-        // the mousedown event happens before the blur event, so we need to delay the callback invocation
-        setTimeout(() => {
-          if (this._blurTimeout) {
-            clearTimeout(this._blurTimeout)
-            this._blurTimeout = null
-          }
-          if (this._select && document.activeElement !== this._select) {
-            this._select.focus()
-          }
-        }, 0)
+        if (this._accessiblityBroker) {
+          this._accessiblityBroker.onUiClicked()
+        }
       }
       if (this._uiContainer) {
         this._uiContainer.appendChild(this._ui)
@@ -67,6 +57,7 @@
     }
 
     onMount() {
+      this._mounted = true
       if (!this._uiContainer) {
         this._uiContainer = this._root.querySelector('[data-szn-select-ui]')
         this._uiContainer.appendChild(this._ui)
@@ -77,20 +68,27 @@
       }
 
       SznElements.awaitElementReady(this._ui, () => {
+        if (!this._mounted) {
+          return
+        }
+
         this._ui.minBottomSpace = this._minBottomSpace
         this._ui.setSelectElement(this._select)
-        this._ui.setOpen(this._isOpen)
-        this._ui.setFocus(this._hasFocus)
-      })
 
-      addEventListeners(this)
-      finishInitialization(this)
+        // TODO: select accessibility broker
+        this._accessiblityBroker = new SznSelectRichNativeSelect(this._select, this._ui, this)
+        this._accessiblityBroker.onMount()
+
+        addEventListeners(this)
+        finishInitialization(this)
+      })
     }
 
     onUnmount() {
-      if (this._blurTimeout) {
-        clearTimeout(this._blurTimeout)
-        this._blurTimeout = null
+      this._mounted = false
+
+      if (this._accessiblityBroker) {
+        this._accessiblityBroker.onUnmount()
       }
 
       removeEventListeners(this)
@@ -98,134 +96,21 @@
   }
 
   function addEventListeners(instance) {
-    instance._uiContainer.addEventListener('click', instance._onToggleDropdown)
-    instance._select.addEventListener('change', instance._onUpdateNeeded)
-    instance._select.addEventListener('focus', instance._onFocus)
-    instance._select.addEventListener('blur', instance._onBlur)
-    instance._select.addEventListener('keydown', instance._onKeyDown)
-    addEventListener('click', instance._onCloseDropdown)
+    instance._uiContainer.addEventListener('click', instance._onUiClicked)
+    instance._uiContainer.addEventListener('change', instance._onChange)
   }
 
   function removeEventListeners(instance) {
-    instance._uiContainer.removeEventListener('click', instance._onToggleDropdown)
-    instance._select.removeEventListener('change', instance._onUpdateNeeded)
-    instance._select.removeEventListener('focus', instance._onFocus)
-    instance._select.removeEventListener('blur', instance._onBlur)
-    instance._select.removeEventListener('keydown', instance._onKeyDown)
-    removeEventListener('click', instance._onCloseDropdown)
+    instance._uiContainer.removeEventListener('click', instance._onUiClicked)
+    instance._uiContainer.removeEventListener('change', instance._onChange)
   }
 
-  function onKeyDown(instance, event) {
-    let shouldToggleDropdown = false
-    switch (event.keyCode) {
-      case 27: // escape
-        shouldToggleDropdown = instance._isOpen
-        break
-      case 38: // up
-      case 40: // down
-        shouldToggleDropdown = event.altKey
-        if (!instance._select.multiple && !event.altKey && navigator.platform === 'MacIntel') {
-          // The macOS browsers rely on the native select dropdown, which is opened whenever the user wants to change
-          // the selected value, so we have to do the change ourselves.
-          event.preventDefault()
-          const selectedIndexDelta = event.keyCode === 38 ? -1 : 1
-          const select = instance._select
-          let newIndex = select.selectedIndex
-          let lastNewIndex = newIndex
-          do {
-            newIndex = Math.max(0, Math.min(newIndex + selectedIndexDelta, select.options.length - 1))
-            if (newIndex === lastNewIndex) {
-              // all options in the chosen direction are disabled
-              return
-            }
-            lastNewIndex = newIndex
-          } while (select.options.item(newIndex).disabled || select.options.item(newIndex).parentNode.disabled)
-          select.selectedIndex = Math.max(0, Math.min(newIndex, select.options.length - 1))
-          select.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
-        }
-        break
-      case 32: // space
-        shouldToggleDropdown = !instance._isOpen
-        if (instance._isOpen) {
-          event.preventDefault() // Prevent Safari from opening the native dropdown
-        }
-        break
-      case 13: // enter
-        shouldToggleDropdown = true
-        break
-      default:
-        break // nothing to do
-    }
-
-    if (shouldToggleDropdown) {
-      event.preventDefault() // Prevent Safari from opening the native dropdown
-      onToggleDropdown(instance, event)
-    }
+  function onUiClicked(instance, event) {
+    instance._accessiblityBroker.onUiClicked(event)
   }
 
-  function onFocus(instance) {
-    if (instance._blurTimeout) {
-      clearTimeout(instance._blurTimeout)
-      instance._blurTimeout = null
-    }
-
-    if (instance._ui._broker) {
-      instance._ui.setFocus(true)
-    }
-  }
-
-  function onBlur(instance) {
-    if (instance._blurTimeout) {
-      clearTimeout(instance._blurTimeout)
-    }
-    instance._blurTimeout = setTimeout(() => {
-      if (instance._ui._broker) {
-        instance._ui.setFocus(false)
-      }
-      onCloseDropdown(instance)
-    }, 1000 / 30)
-  }
-
-  function onCloseDropdown(instance) {
-    if (!instance._isOpen) {
-      return
-    }
-
-    if (instance._ui._broker) {
-      instance._ui.setOpen(false)
-      instance._isOpen = false
-    }
-  }
-
-  function onUpdateNeeded(instance) {
-    if (instance._select.multiple) {
-      return
-    }
-
-    const select = instance._select
-    if (document.activeElement !== select) {
-      select.focus()
-    }
-  }
-
-  function onToggleDropdown(instance, event) {
-    if (instance._select.disabled) {
-      return
-    }
-
-    if (document.activeElement !== instance._select) {
-      instance._select.focus()
-    }
-
-    if (instance._select.multiple) {
-      return
-    }
-
-    event.stopPropagation()
-    instance._isOpen = !instance._isOpen
-    if (instance._ui._broker) {
-      instance._ui.setOpen(instance._isOpen)
-    }
+  function onChange(instance) {
+    instance._accessiblityBroker.onChange()
   }
 
   function finishInitialization(instance) {
@@ -256,6 +141,194 @@
       }
     }
   }
+
+  class SznSelectAccessibilityBroker {
+    constructor(select, ui, sznSelect) {
+      this.select = select
+      this.sznSelect = sznSelect
+      this.ui = ui
+    }
+
+    setOpen(isOpen) {
+      this.sznSelect.isOpen = isOpen
+      this.ui.setOpen(isOpen)
+    }
+
+    onMount() {}
+
+    onUnmount() {}
+
+    onUiClicked(event) {}
+
+    onChange() {}
+  }
+
+  class SznSelectRichNativeSelect extends SznSelectAccessibilityBroker {
+    constructor(select, ui, sznSelect) {
+      super(select, ui, sznSelect)
+
+      this._onFocus = this.onFocus.bind(this)
+      this._onBlur = this.onBlur.bind(this)
+      this._onKeyDown = this.onKeyDown.bind(this)
+      this._onCloseDropdown = this.onCloseDropdown.bind(this)
+
+      this._blurTimeout = null
+    }
+
+    onMount() {
+      super.onMount()
+
+      this._addEventListeners()
+    }
+
+    onUnmount() {
+      super.onUnmount()
+
+      if (this._blurTimeout) {
+        clearTimeout(this._blurTimeout)
+        this._blurTimeout = null
+      }
+
+      this._removeEventListeners()
+    }
+
+    onFocus() {
+      if (this._blurTimeout) {
+        clearTimeout(this._blurTimeout)
+        this._blurTimeout = null
+      }
+
+      this.ui.setFocus(true)
+    }
+
+    onBlur() {
+      if (this._blurTimeout) {
+        clearTimeout(this._blurTimeout)
+      }
+      this._blurTimeout = setTimeout(() => {
+        this.ui.setFocus(false)
+        this.onCloseDropdown()
+      }, 1000 / 30)
+    }
+
+    onUiClicked(event) {
+      super.onUiClicked(event)
+
+      if (this.select.disabled) {
+        return
+      }
+
+      if (document.activeElement !== this.select) {
+        this.select.focus()
+      }
+
+      if (this.select.multiple) {
+        return
+      }
+
+      if (event) {
+        event.stopPropagation()
+      }
+      if (!this.sznSelect.isOpen) {
+        this.setOpen(!this.sznSelect.isOpen)
+      }
+
+      // the mousedown event happens before the blur event, so we need to delay the callback invocation
+      setTimeout(() => {
+        if (this._blurTimeout) {
+          clearTimeout(this._blurTimeout)
+          this._blurTimeout = null
+        }
+        if (document.activeElement !== this.select) {
+          this.select.focus()
+        }
+      }, 0)
+    }
+
+    onChange() {
+      super.onChange()
+
+      const {select} = this
+      if (!select.multiple && document.activeElement !== select) {
+        select.focus()
+      }
+    }
+
+    onKeyDown(event) {
+      let shouldToggleDropdown = false
+      switch (event.keyCode) {
+        case 27: // escape
+          shouldToggleDropdown = this.sznSelect.isOpen
+          break
+        case 38: // up
+        case 40: // down
+          shouldToggleDropdown = event.altKey
+          if (!this.select.multiple && !event.altKey && navigator.platform === 'MacIntel') {
+            // The macOS browsers rely on the native select dropdown, which is opened whenever the user wants to change
+            // the selected value, so we have to do the change ourselves.
+            event.preventDefault()
+            const selectedIndexDelta = event.keyCode === 38 ? -1 : 1
+            const {select} = this
+            let newIndex = select.selectedIndex
+            let lastNewIndex = newIndex
+            do {
+              newIndex = Math.max(0, Math.min(newIndex + selectedIndexDelta, select.options.length - 1))
+              if (newIndex === lastNewIndex) {
+                // all options in the chosen direction are disabled
+                return
+              }
+              lastNewIndex = newIndex
+            } while (select.options.item(newIndex).disabled || select.options.item(newIndex).parentNode.disabled)
+            select.selectedIndex = Math.max(0, Math.min(newIndex, select.options.length - 1))
+            select.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
+          }
+          break
+        case 32: // space
+          shouldToggleDropdown = !this.sznSelect.isOpen
+          if (this.sznSelect.isOpen) {
+            event.preventDefault() // Prevent Safari from opening the native dropdown
+          }
+          break
+        case 13: // enter
+          shouldToggleDropdown = true
+          break
+        default:
+          break // nothing to do
+      }
+
+      if (shouldToggleDropdown) {
+        event.preventDefault() // Prevent Safari from opening the native dropdown
+        this.setOpen(!this.sznSelect.isOpen)
+      }
+    }
+
+    onCloseDropdown() {
+      if (!this.sznSelect.isOpen) {
+        return
+      }
+
+      this.setOpen(false)
+    }
+
+    _addEventListeners() {
+      this.select.addEventListener('focus', this._onFocus)
+      this.select.addEventListener('blur', this._onBlur)
+      this.select.addEventListener('keydown', this._onKeyDown)
+      addEventListener('click', this._onCloseDropdown)
+    }
+
+    _removeEventListeners() {
+      this.select.removeEventListener('focus', this._onFocus)
+      this.select.removeEventListener('blur', this._onBlur)
+      this.select.removeEventListener('keydown', this._onKeyDown)
+      removeEventListener('click', this._onCloseDropdown)
+    }
+  }
+  SznSelectAccessibilityBroker.compatibilityTest = () => true
+
+  SznSelectAccessibilityBroker.implementations = [
+    SznSelectRichNativeSelect,
+  ]
 
   if (SznElements.init) {
     SznElements.init()
