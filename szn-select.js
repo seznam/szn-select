@@ -75,8 +75,14 @@
         this._ui.minBottomSpace = this._minBottomSpace
         this._ui.setSelectElement(this._select)
 
-        // TODO: select accessibility broker
-        this._accessiblityBroker = new RichNativeSelect(this._select, this._ui, this)
+        let implementation = null
+        for (const possibleImplementation of AccessibilityBroker.implementations) {
+          if (possibleImplementation.compatibilityTest(this._select)) {
+            implementation = possibleImplementation
+            break
+          }
+        }
+        this._accessiblityBroker = new implementation(this._select, this._ui, this)
         this._accessiblityBroker.onMount()
 
         addEventListeners(this)
