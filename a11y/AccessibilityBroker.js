@@ -18,3 +18,6 @@ class AccessibilityBroker {
 
   onChange() {}
 }
+AccessibilityBroker.compatibilityTest = () => {
+  throw new TypeError('The compatibility test is not implemented for this accessibility implementation')
+}
