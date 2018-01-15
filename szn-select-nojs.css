@@ -1,0 +1,23 @@
+/* styles to use when JS not available */
+
+szn-select select {
+  border: var(--szn-select-button-border-width, 1px) solid var(--szn-select-button-border-color, #cccccc);
+  border-radius: var(--szn-select-button-border-radius, 4px);
+  min-width: var(--szn-select-button-min-width, 109px);
+  height: var(--szn-select-button-single-height, 2em);
+
+  color: var(--szn-select-text-color, #000000);
+
+  background: var(--szn-select-background-color, #ffffff);
+}
+
+szn-select select[multiple] {
+  height: auto;
+}
+
+szn-select select:focus {
+  border-color: var(--szn-select-active-border-color, #7dbfff);
+
+  box-shadow: var(--szn-select-active-box-shadow, 0 0 3px rgba(0, 132, 255, .4));
+  outline: none;
+}

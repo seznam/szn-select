@@ -72,6 +72,12 @@ function copyES6Implementation() {
     .pipe(gulp.dest('./dist'))
 }
 
+function copyNoJsCss() {
+  return gulp
+    .src('./szn-select-nojs.css')
+    .pipe(gulp.dest('./dist'))
+}
+
 function compileCss() {
   return gulp
     .src('./szn-select.css')
@@ -110,6 +116,7 @@ exports.default = gulp.series(
     copy,
   ),
   injectCss,
+  copyNoJsCss,
   injectA11yImplementations,
   compileJS,
   minify,
