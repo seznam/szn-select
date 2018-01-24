@@ -92,31 +92,9 @@ class RichNativeSelect extends AccessibilityBroker {
       case 38: // up
       case 40: // down
         shouldToggleDropdown = event.altKey
-        if (!event.altKey && navigator.platform === 'MacIntel') {
-          // The macOS browsers rely on the native select dropdown, which is opened whenever the user wants to change
-          // the selected value, so we have to do the change ourselves.
-          event.preventDefault()
-          const selectedIndexDelta = event.keyCode === 38 ? -1 : 1
-          const {select} = this
-          let newIndex = select.selectedIndex
-          let lastNewIndex = newIndex
-          do {
-            newIndex = Math.max(0, Math.min(newIndex + selectedIndexDelta, select.options.length - 1))
-            if (newIndex === lastNewIndex) {
-              // all options in the chosen direction are disabled
-              return
-            }
-            lastNewIndex = newIndex
-          } while (select.options.item(newIndex).disabled || select.options.item(newIndex).parentNode.disabled)
-          select.selectedIndex = Math.max(0, Math.min(newIndex, select.options.length - 1))
-          select.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
-        }
         break
       case 32: // space
         shouldToggleDropdown = !this.sznSelect.isOpen
-        if (this.sznSelect.isOpen) {
-          event.preventDefault() // Prevent Safari from opening the native dropdown
-        }
         break
       case 13: // enter
         shouldToggleDropdown = true
@@ -126,7 +104,6 @@ class RichNativeSelect extends AccessibilityBroker {
     }
 
     if (shouldToggleDropdown) {
-      event.preventDefault() // Prevent Safari from opening the native dropdown
       this.setOpen(!this.sznSelect.isOpen)
     }
   }
