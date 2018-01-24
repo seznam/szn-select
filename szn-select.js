@@ -1,4 +1,4 @@
-/* global AccessibilityBroker, DisabledSelect, RichNativeSelect */
+/* global AccessibilityBroker, DisabledSelect, MultiSelect, RichNativeSelect */
 
 'use strict'
 ;(global => {
@@ -177,6 +177,7 @@
 
   AccessibilityBroker.implementations = [
     DisabledSelect,
+    MultiSelect,
     RichNativeSelect,
   ]
 

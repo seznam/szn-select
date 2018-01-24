@@ -55,10 +55,6 @@ class RichNativeSelect extends AccessibilityBroker {
       this.select.focus()
     }
 
-    if (this.select.multiple) {
-      return
-    }
-
     if (event) {
       event.stopPropagation()
     }
@@ -82,7 +78,7 @@ class RichNativeSelect extends AccessibilityBroker {
     super.onChange()
 
     const {select} = this
-    if (!select.multiple && document.activeElement !== select) {
+    if (document.activeElement !== select) {
       select.focus()
     }
   }
@@ -96,7 +92,7 @@ class RichNativeSelect extends AccessibilityBroker {
       case 38: // up
       case 40: // down
         shouldToggleDropdown = event.altKey
-        if (!this.select.multiple && !event.altKey && navigator.platform === 'MacIntel') {
+        if (!event.altKey && navigator.platform === 'MacIntel') {
           // The macOS browsers rely on the native select dropdown, which is opened whenever the user wants to change
           // the selected value, so we have to do the change ourselves.
           event.preventDefault()
@@ -157,4 +153,4 @@ class RichNativeSelect extends AccessibilityBroker {
     removeEventListener('click', this._onCloseDropdown)
   }
 }
-RichNativeSelect.compatibilityTest = select => !select.disabled
+RichNativeSelect.compatibilityTest = select => !select.disabled && !select.multiple
