@@ -1,3 +1,5 @@
+/* global AccessibilityBroker */
+
 class RichNativeSelect extends AccessibilityBroker {
   constructor(select, ui, sznSelect) {
     super(select, ui, sznSelect)
