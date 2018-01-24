@@ -1,3 +1,5 @@
+/* global AccessibilityBroker, DisabledSelect, RichNativeSelect */
+
 'use strict'
 ;(global => {
   const SznElements = global.SznElements = global.SznElements || {}
@@ -34,6 +36,7 @@
       this._minBottomSpace = MIN_BOTTOM_SPACE
       this._accessiblityBroker = null
       this._mounted = false
+      this._selectAttributesObserver = new MutationObserver(updateA11yBroker.bind(null, this))
 
       this._onUiClicked = onUiClicked.bind(null, this)
       this._onChange = onChange.bind(null, this)
@@ -66,6 +69,10 @@
       if (!this._select) {
         this._select = this._root.querySelector('select')
       }
+      this._selectAttributesObserver.observe(this._select, {
+        attributes: true,
+        attributeFilter: ['disabled', 'multiple'],
+      })
 
       SznElements.awaitElementReady(this._ui, () => {
         if (!this._mounted) {
@@ -75,15 +82,7 @@
         this._ui.minBottomSpace = this._minBottomSpace
         this._ui.setSelectElement(this._select)
 
-        let implementation = null
-        for (const possibleImplementation of AccessibilityBroker.implementations) {
-          if (possibleImplementation.compatibilityTest(this._select)) {
-            implementation = possibleImplementation
-            break
-          }
-        }
-        this._accessiblityBroker = new implementation(this._select, this._ui, this)
-        this._accessiblityBroker.onMount()
+        updateA11yBroker(this)
 
         addEventListeners(this)
         finishInitialization(this)
@@ -92,9 +91,11 @@
 
     onUnmount() {
       this._mounted = false
+      this._selectAttributesObserver.disconnect()
 
       if (this._accessiblityBroker) {
         this._accessiblityBroker.onUnmount()
+        this._accessiblityBroker = null
       }
 
       removeEventListeners(this)
@@ -117,6 +118,30 @@
 
   function onChange(instance) {
     instance._accessiblityBroker.onChange()
+  }
+
+  function updateA11yBroker(instance) {
+    if (instance._accessiblityBroker) {
+      instance._accessiblityBroker.onUnmount()
+    }
+
+    if (!instance._mounted) {
+      return
+    }
+
+    const implementation = selectA11yBrokerImplementation(instance._select)
+    instance._accessiblityBroker = new implementation(instance._select, instance._ui, instance)
+    instance._accessiblityBroker.onMount()
+  }
+
+  function selectA11yBrokerImplementation(select) {
+    for (const possibleImplementation of AccessibilityBroker.implementations) {
+      if (possibleImplementation.compatibilityTest(select)) {
+        return possibleImplementation
+      }
+    }
+
+    throw new Error('There is no compatible accessibility broker implementation for the provided select element')
   }
 
   function finishInitialization(instance) {
@@ -151,6 +176,7 @@
   // %{A11Y_IMPLEMENTATIONS}%
 
   AccessibilityBroker.implementations = [
+    DisabledSelect,
     RichNativeSelect,
   ]
 

@@ -51,10 +51,6 @@ class RichNativeSelect extends AccessibilityBroker {
   onUiClicked(event) {
     super.onUiClicked(event)
 
-    if (this.select.disabled) {
-      return
-    }
-
     if (document.activeElement !== this.select) {
       this.select.focus()
     }
@@ -161,4 +157,4 @@ class RichNativeSelect extends AccessibilityBroker {
     removeEventListener('click', this._onCloseDropdown)
   }
 }
-RichNativeSelect.compatibilityTest = () => true
+RichNativeSelect.compatibilityTest = select => !select.disabled
