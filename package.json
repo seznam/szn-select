@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "gulp",
     "prepublishOnly": "echo Run \\'npm run publish-package\\' instead && exit 1",
-    "publish-package": "npm run build && npm publish --ignore-scripts dist"
+    "publish-package": "git push && git push --tags && npm run build && npm publish --ignore-scripts dist"
   },
   "repository": {
     "type": "git",
