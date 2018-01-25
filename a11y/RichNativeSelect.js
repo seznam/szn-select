@@ -82,15 +82,6 @@ class RichNativeSelect extends AccessibilityBroker {
     }, 0)
   }
 
-  onChange() {
-    super.onChange()
-
-    const {select} = this
-    if (document.activeElement !== select) {
-      select.focus()
-    }
-  }
-
   onKeyDown(event) {
     let shouldToggleDropdown = false
     switch (event.keyCode) {
