@@ -48,7 +48,7 @@
     "postcss-custom-properties": "^6.2.0"
   },
   "dependencies": {
-    "@jurca/szn-elements": "0.0.5",
+    "@jurca/szn-elements": "0.0.6",
     "@jurca/szn-select-ui": "0.0.3"
   }
 }
