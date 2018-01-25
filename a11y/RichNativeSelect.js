@@ -58,6 +58,9 @@ class RichNativeSelect extends AccessibilityBroker {
     switch (event.type) {
       case 'click':
         event.stopPropagation()
+        if (!this.ui.contains(event.target)) {
+          this.setOpen(false)
+        }
         break
       case 'mousedown':
         if (!this.sznSelect.isOpen) {
@@ -86,8 +89,6 @@ class RichNativeSelect extends AccessibilityBroker {
     if (document.activeElement !== select) {
       select.focus()
     }
-
-    this.setOpen(false)
   }
 
   onKeyDown(event) {
