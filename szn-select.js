@@ -49,9 +49,9 @@
         stylesInjected = true
       }
 
-      this._ui.onUiInteracted = () => {
+      this._ui.onUiInteracted = event => {
         if (this._accessiblityBroker) {
-          this._accessiblityBroker.onUiClicked()
+          this._accessiblityBroker.onUiClicked(event)
         }
       }
       if (this._uiContainer) {
@@ -104,12 +104,12 @@
 
   function addEventListeners(instance) {
     instance._uiContainer.addEventListener('click', instance._onUiClicked)
-    instance._uiContainer.addEventListener('change', instance._onChange)
+    instance._select.addEventListener('change', instance._onChange)
   }
 
   function removeEventListeners(instance) {
     instance._uiContainer.removeEventListener('click', instance._onUiClicked)
-    instance._uiContainer.removeEventListener('change', instance._onChange)
+    instance._select.removeEventListener('change', instance._onChange)
   }
 
   function onUiClicked(instance, event) {

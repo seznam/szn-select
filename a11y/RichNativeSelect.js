@@ -55,11 +55,16 @@ class RichNativeSelect extends AccessibilityBroker {
       this.select.focus()
     }
 
-    if (event) {
-      event.stopPropagation()
-    }
-    if (!this.sznSelect.isOpen) {
-      this.setOpen(!this.sznSelect.isOpen)
+    switch (event.type) {
+      case 'click':
+        event.stopPropagation()
+        break
+      case 'mousedown':
+        if (!this.sznSelect.isOpen) {
+          this.setOpen(true)
+        } else if (this.ui.contains(event.target)) {
+          this.setOpen(false)
+        }
     }
 
     // the mousedown event happens before the blur event, so we need to delay the callback invocation
@@ -81,6 +86,8 @@ class RichNativeSelect extends AccessibilityBroker {
     if (document.activeElement !== select) {
       select.focus()
     }
+
+    this.setOpen(false)
   }
 
   onKeyDown(event) {
