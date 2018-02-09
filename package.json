@@ -41,7 +41,7 @@
     "eslint-config-fbjs-opensource": "^1.0.0",
     "glob": "^7.1.2",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-babel": "^7.0.0",
+    "gulp-babel": "^7.0.1",
     "gulp-postcss": "^7.0.0",
     "gulp-rename": "^1.2.2",
     "jest": "^21.2.1",
