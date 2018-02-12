@@ -9,6 +9,20 @@ class MultiSelect extends AccessibilityBroker {
     this._blurTimeout = null
   }
 
+  generateMetaAttributes(baseAttributes) {
+    if (/(?:\(iP(?:ad|hone|od(?: touch)?);| Android )/.test(navigator.userAgent)) {
+      // We want to use the native dropdown on mobile devices that use assistive technologies in order to achieve the
+      // best possible accessibility. Interacting with the UI without the use of assistive technologies will not be
+      // affected and will result in opening our own custom drop-down when tapping the single-select's button.
+      return Object.assign({}, baseAttributes, {
+        // not necessarily true, but HW keyboards are extremely rare with these devices
+        'data-szn-select-touch-only': /\(iP(?:ad|hone|od(?: touch)?);/.test(navigator.userAgent) ? 'ios' : '',
+      })
+    }
+
+    return baseAttributes
+  }
+
   onMount() {
     super.onMount()
 

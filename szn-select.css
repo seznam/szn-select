@@ -1,5 +1,7 @@
 szn-select {
   display: inline-block;
+
+  position: relative;
 }
 
 /* styles used when JS is available */
@@ -18,10 +20,39 @@ szn-select[data-szn-select-single] {
 szn-select [data-szn-select-ui] {
   display: none;
 
+  position: relative;
+
   width: 100%;
   height: 100%;
 }
 
 szn-select[data-szn-select-ready] [data-szn-select-ui] {
   display: block;
+}
+
+/* RichNativeSelect */
+
+szn-select[data-szn-select-touch-only] select {
+  position: absolute;
+  left: var(--szn-select-border-radius, 4px);
+  right: var(--szn-select-border-radius, 4px);
+  top: var(--szn-select-border-radius, 4px);
+  bottom: var(--szn-select-border-radius, 4px);
+
+  min-width: 0;
+  width: calc(100% - 2 * var(--szn-select-border-radius, 4px));
+  height: auto;
+}
+
+szn-select[data-szn-select-touch-only='ios'] select {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
 }

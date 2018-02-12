@@ -12,6 +12,25 @@ class RichNativeSelect extends AccessibilityBroker {
     this._blurTimeout = null
   }
 
+  generateMetaAttributes(baseAttributes) {
+    if (/(?:\(iP(?:ad|hone|od(?: touch)?);| Android )/.test(navigator.userAgent)) {
+      // We want to use the native dropdown on mobile devices that use assistive technologies in order to achieve the
+      // best possible accessibility. Interacting with the UI without the use of assistive technologies will not be
+      // affected and will result in opening our own custom drop-down when tapping the single-select's button.
+      return Object.assign({}, baseAttributes, {
+        // not necessarily true, but HW keyboards are extremely rare with these devices
+        'data-szn-select-touch-only': /\(iP(?:ad|hone|od(?: touch)?);/.test(navigator.userAgent) ? 'ios' : '',
+      })
+    }
+
+    // Note about the iOS devices: it might be possible to detect usage of voiceover: when the user activates the
+    // native select element, the touchstart (use capture phase to react before the select gains focus) event will
+    // happen at the middle (minus 0 to 1px) of the touched element (unless the select element cannot fit comfortably
+    // into its container), which could be a <szn-> element (the select is opened on iOS still).
+
+    return baseAttributes
+  }
+
   onMount() {
     super.onMount()
 
