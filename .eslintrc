@@ -4,6 +4,7 @@
     "sourceType": "script"
   },
   "rules": {
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "prefer-object-spread/prefer-object-spread": "off" // we use ES2015 in our sources at the moment
   }
 }
