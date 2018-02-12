@@ -20,7 +20,9 @@ class MultiSelect extends AccessibilityBroker {
       })
     }
 
-    return baseAttributes
+    return Object.assign({}, baseAttributes, {
+      role: 'application', // NVDA compatibility
+    })
   }
 
   onMount() {

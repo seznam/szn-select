@@ -28,7 +28,9 @@ class RichNativeSelect extends AccessibilityBroker {
     // happen at the middle (minus 0 to 1px) of the touched element (unless the select element cannot fit comfortably
     // into its container), which could be a <szn-> element (the select is opened on iOS still).
 
-    return baseAttributes
+    return Object.assign({}, baseAttributes, {
+      role: 'application', // NVDA compatibility
+    })
   }
 
   onMount() {
