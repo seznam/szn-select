@@ -7,11 +7,7 @@
   const CSS_STYLES = `
 %{CSS_STYLES}%
   `
-  const CSS_STYLES_TAG = 'data-styles--szn-select'
-
   const MIN_BOTTOM_SPACE = 160 // px
-
-  let stylesInjected = false
 
   SznElements['szn-select'] = class SznSelect {
     constructor(rootElement, uiContainer) {
@@ -42,13 +38,7 @@
       this._onUiClicked = onUiClicked.bind(null, this)
       this._onChange = onChange.bind(null, this)
 
-      if (!stylesInjected) {
-        const stylesContainer = document.createElement('style')
-        stylesContainer.innerHTML = CSS_STYLES
-        stylesContainer.setAttribute(CSS_STYLES_TAG, '')
-        document.head.appendChild(stylesContainer)
-        stylesInjected = true
-      }
+      SznElements.injectStyles(CSS_STYLES, 'szn-select')
 
       this._ui.onUiInteracted = event => {
         if (this._accessiblityBroker) {
