@@ -37,6 +37,7 @@
       this._accessiblityBroker = null
       this._mounted = false
       this._selectAttributesObserver = new MutationObserver(updateA11yBroker.bind(null, this))
+      this._lastMetaAttributes = {}
 
       this._onUiClicked = onUiClicked.bind(null, this)
       this._onChange = onChange.bind(null, this)
@@ -130,7 +131,12 @@
     }
 
     const implementation = selectA11yBrokerImplementation(instance._select)
+    if (instance._accessiblityBroker && instance._accessiblityBroker.constructor === implementation) {
+      return
+    }
+
     instance._accessiblityBroker = new implementation(instance._select, instance._ui, instance)
+    finishInitialization(instance) // update meta-attributes
     instance._accessiblityBroker.onMount()
   }
 
@@ -145,22 +151,26 @@
   }
 
   function finishInitialization(instance) {
-    const rootAttributes = {
-      'data-szn-select-ready': '',
+    const baseAttributes = {}
+    for (const property of Object.keys(instance._lastMetaAttributes)) {
+      baseAttributes[property] = null
     }
-    rootAttributes['data-szn-select-single'] = instance._select.multiple ? null : ''
+    baseAttributes['data-szn-select-ready'] = ''
+    baseAttributes['data-szn-select-single'] = instance._select.multiple ? null : ''
+    const metaAttributes = instance._accessiblityBroker.generateMetaAttributes(baseAttributes)
 
     if (instance._root.hasAttribute('data-szn-select-standalone')) {
-      setAttributes(instance._root, rootAttributes)
+      setAttributes(instance._root, metaAttributes)
     } else {
       instance._root.dispatchEvent(new CustomEvent('szn-select:ready', {
         bubbles: true,
         cancelable: true,
         detail: {
-          attributes: rootAttributes,
+          attributes: metaAttributes,
         },
       }))
     }
+    instance._lastMetaAttributes = metaAttributes
   }
 
   function setAttributes(element, attributes) {

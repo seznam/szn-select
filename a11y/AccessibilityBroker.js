@@ -10,6 +10,10 @@ class AccessibilityBroker {
     this.ui.setOpen(isOpen)
   }
 
+  generateMetaAttributes(baseAttributes) {
+    return baseAttributes
+  }
+
   onMount() {}
 
   onUnmount() {}
