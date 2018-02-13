@@ -19,7 +19,7 @@ class RichNativeSelect extends AccessibilityBroker {
       // affected and will result in opening our own custom drop-down when tapping the single-select's button.
       return Object.assign({}, baseAttributes, {
         // not necessarily true, but HW keyboards are extremely rare with these devices
-        'data-szn-select-touch-only': /\(iP(?:ad|hone|od(?: touch)?);/.test(navigator.userAgent) ? 'ios' : '',
+        'data-szn-select--touch-only': /\(iP(?:ad|hone|od(?: touch)?);/.test(navigator.userAgent) ? 'ios' : '',
       })
     }
 

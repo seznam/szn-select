@@ -6,18 +6,18 @@ szn-select {
 
 /* styles used when JS is available */
 
-szn-select[data-szn-select-ready] select {
+szn-select[data-szn-select--ready] select {
   position: fixed;
   right: 999999px;
   right: 1000vw;
 }
 
-szn-select[data-szn-select-single] {
+szn-select[data-szn-select--single] {
   min-width: var(--szn-select-min-width, 109px);
   height: var(--szn-select-single-height, 2em);
 }
 
-szn-select [data-szn-select-ui] {
+szn-select [data-szn-select--ui] {
   display: none;
 
   position: relative;
@@ -26,13 +26,13 @@ szn-select [data-szn-select-ui] {
   height: 100%;
 }
 
-szn-select[data-szn-select-ready] [data-szn-select-ui] {
+szn-select[data-szn-select--ready] [data-szn-select--ui] {
   display: block;
 }
 
-/* RichNativeSelect */
+/* RichNativeSelect, MultiSelect */
 
-szn-select[data-szn-select-touch-only] select {
+szn-select[data-szn-select--touch-only] select {
   position: absolute;
   left: var(--szn-select-border-radius, 4px);
   right: var(--szn-select-border-radius, 4px);
@@ -44,7 +44,7 @@ szn-select[data-szn-select-touch-only] select {
   height: auto;
 }
 
-szn-select[data-szn-select-touch-only='ios'] select {
+szn-select[data-szn-select--touch-only='ios'] select {
   left: 0;
   right: 0;
   top: 0;

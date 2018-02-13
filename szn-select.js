@@ -53,7 +53,7 @@
     onMount() {
       this._mounted = true
       if (!this._uiContainer) {
-        this._uiContainer = this._root.querySelector('[data-szn-select-ui]')
+        this._uiContainer = this._root.querySelector('[data-szn-select--ui]')
         this._uiContainer.appendChild(this._ui)
       }
 
@@ -145,11 +145,11 @@
     for (const property of Object.keys(instance._lastMetaAttributes)) {
       baseAttributes[property] = null
     }
-    baseAttributes['data-szn-select-ready'] = ''
-    baseAttributes['data-szn-select-single'] = instance._select.multiple ? null : ''
+    baseAttributes['data-szn-select--ready'] = ''
+    baseAttributes['data-szn-select--single'] = instance._select.multiple ? null : ''
     const metaAttributes = instance._accessiblityBroker.generateMetaAttributes(baseAttributes)
 
-    if (instance._root.hasAttribute('data-szn-select-standalone')) {
+    if (instance._root.hasAttribute('data-szn-select--standalone')) {
       setAttributes(instance._root, metaAttributes)
     } else {
       instance._root.dispatchEvent(new CustomEvent('szn-select:ready', {
