@@ -51,30 +51,40 @@
       this._mounted = true
       if (!this._uiContainer) {
         this._uiContainer = this._root.querySelector('[data-szn-select--ui]')
-        this._uiContainer.appendChild(this._ui)
       }
 
       if (!this._select) {
         this._select = this._root.querySelector('select')
       }
-      this._selectAttributesObserver.observe(this._select, {
-        attributes: true,
-        attributeFilter: ['disabled', 'multiple'],
-      })
 
-      SznElements.awaitElementReady(this._ui, () => {
-        if (!this._mounted) {
+      if (!this._uiContainer || !this._select) {
+        // Can this really happen in browsers that do not support custom elements?
+        if (isDocumentReady()) {
+          console.error( // eslint-disable-line no-console
+            'The szn-select element requires a select element and another element with the data-szn-select--ui ' +
+            'attribute to be in its children, but at least one of these is missing',
+            this._root,
+          )
           return
         }
 
-        this._ui.minBottomSpace = this._minBottomSpace
-        this._ui.setSelectElement(this._select)
+        const onReadyStateChange = () => {
+          if (!isDocumentReady()) {
+            return
+          }
 
-        updateA11yBroker(this)
+          document.removeEventListener('readystatechange', onReadyStateChange)
+          if (this._mounted) {
+            this.onMount()
+          }
+        }
 
-        addEventListeners(this)
-        finishInitialization(this)
-      })
+        document.addEventListener('readystatechange', onReadyStateChange)
+
+        return
+      }
+
+      handleElementProperlyMounted(this)
     }
 
     onUnmount() {
@@ -90,7 +100,42 @@
     }
   }
 
-  function handleElementProperlyMounted(instance) {}
+  function isDocumentReady() {
+    // https://mdn.io/Document/readyState
+    return / MSIE \d/.test(navigator.userAgent) ?
+      document.readyState === 'complete'
+      :
+      document.readyState !== 'loading'
+  }
+
+  function handleElementProperlyMounted(instance) {
+    if (!instance._mounted) {
+      return
+    }
+
+    if (!instance._ui.parentNode) {
+      instance._uiContainer.appendChild(instance._ui)
+    }
+
+    instance._selectAttributesObserver.observe(instance._select, {
+      attributes: true,
+      attributeFilter: ['disabled', 'multiple'],
+    })
+
+    SznElements.awaitElementReady(instance._ui, () => {
+      if (!instance._mounted) {
+        return
+      }
+
+      instance._ui.minBottomSpace = instance._minBottomSpace
+      instance._ui.setSelectElement(instance._select)
+
+      updateA11yBroker(instance)
+
+      addEventListeners(instance)
+      finishInitialization(instance)
+    })
+  }
 
   function addEventListeners(instance) {
     instance._uiContainer.addEventListener('click', instance._onUiClicked)
