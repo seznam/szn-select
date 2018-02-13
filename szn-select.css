@@ -13,8 +13,8 @@ szn-select[data-szn-select--ready] select {
 }
 
 szn-select[data-szn-select--single] {
-  min-width: var(--szn-select-min-width, 109px);
-  height: var(--szn-select-single-height, 2em);
+  min-width: var(--szn-select--min-width, 109px);
+  height: var(--szn-select--single-height, 2em);
 }
 
 szn-select [data-szn-select--ui] {
@@ -34,13 +34,13 @@ szn-select[data-szn-select--ready] [data-szn-select--ui] {
 
 szn-select[data-szn-select--touch-only] select {
   position: absolute;
-  left: var(--szn-select-border-radius, 4px);
-  right: var(--szn-select-border-radius, 4px);
-  top: var(--szn-select-border-radius, 4px);
-  bottom: var(--szn-select-border-radius, 4px);
+  left: var(--szn-select--border-radius, 4px);
+  right: var(--szn-select--border-radius, 4px);
+  top: var(--szn-select--border-radius, 4px);
+  bottom: var(--szn-select--border-radius, 4px);
 
   min-width: 0;
-  width: calc(100% - 2 * var(--szn-select-border-radius, 4px));
+  width: calc(100% - 2 * var(--szn-select--border-radius, 4px));
   height: auto;
 }
 
