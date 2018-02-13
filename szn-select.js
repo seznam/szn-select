@@ -10,7 +10,7 @@
   const MIN_BOTTOM_SPACE = 160 // px
 
   SznElements['szn-select'] = class SznSelect {
-    constructor(rootElement, uiContainer) {
+    constructor(rootElement) {
       if (!rootElement.hasOwnProperty('minBottomSpace')) {
         Object.defineProperty(rootElement, 'minBottomSpace', {
           get: () => rootElement._broker._minBottomSpace,
@@ -27,7 +27,7 @@
 
       this._root = rootElement
       this._select = rootElement.querySelector('select')
-      this._uiContainer = uiContainer
+      this._uiContainer = null
       this._ui = document.createElement('szn-select-ui')
       this._minBottomSpace = MIN_BOTTOM_SPACE
       this._accessiblityBroker = null
@@ -44,9 +44,6 @@
         if (this._accessiblityBroker) {
           this._accessiblityBroker.onUiClicked(event)
         }
-      }
-      if (this._uiContainer) {
-        this._uiContainer.appendChild(this._ui)
       }
     }
 
@@ -92,6 +89,8 @@
       removeEventListeners(this)
     }
   }
+
+  function handleElementProperlyMounted(instance) {}
 
   function addEventListeners(instance) {
     instance._uiContainer.addEventListener('click', instance._onUiClicked)
