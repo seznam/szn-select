@@ -1,5 +1,11 @@
 /* styles to use when JS not available */
 
+szn-select {
+  display: inline-block;
+
+  position: relative;
+}
+
 szn-select select {
   border: var(--szn-select--button-border-width, 1px) solid var(--szn-select--button-border-color, #cccccc);
   border-radius: var(--szn-select--button-border-radius, 4px);

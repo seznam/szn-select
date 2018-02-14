@@ -1,20 +1,26 @@
 :root {
   --szn-select--border-width: 1px;
   --szn-select--border-color: #cccccc;
+  --szn-select--active-border-color: #7dbfff;
   --szn-select--border-radius: 4px;
   --szn-select--min-width: 109px;
   --szn-select--height: 2em;
   --szn-select--height-px: 32px;
 
-  --szn-select--button-padding: 0 5px 0 12px;
+  --szn-select--option-indent: 12px;
+  --szn-select--option-padding: 5px 5px 5px var(--szn-select--option-indent);
+  --szn-select--selected-option-background: #eeeeee;
+
+  --szn-select--button-padding: 0 5px 0 var(--szn-select--option-indent);
   --szn-select--state-arrow-width: var(--szn-select--height);
 
   --szn-select--state-arrow-closed: "▼";
   --szn-select--state-arrow-opened: "▲";
   --szn-select--text-color: #000000;
   --szn-select--disabled-text-color: #cccccc;
-
   --szn-select--background: #ffffff;
+
+  --szn-select--active-box-shadow: 0 0 3px rgba(0, 132, 255, .4);
 }
 
 szn-select {
@@ -34,6 +40,23 @@ szn-select {
   --szn-select-button--background-color: var(--szn-select--background);
   --szn-select-button--icon-closed: var(--szn-select--state-arrow-closed);
   --szn-select-button--icon-opened: var(--szn-select--state-arrow-opened);
+
+  --szn-options--border-width: var(--szn-select--border-width);
+  --szn-options--border-color: var(--szn-select--border-color);
+  --szn-options--border-radius-dropdown: 0 0 var(--szn-select--border-radius) var(--szn-select--border-radius);
+  --szn-options--border-radius-dropup: var(--szn-select--border-radius) var(--szn-select--border-radius) 0 0;
+  --szn-options--border-radius-mutli-select: var(--szn-select--border-radius);
+  --szn-options--item-padding: var(--szn-select--option-padding);
+  --szn-options--item-indent: var(--szn-select--option-indent);
+  --szn-options--text-color: var(--szn-select--text-color);
+  --szn-options--disabled-text: var(--szn-select--disabled-text-color);
+  --szn-options--background-color: var(--szn-select--background);
+  --szn-options--selected-background: var(--szn-select--selected-option-background);
+
+  --szn-select-ui--active-border-color: var(--szn-select--active-border-color);
+  --szn-select-ui--active-box-shadow: var(--szn-select--active-box-shadow);
+  --szn-select-ui--dropdown-offset: calc(-1 * var(--szn-select--border-width));
+  --szn-select-ui--dropdown-min-width: var(--szn-select--min-width);
 }
 
 /* styles used when JS is available */
