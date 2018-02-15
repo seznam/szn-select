@@ -31,7 +31,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
 
   generateMetaAttributes(baseAttributes) {
     return Object.assign({}, baseAttributes, {
-      'data-szn-select--firefox': '',
+      'data-szn-select--vanilla-aria': '',
     })
   }
 
@@ -282,12 +282,12 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
           aria-haspopup="true"
           aria-activedescendant=""
           aria-disabled="true"
-          data-szn-select--firefox-button
+          data-szn-select--vanilla-aria-button
         >
         </szn->
       `),
       SznElements.buildDom(`
-        <szn- id="${menuId}" data-szn-select--firefox-dropdown>
+        <szn- id="${menuId}" data-szn-select--vanilla-aria-dropdown>
           <ul tabindex="-1" role="listbox" aria-hidden="true" aria-disabled="false"></ul>
         </szn->
       `),
@@ -305,7 +305,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
 VanillaAriaLabelledBySelect.compatibilityTest = select => (
   !select.disabled &&
   !select.multiple &&
-  / Firefox\//.test(navigator.userAgent)
+  /(?: Firefox\/| Mac OS X )/.test(navigator.userAgent)
 )
 
 VanillaAriaLabelledBySelect._lastId = 0

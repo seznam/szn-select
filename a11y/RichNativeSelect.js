@@ -153,5 +153,5 @@ class RichNativeSelect extends AccessibilityBroker {
 RichNativeSelect.compatibilityTest = select => (
   !select.disabled &&
   !select.multiple &&
-  !/ Firefox\//.test(navigator.userAgent)
+  !/(?: Firefox\/| Mac OS X )/.test(navigator.userAgent)
 )
