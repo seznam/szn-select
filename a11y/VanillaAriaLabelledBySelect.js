@@ -18,6 +18,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
 
     this._onFocus = this.onFocus.bind(this)
     this._onBlur = this.onBlur.bind(this)
+    this._onKeyDown = this.onKeyDown.bind(this)
   }
 
   setOpen(isOpen) {
@@ -95,7 +96,6 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
 
   onChange() {
     this._updateA11yButton()
-    this.setOpen(false)
 
     if (document.activeElement !== this._a11yButton) {
       this._a11yButton.focus()
@@ -122,14 +122,77 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     }, 1000 / 30)
   }
 
+  onKeyDown(event) {
+    const enabledOptions = Array.from(this.select.options).filter(
+      option => !option.disabled && !option.parentNode.disabled,
+    )
+    if (!enabledOptions.length) {
+      return
+    }
+    const selectedIndex = enabledOptions.findIndex(option => option.selected)
+    const {isOpen} = this.sznSelect
+
+    switch (event.keyCode) {
+      case 38: // up
+      case 40: // down
+        {
+          if (event.altKey) {
+            this.setOpen(!isOpen)
+            break
+          }
+
+          const newSelectedIndex = selectedIndex + (event.keyCode === 38 ? -1 : 1)
+          if (enabledOptions[newSelectedIndex]) {
+            enabledOptions[newSelectedIndex].selected = true
+          }
+          this.select.dispatchEvent(new CustomEvent('change'))
+        }
+        break
+      case 13: // enter
+        this.setOpen(!isOpen)
+        break
+      case 32: // space
+        if (!isOpen) {
+          this.setOpen(true)
+        }
+        break
+      case 27: // escape
+        this.setOpen(false)
+        break
+      case 33: // page up
+      case 34: // page down
+        {
+          const newSelectedIndex = event.keyCode === 33 ?
+            Math.max(0, selectedIndex - (isOpen ? 10 : 1))
+            :
+            Math.min(enabledOptions.length - 1, selectedIndex + (isOpen ? 10 : 1))
+          enabledOptions[newSelectedIndex].selected = true
+          this.select.dispatchEvent(new CustomEvent('change'))
+        }
+        break
+      case 36: // home
+        enabledOptions[0].selected = true
+        this.select.dispatchEvent(new CustomEvent('change'))
+        break
+      case 35: // end
+        enabledOptions[enabledOptions.length - 1].selected = true
+        this.select.dispatchEvent(new CustomEvent('change'))
+        break
+      default:
+        break // nothing to do
+    }
+  }
+
   _addEventListeners() {
     this._a11yButton.addEventListener('focus', this._onFocus)
     this._a11yButton.addEventListener('blur', this._onBlur)
+    this._a11yButton.addEventListener('keydown', this._onKeyDown)
   }
 
   _removeEventListeners() {
     this._a11yButton.removeEventListener('focus', this._onFocus)
     this._a11yButton.removeEventListener('blur', this._onBlur)
+    this._a11yButton.removeEventListener('keydown', this._onKeyDown)
   }
 
   _updateA11yButton() {
