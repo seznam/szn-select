@@ -126,78 +126,81 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     const enabledOptions = Array.from(this.select.options).filter(
       option => !option.disabled && !option.parentNode.disabled,
     )
-    if (!enabledOptions.length) {
-      return
-    }
     const selectedIndex = enabledOptions.findIndex(option => option.selected)
     const {isOpen} = this.sznSelect
+    let newlySelectedOption = null
 
     switch (event.keyCode) {
       case 38: // up
       case 40: // down
         {
+          event.preventDefault()
           if (event.altKey) {
             this.setOpen(!isOpen)
             break
           }
 
           const newSelectedIndex = selectedIndex + (event.keyCode === 38 ? -1 : 1)
-          if (enabledOptions[newSelectedIndex]) {
-            enabledOptions[newSelectedIndex].selected = true
-          }
-          this.select.dispatchEvent(new CustomEvent('change'))
+          newlySelectedOption = enabledOptions[newSelectedIndex]
         }
         break
       case 13: // enter
+        event.preventDefault()
         this.setOpen(!isOpen)
         break
       case 32: // space
+        event.preventDefault()
         if (!isOpen) {
           this.setOpen(true)
         }
         break
       case 27: // escape
+        event.preventDefault()
         this.setOpen(false)
         break
       case 33: // page up
       case 34: // page down
         {
+          event.preventDefault()
           const newSelectedIndex = event.keyCode === 33 ?
             Math.max(0, selectedIndex - (isOpen ? 10 : 1))
             :
             Math.min(enabledOptions.length - 1, selectedIndex + (isOpen ? 10 : 1))
-          enabledOptions[newSelectedIndex].selected = true
-          this.select.dispatchEvent(new CustomEvent('change'))
+          newlySelectedOption = enabledOptions[newSelectedIndex]
         }
         break
       case 36: // home
-        enabledOptions[0].selected = true
-        this.select.dispatchEvent(new CustomEvent('change'))
+        event.preventDefault()
+        newlySelectedOption = enabledOptions[0]
         break
       case 35: // end
-        enabledOptions[enabledOptions.length - 1].selected = true
-        this.select.dispatchEvent(new CustomEvent('change'))
+        event.preventDefault()
+        newlySelectedOption = enabledOptions[enabledOptions.length - 1]
         break
       default:
         break // nothing to do
+    }
+
+    if (newlySelectedOption && newlySelectedOption !== enabledOptions[selectedIndex]) {
+      newlySelectedOption.selected = true
+      this.select.dispatchEvent(new CustomEvent('change'))
     }
   }
 
   _addEventListeners() {
     this._a11yButton.addEventListener('focus', this._onFocus)
     this._a11yButton.addEventListener('blur', this._onBlur)
-    this._a11yButton.addEventListener('keydown', this._onKeyDown)
+    this._uiContainer.addEventListener('keydown', this._onKeyDown)
   }
 
   _removeEventListeners() {
     this._a11yButton.removeEventListener('focus', this._onFocus)
     this._a11yButton.removeEventListener('blur', this._onBlur)
-    this._a11yButton.removeEventListener('keydown', this._onKeyDown)
+    this._uiContainer.removeEventListener('keydown', this._onKeyDown)
   }
 
   _updateA11yButton() {
     const selectedOption = this.select.options.item(this.select.selectedIndex)
-    this._a11yButton.innerText = selectedOption ? selectedOption.text : ''
     if (selectedOption) {
       const selectedOptionUI = Array.from(this._a11yMenu.querySelectorAll('li')).find(
         optionUI => optionUI.option === selectedOption,
