@@ -125,5 +125,11 @@ szn-select[data-szn-select--firefox] ul[aria-hidden='true'] {
 szn-select[data-szn-select--firefox] [data-szn-select--firefox-button],
 szn-select[data-szn-select--firefox] [data-szn-select--firefox-dropdown] {
   position: absolute;
+  left: 0;
+  top: 0;
+
+  width: 100%;
+  height: 100%;
+
   opacity: 0;
 }
