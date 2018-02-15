@@ -150,4 +150,8 @@ class RichNativeSelect extends AccessibilityBroker {
     removeEventListener('click', this._onCloseDropdown)
   }
 }
-RichNativeSelect.compatibilityTest = select => !select.disabled && !select.multiple
+RichNativeSelect.compatibilityTest = select => (
+  !select.disabled &&
+  !select.multiple &&
+  !/ Firefox\//.test(navigator.userAgent)
+)

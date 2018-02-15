@@ -1,4 +1,4 @@
-/* global AccessibilityBroker, DisabledSelect, MultiSelect, RichNativeSelect */
+/* global AccessibilityBroker, DisabledSelect, MultiSelect, RichNativeSelect, VanillaAriaLabelledBySelect */
 
 'use strict'
 ;(global => {
@@ -223,6 +223,7 @@
     DisabledSelect,
     MultiSelect,
     RichNativeSelect,
+    VanillaAriaLabelledBySelect,
   ]
 
   if (SznElements.init) {

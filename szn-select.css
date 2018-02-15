@@ -111,3 +111,19 @@ szn-select[data-szn-select--touch-only='ios'] select {
 
   opacity: 0;
 }
+
+/* VanillaAriaLabelledBySelect */
+
+szn-select[data-szn-select--firefox] select {
+  display: none;
+}
+
+szn-select[data-szn-select--firefox] ul[aria-hidden='true'] {
+  display: none;
+}
+
+szn-select[data-szn-select--firefox] [data-szn-select--firefox-button],
+szn-select[data-szn-select--firefox] [data-szn-select--firefox-dropdown] {
+  position: absolute;
+  opacity: 0;
+}
