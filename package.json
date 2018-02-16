@@ -49,6 +49,7 @@
     "postcss-custom-properties": "^6.2.0"
   },
   "peerDependencies": {
-    "@jurca/szn-elements": "^1.0.0"
+    "@jurca/szn-elements": "^1.0.0",
+    "@jurca/szn-tethered": "^0.0.6"
   }
 }
