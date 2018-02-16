@@ -5,7 +5,8 @@
   const CSS_STYLES = `
 %{CSS_STYLES}%
   `
-  SznElements['szn-select--options'] = class SznOptions {
+
+  class SznSelectOptions {
     /**
      * Initializes the szn-options element's implementation.
      *
@@ -88,9 +89,18 @@
        */
       this._previousSelectionStartIndex = -1
 
+      /**
+       * The ID of the current touch being observed for possible option interaction.
+       *
+       * @type {?number}
+       */
+      this._observedTouchId = null
+
       this._onItemHovered = event => onItemHovered(this, event.target)
       this._onItemClicked = event => onItemClicked(this, event.target)
       this._onItemSelectionStart = event => onItemSelectionStart(this, event.target, event)
+      this._onTouchStart = onTouchStart.bind(null, this)
+      this._onTouchEnd = onTouchEnd.bind(null, this)
 
       this._onSelectionEnd = () => {
         this._dragSelectionStartOption = null
@@ -149,10 +159,10 @@
     }
   }
 
-  /**
+    /**
    * Registers the provided szn-options element's DOM mutation observer to observe the related options for changes.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    */
   function registerOptionsObserver(instance) {
     if (!instance._mounted || !instance._options) {
@@ -174,7 +184,7 @@
    * The function has no effect if the provided szn-options element is not mounted into the document or has not been
    * provided with its options yet.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    */
   function addEventListeners(instance) {
     if (!instance._mounted || !instance._options) {
@@ -185,13 +195,15 @@
     instance._root.addEventListener('mouseover', instance._onItemHovered)
     instance._root.addEventListener('mousedown', instance._onItemSelectionStart)
     instance._root.addEventListener('mouseup', instance._onItemClicked)
+    instance._root.addEventListener('touchstart', instance._onTouchStart)
     addEventListener('mouseup', instance._onSelectionEnd)
+    addEventListener('touchend', instance._onTouchEnd)
   }
 
   /**
    * Deregisters all event listeners used by the provided szn-options element.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    */
   function removeEventListeners(instance) {
     if (instance._options) {
@@ -200,7 +212,41 @@
     instance._root.removeEventListener('mouseover', instance._onItemHovered)
     instance._root.removeEventListener('mousedown', instance._onItemSelectionStart)
     instance._root.removeEventListener('mouseup', instance._onItemClicked)
+    instance._root.removeEventListener('touchstart', instance._onTouchStart)
     removeEventListener('mouseup', instance._onSelectionEnd)
+    removeEventListener('touchend', instance._onTouchEnd)
+  }
+
+  /**
+   * @param {SznSelectOptions} instance
+   * @param {TouchEvent} event
+   */
+  function onTouchStart(instance, event) {
+    if (instance._observedTouchId) {
+      return
+    }
+
+    const touch = event.changedTouches[0]
+    instance._observedTouchId = touch.identifier
+  }
+
+  function onTouchEnd(instance, event) {
+    const touch = Array.from(event.changedTouches).find(
+      someTouch => someTouch.identifier === instance._observedTouchId,
+    )
+    if (!touch) {
+      return
+    }
+
+    instance._observedTouchId = null
+    event.preventDefault() // prevent mouse events
+    const option = event.target._option
+    if (!isOptionEnabled(option)) {
+      return
+    }
+
+    option.selected = !option.selected
+    instance._options.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
   }
 
   /**
@@ -208,7 +254,7 @@
    * current multiple-items selection if the element represents a multi-select, or updates the currently highlighted
    * item in the UI of a single-select.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    * @param {Element} itemUi The element which's area the mouse pointer entered.
    */
   function onItemHovered(instance, itemUi) {
@@ -237,7 +283,7 @@
    * The function ends multiple-items selection for multi-selects, ends options highlighting and marks the the selected
    * option for single-selects.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    * @param {Element} itemUi The element at which the user released the primary mouse button.
    */
   function onItemClicked(instance, itemUi) {
@@ -266,7 +312,7 @@
    *
    * The function has no effect for single-selects.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    * @param {Element} itemUi The element at which the user pressed the primary mouse button down.
    * @param {MouseEvent} event The mouse event representing the user's action.
    */
@@ -301,7 +347,7 @@
    * Which option is the last selected one is determined by comparing the provided index with the indexes passed to the
    * previous call of this function.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    * @param {number} selectionStartIndex The index of the first selected option. The index must be a non-negative
    *        integer and cannot be greater that the total number of options; or set to <code>-1</code> if there is no
    *        option currently selected.
@@ -327,7 +373,7 @@
    * Scrolls, only if necessary, the UI of the provided szn-options element to make the option at the specified index
    * fully visible.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    * @param {number} optionIndex The index of the option to select. The index must be a non-negative integer and cannot
    *        be greater than the total number of options.
    */
@@ -358,7 +404,7 @@
    * Any item which's index is in the provided instance's list of additionally selected items will be marked as
    * selected as well.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element instance.
+   * @param {SznSelectOptions} instance The szn-options element instance.
    * @param {Element} lastHoveredItem The element representing the UI of the last option the user has hovered using
    *        their mouse pointer.
    */
@@ -417,7 +463,7 @@
    * functions synchronizes the displayed UI to reflect the available options, their status, and scrolls to the last
    * selected option if it is not visible.
    *
-   * @param {SznElements.SznOptions} instance The szn-options element's instance.
+   * @param {SznSelectOptions} instance The szn-options element's instance.
    */
   function updateUi(instance) {
     if (!instance._options) {
@@ -565,4 +611,6 @@
       nextOption = nextOption.nextElementSibling
     }
   }
+
+  SznElements['szn-select--options'] = SznSelectOptions
 })(self)
