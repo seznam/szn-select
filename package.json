@@ -42,13 +42,13 @@
     "glob": "^7.1.2",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.1",
+    "gulp-concat": "^2.6.1",
     "gulp-postcss": "^7.0.0",
     "gulp-rename": "^1.2.2",
     "jest": "^21.2.1",
     "postcss-custom-properties": "^6.2.0"
   },
-  "dependencies": {
-    "@jurca/szn-elements": "0.0.6",
-    "@jurca/szn-select-ui": "0.0.6"
+  "peerDependencies": {
+    "@jurca/szn-elements": "^1.0.0"
   }
 }

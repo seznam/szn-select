@@ -53,10 +53,10 @@ szn-select {
   --szn-options--background-color: var(--szn-select--background);
   --szn-options--selected-background: var(--szn-select--selected-option-background);
 
-  --szn-select-ui--active-border-color: var(--szn-select--active-border-color);
-  --szn-select-ui--active-box-shadow: var(--szn-select--active-box-shadow);
-  --szn-select-ui--dropdown-offset: calc(-1 * var(--szn-select--border-width));
-  --szn-select-ui--dropdown-min-width: var(--szn-select--min-width);
+  --szn-select--ui--active-border-color: var(--szn-select--active-border-color);
+  --szn-select--ui--active-box-shadow: var(--szn-select--active-box-shadow);
+  --szn-select--ui--dropdown-offset: calc(-1 * var(--szn-select--border-width));
+  --szn-select--ui--dropdown-min-width: var(--szn-select--min-width);
 }
 
 /* styles used when JS is available */

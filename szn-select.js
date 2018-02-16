@@ -28,7 +28,7 @@
       this._root = rootElement
       this._select = rootElement.querySelector('select')
       this._uiContainer = null
-      this._ui = document.createElement('szn-select-ui')
+      this._ui = document.createElement('szn-select--ui')
       this._minBottomSpace = MIN_BOTTOM_SPACE
       this._accessiblityBroker = null
       this._mounted = false
@@ -225,8 +225,4 @@
     RichNativeSelect,
     VanillaAriaLabelledBySelect,
   ]
-
-  if (SznElements.init) {
-    SznElements.init()
-  }
 })(self)

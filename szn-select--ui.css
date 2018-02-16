@@ -1,0 +1,27 @@
+szn-select--ui {
+    display: inline-block;
+
+    width: 100%;
+    height: 100%;
+}
+
+szn-select--ui[data-szn-select--ui--active] szn-select-button,
+szn-select--ui[data-szn-select--ui--active] szn-options {
+    border-color: var(--szn-select--ui--active-border-color, #7dbfff);
+
+    box-shadow: var(--szn-select--ui--active-box-shadow, 0 0 3px rgba(0, 132, 255, .4));
+}
+
+/* increase weight of the selector to override the szn-tethered's styles */
+body > szn-tethered > [data-szn-select--ui--dropdown] {
+    display: block;
+
+    top: var(--szn-select--ui--dropdown-offset, -1px);
+
+    min-width: var(--szn-select--ui--dropdown-min-width, 109px);
+}
+
+/* increase weight of the selector to override the szn-tethered's styles */
+body > szn-tethered[data-vertical-align='top'] > [data-szn-select--ui--dropdown] {
+    bottom: var(--szn-select--ui--dropdown-offset, -1px);
+}
