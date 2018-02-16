@@ -172,7 +172,11 @@
     )
     const dropdownBounds = instance._dropdownContent.getBoundingClientRect()
     const isTopAligned = instance._dropdown.verticalAlignment === instance._dropdown.VERTICAL_ALIGN.TOP
-    const viewportHeight = window.innerHeight
+    // Lets hope the document element (<html>) is at least 100vh high - which it usually is.
+    const viewportHeight = Math.min(
+      document.documentElement.clientHeight, // window.innerHeight - scrollbars
+      window.innerHeight,
+    )
 
     const suggestedHeight = isTopAligned ?
       Math.min(maxHeight, dropdownBounds.bottom)
