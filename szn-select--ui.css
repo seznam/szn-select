@@ -5,7 +5,7 @@ szn-select--ui {
     height: 100%;
 }
 
-szn-select--ui[data-szn-select--ui--active] szn-select-button,
+szn-select--ui[data-szn-select--ui--active] szn-select--button,
 szn-select--ui[data-szn-select--ui--active] szn-options {
     border-color: var(--szn-select--ui--active-border-color, #7dbfff);
 

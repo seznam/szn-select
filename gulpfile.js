@@ -14,6 +14,7 @@ const util = require('util')
 async function injectCss(done) {
   await Promise.all([
     'szn-select',
+    'szn-select--button',
     'szn-select--ui',
   ].map(elementName => processElement(elementName)))
 
@@ -125,7 +126,7 @@ function clean() {
 }
 
 function cleanup() {
-  return del('./dist/szn-select{,--ui}.{css,js}')
+  return del('./dist/szn-select{,--button,--ui}.{css,js}')
 }
 
 exports.default = gulp.series(

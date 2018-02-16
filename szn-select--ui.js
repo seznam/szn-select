@@ -220,7 +220,7 @@
   }
 
   function initSingleSelectButton(instance) {
-    const button = document.createElement('szn-select-button')
+    const button = document.createElement('szn-select--button')
     SznElements.awaitElementReady(button, () => {
       if (instance._button !== button) {
         return

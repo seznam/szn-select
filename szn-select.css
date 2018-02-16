@@ -28,18 +28,18 @@ szn-select {
 
   position: relative;
 
-  --szn-select-button--border-width: var(--szn-select--border-width);
-  --szn-select-button--border-color: var(--szn-select--border-color);
-  --szn-select-button--border-radius: var(--szn-select--border-radius);
-  --szn-select-button--padding: var(--szn-select--button-padding);
-  --szn-select-button--height: var(--szn-select--height);
-  --szn-select-button--height-px: var(--szn-select--height-px);
-  --szn-select-button--text-color: var(--szn-select--text-color);
-  --szn-select-button--disabled-text-color: var(--szn-select--disabled-text-color);
-  --szn-select-button--mark-width: var(--szn-select--state-arrow-width);
-  --szn-select-button--background-color: var(--szn-select--background);
-  --szn-select-button--icon-closed: var(--szn-select--state-arrow-closed);
-  --szn-select-button--icon-opened: var(--szn-select--state-arrow-opened);
+  --szn-select--button--border-width: var(--szn-select--border-width);
+  --szn-select--button--border-color: var(--szn-select--border-color);
+  --szn-select--button--border-radius: var(--szn-select--border-radius);
+  --szn-select--button--padding: var(--szn-select--button-padding);
+  --szn-select--button--height: var(--szn-select--height);
+  --szn-select--button--height-px: var(--szn-select--height-px);
+  --szn-select--button--text-color: var(--szn-select--text-color);
+  --szn-select--button--disabled-text-color: var(--szn-select--disabled-text-color);
+  --szn-select--button--mark-width: var(--szn-select--state-arrow-width);
+  --szn-select--button--background-color: var(--szn-select--background);
+  --szn-select--button--icon-closed: var(--szn-select--state-arrow-closed);
+  --szn-select--button--icon-opened: var(--szn-select--state-arrow-opened);
 
   --szn-options--border-width: var(--szn-select--border-width);
   --szn-options--border-color: var(--szn-select--border-color);
