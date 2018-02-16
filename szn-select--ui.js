@@ -213,7 +213,7 @@
   function createSingleSelectUI(instance) {
     initSingleSelectButton(instance)
 
-    instance._dropdownOptions = document.createElement('szn-options')
+    instance._dropdownOptions = document.createElement('szn-select--options')
     instance._dropdown = document.createElement('szn-tethered')
     instance._dropdown.appendChild(instance._dropdownContent)
     instance._dropdownContent.appendChild(instance._dropdownOptions)
@@ -250,7 +250,7 @@
 
   function createMultiSelectUI(instance) {
     const select = instance._select
-    const options = document.createElement('szn-options')
+    const options = document.createElement('szn-select--options')
     instance._root.appendChild(options)
     SznElements.awaitElementReady(options, () => options.setOptions(select))
   }

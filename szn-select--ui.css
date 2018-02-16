@@ -6,7 +6,7 @@ szn-select--ui {
 }
 
 szn-select--ui[data-szn-select--ui--active] szn-select--button,
-szn-select--ui[data-szn-select--ui--active] szn-options {
+szn-select--ui[data-szn-select--ui--active] szn-select--options {
     border-color: var(--szn-select--ui--active-border-color, #7dbfff);
 
     box-shadow: var(--szn-select--ui--active-box-shadow, 0 0 3px rgba(0, 132, 255, .4));

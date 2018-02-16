@@ -1,0 +1,77 @@
+szn-select--options {
+  display: block;
+
+  z-index: 1000;
+
+  border: solid var(--szn-select--options--border-color, #cccccc);
+  border-width: var(--szn-select--options--border-width, 1px);
+  border-radius: var(--szn-select--options--border-radius-dropdown, 0 0 4px 4px);
+  height: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+  overflow-x: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--szn-select--options--text-color, #000000);
+
+  background: var(--szn-select--options--background-color, #ffffff);
+
+  user-select: none;
+}
+
+szn-select--options[data-szn-select--options--multiple] {
+  border-radius: var(--szn-select--options--border-radius-mutli-select, 4px);
+}
+
+szn-select--options [data-szn-select--options--option] {
+  display: block;
+
+  padding: var(--szn-select--options--item-padding, 5px 5px 5px 12px);
+
+  cursor: pointer;
+}
+
+szn-select--options [data-szn-select--options--option][disabled],
+szn-select--options [disabled] [data-szn-select--options--option],
+szn-select--options[disabled] [data-szn-select-options--option] {
+  cursor: default;
+}
+
+szn-select--options [data-szn-select--options--selected] {
+  background: var(--szn-select--options--selected-background, #eeeeee);
+}
+
+szn-select--options [data-szn-select--options--optgroup] {
+  display: block;
+}
+
+szn-select--options [data-szn-select--options--optgroup] [data-szn-select--options--option] {
+  padding-left: calc(2 * var(--szn-select--options--item-indent, 12px));
+}
+
+szn-select--options [data-szn-select--options--optgroup-label]:before {
+  display: block;
+
+  padding: var(--szn-select--options--item-padding, 5px 5px 5px 12px);
+
+  content: attr(data-szn-select--options--optgroup-label);
+  font-weight: bold;
+}
+
+szn-select--options[data-szn-select--options--highlighting] [data-szn-select-options--selected] {
+  background: none;
+}
+
+szn-select--options[data-szn-select--options--highlighting] [data-szn-select--options--highlighted] {
+  background: var(--szn-select--options--selected-background, #eeeeee);
+}
+
+szn-select--options [disabled],
+szn-select--options[disabled] {
+  color: var(--szn-select--options--disabled-text, #cccccc);
+}
+
+szn-tethered[data-vertical-align="top"] szn-select--options {
+  border-radius: var(--szn-select--options--border-radius-dropup, 4px 4px 0 0);
+}
