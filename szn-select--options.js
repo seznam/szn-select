@@ -231,6 +231,10 @@
   }
 
   function onTouchEnd(instance, event) {
+    if (!instance._options.multiple) {
+      return
+    }
+
     const touch = Array.from(event.changedTouches).find(
       someTouch => someTouch.identifier === instance._observedTouchId,
     )
