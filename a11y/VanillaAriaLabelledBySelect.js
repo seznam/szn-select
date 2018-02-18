@@ -19,6 +19,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     this._onFocus = this.onFocus.bind(this)
     this._onBlur = this.onBlur.bind(this)
     this._onKeyDown = this.onKeyDown.bind(this)
+    this._onMouseUp = this.onMouseUp.bind(this)
   }
 
   setOpen(isOpen) {
@@ -61,7 +62,6 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
 
   onUiClicked(event) {
     super.onUiClicked(event)
-    this.setOpen(!this.sznSelect.isOpen)
 
     if (document.activeElement !== this._a11yButton) {
       this._a11yButton.focus()
@@ -92,6 +92,13 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
         this.select.focus()
       }
     }, 0)
+  }
+
+  onMouseUp(event) {
+    // Firefox does not always fire the click event on our dropdown, so have to "fix" it like this
+    if (!this.ui.contains(event.target)) {
+      this.setOpen(false)
+    }
   }
 
   onChange() {
@@ -191,12 +198,14 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     this._a11yButton.addEventListener('focus', this._onFocus)
     this._a11yButton.addEventListener('blur', this._onBlur)
     this._uiContainer.addEventListener('keydown', this._onKeyDown)
+    addEventListener('mouseup', this._onMouseUp)
   }
 
   _removeEventListeners() {
     this._a11yButton.removeEventListener('focus', this._onFocus)
     this._a11yButton.removeEventListener('blur', this._onBlur)
     this._uiContainer.removeEventListener('keydown', this._onKeyDown)
+    removeEventListener('mouseup', this._onMouseUp)
   }
 
   _updateA11yButton() {
