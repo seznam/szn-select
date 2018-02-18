@@ -1,72 +1,72 @@
 szn-select--button {
-    display: block;
+  display: block;
 
-    position: relative;
+  position: relative;
 
-    box-sizing: border-box;
-    border: var(--szn-select--button--border-width, 1px) solid var(--szn-select--button--border-color, #cccccc);
-    border-radius: var(--szn-select--button--border-radius, 4px);
-    width: 100%;
-    height: 100%;
+  box-sizing: border-box;
+  border: var(--szn-select--button--border-width, 1px) solid var(--szn-select--button--border-color, #cccccc);
+  border-radius: var(--szn-select--button--border-radius, 4px);
+  width: 100%;
+  height: 100%;
 
-    line-height: calc(var(--szn-select--button--height-px, 32px) - 2 * var(--szn-select--button--border-width, 1px));
-    line-height: calc(var(--szn-select--button--height, 2em) - 2 * var(--szn-select--button--border-width, 1px));
-    color: var(--szn-select--button--text-color, #000000);
+  line-height: calc(var(--szn-select--button--height-px, 32px) - 2 * var(--szn-select--button--border-width, 1px));
+  line-height: calc(var(--szn-select--button--height, 2em) - 2 * var(--szn-select--button--border-width, 1px));
+  color: var(--szn-select--button--text-color, #000000);
 
-    background: var(--szn-select--button--background-color, #ffffff);
+  background: var(--szn-select--button--background-color, #ffffff);
 
-    cursor: pointer;
-    user-select: none;
-    -moz-user-select: none;
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
 }
 
 szn-select--button[data-szn-select--button--open] {
-    border-radius: var(--szn-select--button--border-radius, 4px) var(--szn-select--button--border-radius, 4px) 0 0;
+  border-radius: var(--szn-select--button--border-radius, 4px) var(--szn-select--button--border-radius, 4px) 0 0;
 }
 
 szn-select--button[data-szn-select--button--open-at-top] {
-    border-radius: 0 0 var(--szn-select--button--border-radius, 4px) var(--szn-select--button--border-radius, 4px);
+  border-radius: 0 0 var(--szn-select--button--border-radius, 4px) var(--szn-select--button--border-radius, 4px);
 }
 
 szn-select--button[disabled] {
-    color: var(--szn-select--button--disabled-text-color, #cccccc);
+  color: var(--szn-select--button--disabled-text-color, #cccccc);
 
-    cursor: default;
+  cursor: default;
 }
 
 szn-select--button [data-szn-select--button--label] {
-    display: block;
+  display: block;
 
-    box-sizing: border-box;
-    border-right: var(--szn-select--button--mark-width, 2em) transparent solid;
-    padding: var(--szn-select--button--padding, 0 5px 0 12px);
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+  box-sizing: border-box;
+  border-right: var(--szn-select--button--mark-width, 2em) transparent solid;
+  padding: var(--szn-select--button--padding, 0 5px 0 12px);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 szn-select--button [data-szn-select--button--mark] {
-    display: block;
+  display: block;
 
-    position: absolute;
-    right: 0;
-    top: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 
-    width: var(--szn-select--button--mark-width, 2em);
-    height: 100%;
+  width: var(--szn-select--button--mark-width, 2em);
+  height: 100%;
 
-    text-align: center;
+  text-align: center;
 }
 
 szn-select--button [data-szn-select--button--mark]:after {
-    display: inline;
+  display: inline;
 
-    content: var(--szn-select--button--icon-closed, "▼");
+  content: var(--szn-select--button--icon-closed, "▼");
 }
 
 szn-select--button[data-szn-select--button--open] [data-szn-select--button--mark]:after {
-    content: var(--szn-select--button--icon-opened, "▲");
+  content: var(--szn-select--button--icon-opened, "▲");
 }
