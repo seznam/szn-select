@@ -18,6 +18,7 @@ szn-select--options {
   background: var(--szn-select--options--background-color, #ffffff);
 
   user-select: none;
+  -moz-user-select: none;
 }
 
 szn-select--options[data-szn-select--options--multiple] {

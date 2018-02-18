@@ -17,6 +17,7 @@ szn-select--button {
 
     cursor: pointer;
     user-select: none;
+    -moz-user-select: none;
 }
 
 szn-select--button[data-szn-select--button--open] {
