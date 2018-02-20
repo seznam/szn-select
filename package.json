@@ -50,6 +50,6 @@
   },
   "peerDependencies": {
     "@jurca/szn-elements": "^1.0.0",
-    "@jurca/szn-tethered": "^0.0.6"
+    "@jurca/szn-tethered": "^0.0.7"
   }
 }
