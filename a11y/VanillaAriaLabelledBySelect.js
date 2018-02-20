@@ -314,6 +314,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
 VanillaAriaLabelledBySelect.compatibilityTest = select => (
   !select.disabled &&
   !select.multiple &&
+  !/(?:\(iP(?:ad|hone|od(?: touch)?);| Android )/.test(navigator.userAgent) &&
   /(?: Firefox\/| Mac OS X )/.test(navigator.userAgent)
 )
 
