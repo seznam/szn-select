@@ -24,7 +24,51 @@ TODO
 
 ### Styling using CSS
 
-TODO
+The `<szn-select>` element's appearance can be configured using the following
+CSS variables (AKA CSS custom properties, supported by all browsers except for
+Internet Explorer):
+
+```css
+:root {
+  /* variable: default value */
+  --szn-select--border-width: 1px;
+  --szn-select--border-color: #cccccc;
+  --szn-select--active-border-color: #7dbfff;
+  --szn-select--border-radius: 4px;
+  --szn-select--min-width: 109px;
+  --szn-select--height: 2em;
+  --szn-select--height-px: 32px;
+
+  --szn-select--option-indent: 12px;
+  --szn-select--option-padding: 5px 5px 5px var(--szn-select--option-indent);
+  --szn-select--selected-option-background: #eeeeee;
+
+  --szn-select--button-padding: 0 5px 0 var(--szn-select--option-indent);
+  --szn-select--state-arrow-width: var(--szn-select--height);
+
+  --szn-select--state-arrow-closed: "▼";
+  --szn-select--state-arrow-opened: "▲";
+  --szn-select--text-color: #000000;
+  --szn-select--disabled-text-color: #cccccc;
+  --szn-select--background: #ffffff;
+
+  --szn-select--active-box-shadow: 0 0 3px rgba(0, 132, 255, .4);
+}
+``` 
+
+To style the dimensions of the dropdown for single-selects, use the following
+CSS selector:
+
+```css
+[data-szn-select--ui--dropdown] {
+    /* overriding the dropdown's width to 240px for the default font size of 16px */
+    width: 15rem;
+}
+```
+
+Note that the styles used by the `<szn-select>` are applied using `<styles>`
+elements appended the document's `<head>`. You will have to use selectors with
+higher specificity or use `!important` to override the default styles.
 
 ## Supported browsers
 
