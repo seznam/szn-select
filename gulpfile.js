@@ -111,6 +111,7 @@ const copy = gulp.parallel(
 function copyPackageMetaFiles() {
   return gulp
     .src(['./LICENSE', './package.json', './README.md'])
+    .pipe(replace('<VERSION>', packageInfo.version))
     .pipe(gulp.dest('./dist'))
 }
 

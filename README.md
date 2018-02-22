@@ -24,7 +24,7 @@ TODO: link to integration-ready bundles
 case JavaScript is disabled or the user is using an obsolete browser:
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@0.0.9/szn-select-nojs.css" media="all">
+<link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select-nojs.css" media="all">
 ```
 
 This step is optional, but results in slightly better UX if the JavaScript
@@ -33,7 +33,7 @@ fails or is disabled.
 2. It is recommended to load the `<szn-select>` element using the loader:
 
 ```html
-<script src="https://unpkg.com/@jurca/szn-select@0.0.9/loader.min.js"></script>
+<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/loader.min.js"></script>
 ```
 
 You may use the `async` and `defer` attributes if you want the loader to be
@@ -69,7 +69,7 @@ If you do not want to use the loader for some reason, just include the
 ES3-compatible bundle:
 
 ```html
-<script src="https://unpkg.com/@jurca/szn-select@0.0.9/szn-select.bundle.es3.min.js"></script>
+<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select.bundle.es3.min.js"></script>
 ```
 
 3. You may turn any ordinary `<select>` into a `<szn-select>` by wrapping it
