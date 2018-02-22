@@ -50,14 +50,14 @@ loader's `<script>` element:
   using the options listed below.
 * `data-szn-select--loader-urls--element-es3` - overrides the URL for loading
   the ES3-compatible implementation of the `szn-select` element
-* `data-szn-select--loader-urls--element-es6` - overrides the URL for loading
-  the ES2016-compatible implementation of the `szn-select` element
+* `data-szn-select--loader-urls--element-es2016` - overrides the URL for
+  loading the ES2016-compatible implementation of the `szn-select` element
 * `data-szn-select--loader-urls--bundle-es3` - overrides the URL for loading
   the ES3-compatible bundle of the `szn-select` and `szn-tethered` elements
   and the szn-elements runtime.
-* `data-szn-select--loader-urls--bundle-es6` - overrides the URL for loading
-  the ES2016-compatible implementation of the `szn-select` and `szn-tethered`
-  elements and the szn-elements runtime.
+* `data-szn-select--loader-urls--bundle-es2016` - overrides the URL for
+  loading the ES2016-compatible implementation of the `szn-select` and
+  `szn-tethered` elements and the szn-elements runtime.
 * `data-szn-select--loader-urls--bundle-ce` - overrides the URL for loading
   the ES2016-compatible implementation that relies on the
   [custom elements](https://mdn.io/Window/customElements) API. The bundle
