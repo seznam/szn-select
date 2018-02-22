@@ -24,7 +24,7 @@ TODO: link to integration-ready bundles
 case JavaScript is disabled or the user is using an obsolete browser:
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select-nojs.css" media="all">
+<link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select-nojs.css">
 ```
 
 This step is optional, but results in slightly better UX if the JavaScript
