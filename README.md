@@ -20,7 +20,96 @@ TODO: link to integration-ready bundles
 
 ### Usage on static or server-rendered websites
 
-TODO
+1. Include the CSS for fallback styling of the native `<select>` element in
+case JavaScript is disabled or the user is using an obsolete browser:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@0.0.9/szn-select-nojs.css" media="all">
+```
+
+This step is optional, but results in slightly better UX if the JavaScript
+fails or is disabled.
+
+2. It is recommended to load the `<szn-select>` element using the loader:
+
+```html
+<script src="loader.js"></script>
+```
+
+You may use the `async` and `defer` attributes if you want the loader to be
+loaded asynchronously. You may also bundle the loader with other JavaScript
+files.
+
+The loader automatically chooses the bundle that has the best compatibility
+with the current browser. By default the loader loads the implementation from
+`unpkg.com`. This may be overridden by adding the following attributes to the
+loader's `<script>` element:
+
+* `data-szn-select--loader-urls--package` - specifies the base URL where all
+  the package's files are available. This can be overridden for specific cases
+  using the options listed below.
+* `data-szn-select--loader-urls--element-es3` - overrides the URL for loading
+  the ES3-compatible implementation of the `szn-select` element
+* `data-szn-select--loader-urls--element-es6` - overrides the URL for loading
+  the ES2016-compatible implementation of the `szn-select` element
+* `data-szn-select--loader-urls--bundle-es3` - overrides the URL for loading
+  the ES3-compatible bundle of the `szn-select` and `szn-tethered` elements
+  and the szn-elements runtime.
+* `data-szn-select--loader-urls--bundle-es6` - overrides the URL for loading
+  the ES2016-compatible implementation of the `szn-select` and `szn-tethered`
+  elements and the szn-elements runtime.
+* `data-szn-select--loader-urls--bundle-wc` - overrides the URL for loading
+  the ES2016-compatible implementation that relies on the
+  [custom elements](https://mdn.io/Window/customElements) API. The bundle
+  includes the `szn-select` and `szn-tethered` elements and the szn-elements
+  runtime (only the parts used if custom elements are supported natively).
+
+If you do not want to use the loader for some reason, just include the
+ES3-compatible bundle:
+
+```html
+<script src="bundle.es3.js"></script>
+```
+
+3. You may turn any ordinary `<select>` into a `<szn-select>` by wrapping it
+and providing a UI container:
+
+```html
+<label for="my-select">Choose one:</label>
+<szn-select data-szn-select--standalone>
+    <select name="chosenOption" id="my-select">
+        <option value="1" title="this is the first option">first</option>
+        <optgroup label="other options">
+            <option value="2" selected>default option</option>
+            <option value="3" disabled>you cannot choose this option</option>
+        </optgroup>
+        <optgroup label="you cannot choose these options" disabled>
+            <option value="4">unavailable option</option>
+            <option value="4">yes, multiple options may have the same value</option>
+        </optgroup>
+    </select>
+    <span data-szn-select--ui></span>
+</szn-select>
+```
+
+The `data-szn-select--standalone` attribute tells the `<szn-select>` that is
+is **not** being used on a page that uses a DOM-managing library such as
+React, Vue or Angular.
+
+The `<szn-select>` element works with multi-selects too:
+
+```html
+<szn-select data-szn-select--standalone>
+    <select name="choices" multiple aria-label="choose multiple">
+        <option value="1" selected>first</option>
+        <optgroup label="other options">
+            <!-- option groups are supported as well -->
+            <option value="2" disabled>second</option>
+            <option value="3" selected>third</option>
+        </optgroup>
+    </select>
+</szn-select>
+```
 
 ### Styling using CSS
 
