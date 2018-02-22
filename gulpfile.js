@@ -110,6 +110,50 @@ function compileCss() {
     .pipe(gulp.dest('./dist'))
 }
 
+async function bundle(done) {
+  const readFile = util.promisify(fs.readFile)
+  const writeFile = util.promisify(fs.writeFile)
+  const writeUtfFile = (filePath, contents) => writeFile(filePath, contents, 'utf-8')
+
+  const [
+    sznSelectEs3,
+    sznSelectEs6,
+    sznTetheredEs3,
+    sznTetheredEs6,
+    sznElementsEs3,
+    sznElementsEs6,
+    sznElementsCustomElements,
+    sznElementsMutationObserverEs3,
+    sznElementsMutationObserverEs6,
+  ] = await Promise.all([
+    './dist/szn-select.es3.js',
+    './dist/szn-select.es6.js',
+    '@jurca/szn-tethered/szn-tethered.es3.js',
+    '@jurca/szn-tethered/szn-tethered.es6.js',
+    '@jurca/szn-elements/szn-elements.es3.js',
+    '@jurca/szn-elements/szn-elements.es6.js',
+    '@jurca/szn-elements/szn-elements-custom-elements.js',
+    '@jurca/szn-elements/szn-elements-mutation-observer.es3.js',
+    '@jurca/szn-elements/szn-elements-mutation-observer.es6.js',
+  ].map(require.resolve).map(filePath => readFile(filePath, 'utf-8')))
+
+  const baseBundleEs3 = [sznSelectEs3, sznTetheredEs3, sznElementsEs3]
+  const baseBundleEs6 = [sznSelectEs6, sznTetheredEs6, sznElementsEs6]
+  const bundleEs3 = [...baseBundleEs3, sznElementsMutationObserverEs3]
+  const bundleEs6 = [...baseBundleEs6, sznElementsMutationObserverEs6]
+  const bundleCe = [...baseBundleEs6, sznElementsCustomElements]
+
+  await Promise.all([
+    ['es3', bundleEs3],
+    ['es6', bundleEs6],
+    ['ce', bundleCe],
+  ].map(
+    ([bundleName, sources]) => writeUtfFile(`./dist/szn-select.bundle.${bundleName}.js`, sources.join('\n;\n')),
+  ))
+
+  done()
+}
+
 function minify() {
   return gulp
     .src('./dist/*.js')
@@ -142,5 +186,6 @@ exports.default = gulp.series(
   injectInitCode,
   cleanup,
   compileJS,
+  bundle,
   minify,
 )
