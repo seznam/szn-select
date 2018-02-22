@@ -39,14 +39,14 @@ TODO
 
 The current level of compatibility with assistive technologies is represented by the table below:
 
-&nbsp;     | keyboard | [NVDA](https://www.nvaccess.org/) | [Jaws](http://www.freedomscientific.com/Products/Blindness/JAWS) | [VoiceOver](https://www.apple.com/accessibility/mac/vision/) | [Talkback](https://play.google.com/store/apps/details?id=com.google.android.marvin.talkback&hl=sk) | [VoiceOver iOS](https://www.apple.com/accessibility/iphone/vision/)
------------|----------|------|------|-----------|---------|--------------
-**Chrome** | great    | great| good | good      | good    | good
-**Firefox**| great    | great| n/a  | n/a       | good    | good
-**Opera**  | great    | great| good | good      | good    | n/a
-**Safari** | great    | n/a  | n/a  | good      | n/a     | good
-**Edge**   | great    | great| n/a  | n/a       | unknown | unknown
-**IE**     | great    | good | good | n/a       | n/a     | n/a
+&nbsp;                                                                                       | Chrome | Firefox | Opera | Safari | Edge    | IE
+---------------------------------------------------------------------------------------------|--------|---------|-------|--------|---------|---
+keyboard                                                                                     | great  | great   | great | great  | great   | great
+[NVDA](https://www.nvaccess.org/)                                                            | great  | great   | great | n/a    | great   | good
+[Jaws](http://www.freedomscientific.com/Products/Blindness/JAWS)                             | good   | n/a     | good  | n/a    | n/a     | good
+[VoiceOver](https://www.apple.com/accessibility/mac/vision/)                                 | good   | n/a     | good  | good   | n/a     | n/a
+[Talkback](https://play.google.com/store/apps/details?id=com.google.android.marvin.talkback) | good   | good    | good  | n/a    | unknown | n/a
+[VoiceOver iOS](https://www.apple.com/accessibility/iphone/vision/)                          | good   | good    | n/a   | good   | unknown | n/a
 
 ### Compatibility levels explained
 
