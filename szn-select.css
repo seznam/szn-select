@@ -27,7 +27,10 @@ szn-select {
   display: inline-block;
 
   position: relative;
+}
 
+szn-select,
+szn-tethered [data-szn-select--ui--dropdown] {
   --szn-select--button--border-width: var(--szn-select--border-width);
   --szn-select--button--border-color: var(--szn-select--border-color);
   --szn-select--button--border-radius: var(--szn-select--border-radius);
