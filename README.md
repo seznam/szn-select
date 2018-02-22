@@ -108,6 +108,7 @@ The `<szn-select>` element works with multi-selects too:
             <option value="3" selected>third</option>
         </optgroup>
     </select>
+    <span data-szn-select--ui></span>
 </szn-select>
 ```
 
