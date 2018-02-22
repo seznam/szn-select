@@ -68,7 +68,7 @@ If you do not want to use the loader for some reason, just include the
 ES3-compatible bundle:
 
 ```html
-<script src="https://unpkg.com/@jurca/szn-select@0.0.9/szn-select.bundle.es3.js"></script>
+<script src="https://unpkg.com/@jurca/szn-select@0.0.9/szn-select.bundle.es3.min.js"></script>
 ```
 
 3. You may turn any ordinary `<select>` into a `<szn-select>` by wrapping it
