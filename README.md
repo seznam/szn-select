@@ -33,7 +33,7 @@ fails or is disabled.
 2. It is recommended to load the `<szn-select>` element using the loader:
 
 ```html
-<script src="loader.js"></script>
+<script src="https://unpkg.com/@jurca/szn-select@0.0.9/loader.min.js"></script>
 ```
 
 You may use the `async` and `defer` attributes if you want the loader to be
@@ -41,9 +41,10 @@ loaded asynchronously. You may also bundle the loader with other JavaScript
 files.
 
 The loader automatically chooses the bundle that has the best compatibility
-with the current browser. By default the loader loads the implementation from
-`unpkg.com`. This may be overridden by adding the following attributes to the
-loader's `<script>` element:
+with the current browser (modern browsers use smaller bundles). By default the
+loader loads the implementation from `unpkg.com`. This may be overridden by
+adding the following attributes to the `<script>` element used include the
+loader (as stated above, this may be a bundle):
 
 * `data-szn-select--loader-urls--package` - specifies the base URL where all
   the package's files are available. This can be overridden for specific cases

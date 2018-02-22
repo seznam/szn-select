@@ -7,9 +7,11 @@ const gulp = require('gulp')
 const babel = require('gulp-babel')
 const concat = require('gulp-concat')
 const rename = require('gulp-rename')
+const replace = require('gulp-replace')
 const postCss = require('gulp-postcss')
 const postCustomProperties = require('postcss-custom-properties')
 const util = require('util')
+const packageInfo = require('./package.json')
 
 async function injectCss(done) {
   await Promise.all([
@@ -68,7 +70,12 @@ async function injectInitCode(done) {
   done()
 }
 
-function compileJS() {
+const compileJS = gulp.parallel(
+  compileJSSelect,
+  compileJSLoader,
+)
+
+function compileJSSelect() {
   return gulp
     .src('./dist/szn-select.es6.js')
     .pipe(babel({
@@ -79,6 +86,20 @@ function compileJS() {
       }]],
     }))
     .pipe(rename('szn-select.es3.js'))
+    .pipe(gulp.dest('./dist'))
+}
+
+function compileJSLoader() {
+  return gulp
+    .src('./loader.js')
+    .pipe(babel({
+      presets: [['env', {
+        targets: {
+          browsers: ['ie 8'],
+        },
+      }]],
+    }))
+    .pipe(replace('<VERSION>', packageInfo.version))
     .pipe(gulp.dest('./dist'))
 }
 
