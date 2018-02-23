@@ -35,7 +35,7 @@
   "homepage": "https://github.com/jurca/szn-select#readme",
   "devDependencies": {
     "@jurca/szn-elements": "^1.0.1",
-    "@jurca/szn-tethered": "0.0.7",
+    "@jurca/szn-tethered": "^0.0.8",
     "babel-preset-env": "^1.6.1",
     "babel-preset-minify": "^0.2.0",
     "del": "^3.0.0",
@@ -53,6 +53,6 @@
   },
   "peerDependencies": {
     "@jurca/szn-elements": "^1.0.1",
-    "@jurca/szn-tethered": "^0.0.7"
+    "@jurca/szn-tethered": "^0.0.8"
   }
 }
