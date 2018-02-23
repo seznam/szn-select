@@ -27,19 +27,19 @@ async function injectCss(done) {
     const readFile = util.promisify(fs.readFile)
     const writeFile = util.promisify(fs.writeFile)
 
-    const [css, es6] = await Promise.all([
+    const [css, es2016] = await Promise.all([
       readFile(`./dist/${elementName}.css`, 'utf-8'),
       readFile(`./${elementName}.js`, 'utf-8'),
     ])
 
-    return writeFile(`./dist/${elementName}.js`, es6.replace('%{CSS_STYLES}%', css), 'utf-8')
+    return writeFile(`./dist/${elementName}.js`, es2016.replace('%{CSS_STYLES}%', css), 'utf-8')
   }
 }
 
 function concatElements() {
   return gulp
     .src('./dist/*.js')
-    .pipe(concat('szn-select.es6.js'))
+    .pipe(concat('szn-select.es2016.js'))
     .pipe(gulp.dest('./dist'))
 }
 
@@ -51,10 +51,10 @@ async function injectA11yImplementations(done) {
   const implementationSources = await util.promisify(glob)('./a11y/!(AccessibilityBroker).js')
   const implementations = await Promise.all(implementationSources.map(sourceFile => readFile(sourceFile, 'utf-8')))
 
-  const selectSource = await readFile('./dist/szn-select.es6.js', 'utf-8')
+  const selectSource = await readFile('./dist/szn-select.es2016.js', 'utf-8')
   const newSource = selectSource.replace('// %{A11Y_IMPLEMENTATIONS}%', [baseClass, ...implementations].join('\n'))
 
-  await writeFile('./dist/szn-select.es6.js', newSource, 'utf-8')
+  await writeFile('./dist/szn-select.es2016.js', newSource, 'utf-8')
 
   done()
 }
@@ -63,9 +63,9 @@ async function injectInitCode(done) {
   const readFile = util.promisify(fs.readFile)
   const writeFile = util.promisify(fs.writeFile)
 
-  const source = await readFile('./dist/szn-select.es6.js', 'utf-8')
+  const source = await readFile('./dist/szn-select.es2016.js', 'utf-8')
   const patchedSource = `${source}\nif (SznElements.init) {\n  SznElements.init()\n}\n`
-  await writeFile('./dist/szn-select.es6.js', patchedSource, 'utf-8')
+  await writeFile('./dist/szn-select.es2016.js', patchedSource, 'utf-8')
 
   done()
 }
@@ -80,14 +80,14 @@ const compileJS = gulp.parallel(
 
 function compileJSSelectES2016() {
   return gulp
-    .src('./dist/szn-select.es6.js')
+    .src('./dist/szn-select.es2016.js')
     .pipe(babel()) // strips trailing commas in function calls (ES2017) so the source becomes ES2016-compatible
     .pipe(gulp.dest('./dist'))
 }
 
 function compileJSSelectEs3() {
   return gulp
-    .src('./dist/szn-select.es6.js')
+    .src('./dist/szn-select.es2016.js')
     .pipe(babel({
       presets: [['env', {
         targets: {
@@ -149,17 +149,17 @@ async function bundle(done) {
 
   const [
     sznSelectEs3,
-    sznSelectEs6,
+    sznSelectEs2016,
     sznTetheredEs3,
-    sznTetheredEs6,
+    sznTetheredEs2015,
     sznElementsEs3,
-    sznElementsEs6,
+    sznElementsEs2015,
     sznElementsCustomElements,
     sznElementsMutationObserverEs3,
-    sznElementsMutationObserverEs6,
+    sznElementsMutationObserverEs2015,
   ] = await Promise.all([
     './dist/szn-select.es3.js',
-    './dist/szn-select.es6.js',
+    './dist/szn-select.es2016.js',
     '@jurca/szn-tethered/szn-tethered.es3.js',
     '@jurca/szn-tethered/szn-tethered.es6.js',
     '@jurca/szn-elements/szn-elements.es3.js',
@@ -169,18 +169,20 @@ async function bundle(done) {
     '@jurca/szn-elements/szn-elements-mutation-observer.es6.js',
   ].map(require.resolve).map(filePath => readFile(filePath, 'utf-8')))
 
-  const baseBundleEs3 = [sznSelectEs3, sznTetheredEs3, sznElementsEs3]
-  const baseBundleEs6 = [sznSelectEs6, sznTetheredEs6, sznElementsEs6]
+  const baseBundleEs3 = [sznTetheredEs3, sznSelectEs3, sznElementsEs3]
+  const baseBundleEs2016 = [sznTetheredEs2015, sznSelectEs2016, sznElementsEs2015]
   const bundleEs3 = [...baseBundleEs3, sznElementsMutationObserverEs3]
-  const bundleEs6 = [...baseBundleEs6, sznElementsMutationObserverEs6]
-  const bundleCe = [...baseBundleEs6, sznElementsCustomElements]
+  const bundleEs2016 = [...baseBundleEs2016, sznElementsMutationObserverEs2015]
+  const bundleCe = [...baseBundleEs2016, sznElementsCustomElements]
 
   await Promise.all([
-    ['es3', bundleEs3],
-    ['es6', bundleEs6],
-    ['ce', bundleCe],
+    ['elements.es3', [sznTetheredEs3, sznSelectEs3]],
+    ['elements.es2016', [sznTetheredEs2015, sznSelectEs2016]],
+    ['full.es3', bundleEs3],
+    ['full.es2016', bundleEs2016],
+    ['full.ce', bundleCe],
   ].map(
-    ([bundleName, sources]) => writeUtfFile(`./dist/szn-select.bundle.${bundleName}.js`, sources.join('\n;\n')),
+    ([bundleName, sources]) => writeUtfFile(`./dist/szn-select.bundle-${bundleName}.js`, sources.join('\n;\n')),
   ))
 
   done()

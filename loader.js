@@ -1,10 +1,10 @@
 'use strict'
 ;(global => {
   const BUNDLES = {
-    ELEMENT_ES2016: 'es6',
+    ELEMENT_ES2016: 'es2016',
     ELEMENT_ES3: 'es3',
     ALL_CE: 'bundle.ce',
-    ALL_ES2016: 'bundle.es6',
+    ALL_ES2016: 'bundle.es2016',
     ALL_ES3: 'bundle.es3',
   }
   const URL_ATTRIBUTES = {
