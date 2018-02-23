@@ -71,11 +71,21 @@ async function injectInitCode(done) {
 }
 
 const compileJS = gulp.parallel(
-  compileJSSelect,
+  gulp.series(
+    compileJSSelectES2016,
+    compileJSSelectEs3,
+  ),
   compileJSLoader,
 )
 
-function compileJSSelect() {
+function compileJSSelectES2016() {
+  return gulp
+    .src('./dist/szn-select.es6.js')
+    .pipe(babel()) // strips trailing commas in function calls (ES2017) so the source becomes ES2016-compatible
+    .pipe(gulp.dest('./dist'))
+}
+
+function compileJSSelectEs3() {
   return gulp
     .src('./dist/szn-select.es6.js')
     .pipe(babel({
