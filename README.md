@@ -16,7 +16,15 @@ replace it, your users will have much better experience (this is the way the
 [Bootstrap](https://getbootstrap.com/docs/4.0/components/forms/#select-menu)
 framework does it).
 
-TODO: link to integration-ready bundles
+If you absolutely do need a fully styleable `<select>`, you may choose from
+the following integration-ready bundles based on the front-end technology you
+use:
+
+* [szn-select for react](https://www.npmjs.com/package/@jurca/szn-select-react)
+  ([GitHub](https://github.com/jurca/szn-select-react))
+* jQuery: use the deployment steps bellow for static sites
+
+More ready-to-use bundles are coming soon.
 
 ### Usage on static or server-rendered websites
 
