@@ -66,7 +66,7 @@ loader (as stated above, this may be a bundle):
   runtime (only the parts used if custom elements are supported natively).
 
 If you do not want to use the loader for some reason, just include the
-ES3-compatible bundle:
+ES3-compatible bundle (or implement the bundle selection logic yourselves):
 
 ```html
 <script src="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select.bundle.es3.min.js"></script>
