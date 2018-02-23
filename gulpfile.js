@@ -75,7 +75,13 @@ const compileJS = gulp.parallel(
     compileJSSelectES2016,
     compileJSSelectEs3,
   ),
-  compileJSLoader,
+  gulp.series(
+    composeStandaloneLoader,
+    gulp.parallel(
+      compileJSLoader,
+      compileJSEmbeddableLoader,
+    ),
+  ),
 )
 
 function compileJSSelectES2016() {
@@ -99,9 +105,35 @@ function compileJSSelectEs3() {
     .pipe(gulp.dest('./dist'))
 }
 
+function compileJSEmbeddableLoader() {
+  return gulp
+    .src('./embeddableLoader.js')
+    .pipe(babel({
+      presets: [['env', {
+        targets: {
+          browsers: ['ie 8'],
+        },
+      }]],
+    }))
+    .pipe(replace('<VERSION>', packageInfo.version))
+    .pipe(gulp.dest('./dist'))
+}
+
+async function composeStandaloneLoader(done) {
+  const readFile = util.promisify(fs.readFile)
+  const writeFile = util.promisify(fs.writeFile)
+
+  const embeddableLoader = await readFile('./embeddableLoader.js', 'utf-8')
+  const standaloneLoader = await readFile('./loader.js', 'utf-8')
+
+  await writeFile('./dist/loader.js', standaloneLoader.replace('// %{EMBEDDABLE_LOADER}%', embeddableLoader), 'utf-8')
+
+  done()
+}
+
 function compileJSLoader() {
   return gulp
-    .src('./loader.js')
+    .src('./dist/loader.js')
     .pipe(babel({
       presets: [['env', {
         targets: {
