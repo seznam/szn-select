@@ -3,11 +3,11 @@
   const BUNDLES = {
     ELEMENT_ES2016: 'es2016',
     ELEMENT_ES3: 'es3',
-    ELEMENTS_ES2016: '',
-    ELEMENTS_ES3: '',
-    ALL_CE: 'bundle.ce',
-    ALL_ES2016: 'bundle.es2016',
-    ALL_ES3: 'bundle.es3',
+    ELEMENTS_ES2016: 'bundle-elements.es2016',
+    ELEMENTS_ES3: 'bundle-elements.es3',
+    ALL_CE: 'bundle-full.ce',
+    ALL_ES2016: 'bundle-full.es2016',
+    ALL_ES3: 'bundle-full.es3',
   }
   const URL_ATTRIBUTES = {
     PACKAGE: 'data-szn-select--loader-urls--package',
