@@ -203,6 +203,9 @@
           attributes: metaAttributes,
         },
       }))
+      // Make the requested attributes accessible even if the client code was too late to intercept the event
+      instance._root.requestedAttributes = metaAttributes
+      instance._root.isReady = true
     }
     instance._lastMetaAttributes = metaAttributes
   }
