@@ -26,12 +26,9 @@
   }
 
   // Firefox 52-based browsers (e.g. Palemoon) have faulty support for for-scoped const variable declarations
-  let supportsForConst = false
-  try {
-    eval('for (const _ of []);') // eslint-disable-line no-eval
-    supportsForConst = true
-  } catch (_) {
-  }
+  const firefoxVersionMatch = navigator.userAgent.match(/ Firefox\/(\d+)/)
+  const firefoxVersion = firefoxVersionMatch && parseInt(firefoxVersionMatch[1], 10)
+  const supportsForConst = !firefoxVersion || firefoxVersion > 52
   const es2016Supported = supportsForConst && global.Proxy && Array.prototype.includes
 
   const runtimeLoaded = global.SznElements && global.SznElements.init && global.SznElements.injectStyles
