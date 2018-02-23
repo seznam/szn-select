@@ -22,7 +22,7 @@ use:
 
 * [szn-select for react](https://www.npmjs.com/package/@jurca/szn-select-react)
   ([GitHub](https://github.com/jurca/szn-select-react))
-* jQuery: use the deployment steps bellow for static sites
+* jQuery: use the deployment steps for static sites (see bellow)
 
 More ready-to-use bundles are coming soon.
 
