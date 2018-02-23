@@ -50,9 +50,15 @@ loader (as stated above, this may be a bundle):
   the package's files are available. This can be overridden for specific cases
   using the options listed below.
 * `data-szn-select--loader-urls--element-es3` - overrides the URL for loading
-  the ES3-compatible implementation of the `szn-select` element
+  the ES3-compatible implementation of the `szn-select` element.
 * `data-szn-select--loader-urls--element-es2016` - overrides the URL for
-  loading the ES2016-compatible implementation of the `szn-select` element
+  loading the ES2016-compatible implementation of the `szn-select` element.
+* `data-szn-select--loader-urls--element-bundle-es3` - overrides the URL for
+  loading the ES3-compatible implementation of the `szn-select` and
+  `szn-tethered` element.
+* `data-szn-select--loader-urls--element-bundle-es2016` - overrides the URL
+  for loading the ES2016-compatible implementation of the `szn-select` and
+  `szn-tethered` element.
 * `data-szn-select--loader-urls--bundle-es3` - overrides the URL for loading
   the ES3-compatible bundle of the `szn-select` and `szn-tethered` elements
   and the szn-elements runtime.

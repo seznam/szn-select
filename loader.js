@@ -3,6 +3,8 @@
   const BUNDLES = {
     ELEMENT_ES2016: 'es2016',
     ELEMENT_ES3: 'es3',
+    ELEMENTS_ES2016: '',
+    ELEMENTS_ES3: '',
     ALL_CE: 'bundle.ce',
     ALL_ES2016: 'bundle.es2016',
     ALL_ES3: 'bundle.es3',
@@ -12,6 +14,8 @@
   }
   URL_ATTRIBUTES[BUNDLES.ELEMENT_ES2016] = 'data-szn-select--loader-urls--element-es2016'
   URL_ATTRIBUTES[BUNDLES.ELEMENT_ES3] = 'data-szn-select--loader-urls--element-es3'
+  URL_ATTRIBUTES[BUNDLES.ELEMENTS_ES2016] = 'data-szn-select--loader-urls--element-bundle-es2016'
+  URL_ATTRIBUTES[BUNDLES.ELEMENTS_ES3] = 'data-szn-select--loader-urls--element-bundle-es3'
   URL_ATTRIBUTES[BUNDLES.ALL_CE] = 'data-szn-select--loader-urls--bundle-ce'
   URL_ATTRIBUTES[BUNDLES.ALL_ES2016] = 'data-szn-select--loader-urls--bundle-es2016'
   URL_ATTRIBUTES[BUNDLES.ALL_ES3] = 'data-szn-select--loader-urls--bundle-es3'
@@ -30,7 +34,8 @@
   }
   const es2016Supported = supportsForConst && global.Proxy && Array.prototype.includes
 
-  const dependenciesLoaded = global.SznElements && global.SznElements['szn-tethered']
+  const runtimeLoaded = global.SznElements && global.SznElements.init && global.SznElements.injectStyles
+  const dependenciesLoaded = runtimeLoaded && global.SznElements['szn-tethered']
   const bundleToLoad = dependenciesLoaded ?
     (es2016Supported ?
       BUNDLES.ELEMENT_ES2016
@@ -38,13 +43,21 @@
       BUNDLES.ELEMENT_ES3
     )
     :
-    (global.customElements ?
-      BUNDLES.ALL_CE
-      :
+    (runtimeLoaded ?
       (es2016Supported ?
-        BUNDLES.ALL_ES2016
+        BUNDLES.ELEMENTS_ES2016
         :
-        BUNDLES.ALL_ES3
+        BUNDLES.ELEMENTS_ES3
+      )
+      :
+      (global.customElements ?
+        BUNDLES.ALL_CE
+        :
+        (es2016Supported ?
+          BUNDLES.ALL_ES2016
+          :
+          BUNDLES.ALL_ES3
+        )
       )
     )
   const loaderScript = (
