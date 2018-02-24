@@ -87,6 +87,13 @@ ES3-compatible bundle (or implement the bundle selection logic yourselves):
 <script src="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select.bundle.es3.min.js"></script>
 ```
 
+Please note that using the loader has great advantages: the compatibility of
+various assistive technologies may and does change over time and the loader
+will attempt to load the latest backwards-compatible version for you to get
+the best compatibility. It is also recommended to use a version range (e.g.
+`1.x`) when loading the loader from unpkg.com to get the latest compatible
+version of the loader itself.
+
 3. You may turn any ordinary `<select>` into a `<szn-select>` by wrapping it
 and providing a UI container:
 
