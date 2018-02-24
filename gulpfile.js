@@ -13,6 +13,8 @@ const postCustomProperties = require('postcss-custom-properties')
 const util = require('util')
 const packageInfo = require('./package.json')
 
+const compatibleVersionRange = `${packageInfo.version.split('.').shift()}.x`
+
 async function injectCss(done) {
   await Promise.all([
     'szn-select',
@@ -115,7 +117,7 @@ function compileJSEmbeddableLoader() {
         },
       }]],
     }))
-    .pipe(replace('<VERSION>', packageInfo.version))
+    .pipe(replace('<VERSION>', compatibleVersionRange))
     .pipe(gulp.dest('./dist'))
 }
 
@@ -141,7 +143,7 @@ function compileJSLoader() {
         },
       }]],
     }))
-    .pipe(replace('<VERSION>', packageInfo.version))
+    .pipe(replace('<VERSION>', compatibleVersionRange))
     .pipe(gulp.dest('./dist'))
 }
 
@@ -153,7 +155,7 @@ const copy = gulp.parallel(
 function copyPackageMetaFiles() {
   return gulp
     .src(['./LICENSE', './package.json', './README.md'])
-    .pipe(replace('<VERSION>', packageInfo.version))
+    .pipe(replace('<VERSION>', compatibleVersionRange))
     .pipe(gulp.dest('./dist'))
 }
 
