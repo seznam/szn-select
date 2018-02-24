@@ -58,23 +58,23 @@ loader (as stated above, this may be a bundle):
 * `data-szn-select--loader-urls--package` - specifies the base URL where all
   the package's files are available. This can be overridden for specific cases
   using the options listed below.
-* `data-szn-select--loader-urls--element-es3` - overrides the URL for loading
-  the ES3-compatible implementation of the `szn-select` element.
-* `data-szn-select--loader-urls--element-es2016` - overrides the URL for
-  loading the ES2016-compatible implementation of the `szn-select` element.
-* `data-szn-select--loader-urls--element-bundle-es3` - overrides the URL for
+* `data-szn-select--loader-urls--es3` - overrides the URL for loading the
+  ES3-compatible implementation of the `szn-select` element.
+* `data-szn-select--loader-urls--es2016` - overrides the URL for loading the
+  ES2016-compatible implementation of the `szn-select` element.
+* `data-szn-select--loader-urls--bundle-elements-es3` - overrides the URL for
   loading the ES3-compatible implementation of the `szn-select` and
   `szn-tethered` element.
-* `data-szn-select--loader-urls--element-bundle-es2016` - overrides the URL
+* `data-szn-select--loader-urls--bundle-elements-es2016` - overrides the URL
   for loading the ES2016-compatible implementation of the `szn-select` and
   `szn-tethered` element.
-* `data-szn-select--loader-urls--bundle-es3` - overrides the URL for loading
+* `data-szn-select--loader-urls--bundle-full-es3` - overrides the URL for loading
   the ES3-compatible bundle of the `szn-select` and `szn-tethered` elements
   and the szn-elements runtime.
-* `data-szn-select--loader-urls--bundle-es2016` - overrides the URL for
+* `data-szn-select--loader-urls--bundle-full-es2016` - overrides the URL for
   loading the ES2016-compatible implementation of the `szn-select` and
   `szn-tethered` elements and the szn-elements runtime.
-* `data-szn-select--loader-urls--bundle-ce` - overrides the URL for loading
+* `data-szn-select--loader-urls--bundle-full-ce` - overrides the URL for loading
   the ES2016-compatible implementation that relies on the
   [custom elements](https://mdn.io/Window/customElements) API. The bundle
   includes the `szn-select` and `szn-tethered` elements and the szn-elements
