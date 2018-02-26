@@ -28,6 +28,12 @@
     "a11y"
   ],
   "author": "Martin Jurča <martin.jurca@firma.seznam.cz>",
+  "contributors": [
+    {
+      "name": "Lukáš Pazderka",
+      "email": "lukas.pazderka@firma.seznam.cz"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jurca/szn-select/issues"
