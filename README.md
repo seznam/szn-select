@@ -7,6 +7,9 @@ Accessible HTML `<select>` element replacement with customizable UI. Based on
 the patterns used by web components and easy to integrate with various
 frameworks, e.g. React or Angular.
 
+You can [check out the demo](https://jurca.github.io/szn-select/) or take a
+peek at a [fiddle](https://jsfiddle.net/Lnv95bce/17/).
+
 ## Usage
 
 As the [first rule of ARIA states](https://www.w3.org/TR/using-aria/#rule1):
