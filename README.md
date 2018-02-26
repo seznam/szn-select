@@ -45,6 +45,12 @@ fails or is disabled.
 <script src="https://unpkg.com/@jurca/szn-select@<VERSION>/loader.min.js"></script>
 ```
 
+It is recommended to use a
+[semver version range](https://docs.npmjs.com/misc/semver#caret-ranges-123-025-004)
+when using unpkg or a similar JS CDN, such as `1.x` to automatically receive
+the latest compatible version with the most recent bugfixes and compatibility
+updates.
+
 You may use the `async` and `defer` attributes if you want the loader to be
 loaded asynchronously. You may also bundle the loader with other JavaScript
 files.
