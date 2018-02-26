@@ -220,6 +220,17 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
       this._a11yButton.setAttribute('aria-activedescendant', '')
       this._a11yButton.setAttribute('aria-labelledby', '')
     }
+
+    if (this.select.title) {
+      this._a11yButton.setAttribute('title', this.select.title)
+    } else {
+      this._a11yButton.removeAttribute('title')
+    }
+    if (this.select.hasAttribute('aria-label')) {
+      this._a11yButton.setAttribute('aria-label', this.select.getAttribute('aria-label'))
+    } else {
+      this._a11yButton.removeAttribute('aria-label')
+    }
   }
 
   _updateA11yMenu() {
