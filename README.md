@@ -25,6 +25,8 @@ use:
 
 * [szn-select for react](https://www.npmjs.com/package/@jurca/szn-select-react)
   ([GitHub](https://github.com/jurca/szn-select-react))
+* [szn-select for vue](https://www.npmjs.com/package/@jurca/szn-select-vue)
+  ([GitHub](https://github.com/jurca/szn-select-vue))
 * jQuery / Prototype / MooTools / Dojo Toolkit / script.aculo.us / JAK: use
   the deployment steps for static sites (see bellow)
 
