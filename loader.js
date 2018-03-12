@@ -56,7 +56,7 @@
     return (
       document.currentScript ||
       document.querySelector(
-        `[${LOADER_ATTRIBUTE_PREFIX}${SUPPORTED_LOADER_ATTRIBUTES.join(`'],[${LOADER_ATTRIBUTE_PREFIX}`)}]`,
+        `[${LOADER_ATTRIBUTE_PREFIX}${SUPPORTED_LOADER_ATTRIBUTES.join(`],[${LOADER_ATTRIBUTE_PREFIX}`)}]`,
       ) ||
       {getAttribute: () => null} // there is no overriding configuration
     )
