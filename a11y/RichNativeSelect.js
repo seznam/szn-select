@@ -79,7 +79,11 @@ class RichNativeSelect extends AccessibilityBroker {
     switch (event.type) {
       case 'click':
         event.stopPropagation()
-        if (!this.ui.contains(event.target)) {
+        if (this.ui.contains(event.target)) {
+          // We need to do this in case we are enclosed by a <label> element, otherwise we would lose and regain focus,
+          // which would close the dropdown immediately.
+          event.preventDefault()
+        } else {
           this.setOpen(false)
         }
         break
