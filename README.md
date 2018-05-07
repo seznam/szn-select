@@ -241,6 +241,18 @@ Note: It appears that MS Edge 17 will not need any of these polyfills.
 
 ### Support for IE 9 and 10
 
+Internet Explorer 10 and older seems to have some issue with the minified
+version of the DOM API polyfill mentioned above, so, first, change the code to
+use the unminified version:
+
+```html
+<script>
+if (!("firstElementChild" in document.createDocumentFragment())) {
+  document.write('<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/polyfill/modern-ie.js"><\/script>')
+}
+</script>
+```
+
 Internet Explorer 10 and older does not have support for the custom elements
 nor the [MutationObserver](https://mdn.io/MutationObserver), however, versions
 9 and 10 support the (deprecated)
