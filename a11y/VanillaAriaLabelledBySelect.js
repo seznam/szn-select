@@ -20,6 +20,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     this._onBlur = this.onBlur.bind(this)
     this._onKeyDown = this.onKeyDown.bind(this)
     this._onMouseUp = this.onMouseUp.bind(this)
+    this._onClick = this.onClick.bind(this)
   }
 
   setOpen(isOpen) {
@@ -194,11 +195,32 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     }
   }
 
+  onClick(event) {
+    const clickedLabel = event.target.closest('label')
+    if (!clickedLabel) {
+      return
+    }
+
+    if (clickedLabel.htmlFor) {
+      if (clickedLabel.htmlFor !== this.select.id) {
+        return
+      }
+    } else {
+      if (!clickedLabel.contains(this.select)) {
+        return
+      }
+    }
+
+    this._a11yButton.focus()
+    event.preventDefault()
+  }
+
   _addEventListeners() {
     this._a11yButton.addEventListener('focus', this._onFocus)
     this._a11yButton.addEventListener('blur', this._onBlur)
     this._uiContainer.addEventListener('keydown', this._onKeyDown)
     addEventListener('mouseup', this._onMouseUp)
+    addEventListener('click', this._onClick)
   }
 
   _removeEventListeners() {
@@ -206,6 +228,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     this._a11yButton.removeEventListener('blur', this._onBlur)
     this._uiContainer.removeEventListener('keydown', this._onKeyDown)
     removeEventListener('mouseup', this._onMouseUp)
+    removeEventListener('click', this._onClick)
   }
 
   _updateA11yButton() {
