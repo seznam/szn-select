@@ -206,9 +206,9 @@ higher specificity or use `!important` to override the default styles.
 ### Suppport of Microsoft Edge 16 and older, Internet Explorer 11 and older
 
 You will need to include polyfills to make `<szn-select>` work in Internet
-Explorer. Changes are, if you are already using babel/webpack in your project,
+Explorer. Chances are, if you are already using babel/webpack in your project,
 that you are already using the necessary polyfills. If, however, things do not
-work in IE, please include the
+work in IE/Edge, please include the
 [babel polyfill](https://babeljs.io/docs/usage/polyfill/) (or the
 [core-js](https://github.com/zloirock/core-js) polyfill itself) by adding the
 following code in the `<head>` element **before** including the
@@ -222,12 +222,12 @@ if (!window.WeakSet || !window.Proxy || !Array.prototype.includes) {
 </script>
 ```
 
-This will include the polyfill only if the browser needs, therefore the users
-of modern browsers won't be slowed down by downloading more JavaScript that
-they don't need anyway.
+This will include the polyfill only if the browser needs it, therefore the
+users of modern browsers won't be slowed down by downloading more JavaScript
+that they don't need anyway.
 
-Next you will need to include the polyfill for missing DOM APIs for IE 11 and
-Edge 12-16.
+Next you will need to include the polyfill for missing DOM APIs for IE 9-11
+and Edge 12-16.
 
 ```html
 <script>
