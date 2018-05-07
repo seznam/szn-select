@@ -159,7 +159,7 @@
     }
   }
 
-    /**
+  /**
    * Registers the provided szn-options element's DOM mutation observer to observe the related options for changes.
    *
    * @param {SznSelectOptions} instance The szn-options element instance.
