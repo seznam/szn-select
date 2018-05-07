@@ -205,7 +205,7 @@ higher specificity or use `!important` to override the default styles.
 
 ### Suppport of Microsoft Edge 16 and older, Internet Explorer 11 and older
 
-You will need to include polyfills to make `<szn-select>`` work in Internet
+You will need to include polyfills to make `<szn-select>` work in Internet
 Explorer. Changes are, if you are already using babel/webpack in your project,
 that you are already using the necessary polyfills. If, however, things do not
 work in IE, please include the
