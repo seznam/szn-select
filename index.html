@@ -6,6 +6,23 @@
 
     <title>szn-select demo</title>
 
+    <script>
+      if (!window.WeakSet || !window.Proxy || !Array.prototype.includes) {
+        document.write('<script src="https://unpkg.com/babel-polyfill@6.26.x/browser.js"><\/script>')
+      }
+    </script>
+    <script>
+      if (!("firstElementChild" in document.createDocumentFragment())) {
+        document.write('<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/polyfill/modern-ie.js"><\/script>')
+      }
+    </script>
+    <script>
+      if (!window.MutationObserver) {
+        window.module = {} // required by the polyfill
+        document.write('<script src="https://unpkg.com/mutation-observer@1.x/index.js"><\/script>')
+      }
+    </script>
+
     <link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@1.x/szn-select-nojs.css">
 
     <style>
