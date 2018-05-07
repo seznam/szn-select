@@ -178,7 +178,7 @@ Internet Explorer):
 
   --szn-select--active-box-shadow: 0 0 3px rgba(0, 132, 255, .4);
 }
-``` 
+```
 
 To style the dimensions of the dropdown for single-selects, use the following
 CSS selector:
@@ -201,7 +201,62 @@ higher specificity or use `!important` to override the default styles.
 * Opera
 * Safari
 * Edge
-* Internet Explorer 11 (optional polyfills for IE8-10 are in development)
+* Internet Explorer 9 - 11 (optional polyfills for IE8 are in development)
+
+### Suppport of Microsoft Edge 16 and older, Internet Explorer 11 and older
+
+You will need to include polyfills to make `<szn-select>`` work in Internet
+Explorer. Changes are, if you are already using babel/webpack in your project,
+that you are already using the necessary polyfills. If, however, things do not
+work in IE, please include the
+[babel polyfill](https://babeljs.io/docs/usage/polyfill/) (or the
+[core-js](https://github.com/zloirock/core-js) polyfill itself) by adding the
+following code in the `<head>` element **before** including the
+`<szn-select>` element's JavaScript:
+
+```html
+<script>
+if (!window.WeakSet || !window.Proxy || !Array.prototype.includes) {
+  document.write('<script src="https://unpkg.com/babel-polyfill@6.26.x/browser.js"><\/script>')
+}
+</script>
+```
+
+This will include the polyfill only if the browser needs, therefore the users
+of modern browsers won't be slowed down by downloading more JavaScript that
+they don't need anyway.
+
+Next you will need to include the polyfill for missing DOM APIs for IE 11 and
+Edge 12-16.
+
+```html
+<script>
+if (!("firstElementChild" in document.createDocumentFragment())) {
+  document.write('<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/polyfill/modern-ie.min.js"><\/script>')
+}
+</script>
+```
+
+Note: It appears that MS Edge 17 will not need any of these polyfills.
+
+### Support for IE 9 and 10
+
+Internet Explorer 10 and older does not have support for the custom elements
+nor the [MutationObserver](https://mdn.io/MutationObserver), however, versions
+9 and 10 support the (deprecated)
+[DOM mutation events](https://mdn.io/Mutation_events). This allows us to use
+the following [polyfill](https://www.npmjs.com/package/mutation-observer) to
+enable support for IE 9 and 10. Add the following code to the `<head>` element
+**before** including any other polyfills:
+
+```html
+<script>
+  if (!window.MutationObserver) {
+    window.module = {} // required by the polyfill
+    document.write('<script src="https://unpkg.com/mutation-observer@1.x/index.js"><\/script>')
+  }
+</script>
+```
 
 ## Current state of compatibility with assistive technologies
 
