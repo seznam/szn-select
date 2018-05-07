@@ -150,6 +150,7 @@ function compileJSLoader() {
 const copy = gulp.parallel(
   copyPackageMetaFiles,
   copyNoJsCss,
+  copyPolyfills,
 )
 
 function copyPackageMetaFiles() {
@@ -163,6 +164,12 @@ function copyNoJsCss() {
   return gulp
     .src('./szn-select-nojs.css')
     .pipe(gulp.dest('./dist'))
+}
+
+function copyPolyfills() {
+  return gulp
+    .src('./polyfill/*.js')
+    .pipe(gulp.dest('./dist/polyfill'))
 }
 
 function compileCss() {
@@ -224,7 +231,7 @@ async function bundle(done) {
 
 function minify() {
   return gulp
-    .src('./dist/*.js')
+    .src('./dist/**/*.js')
     .pipe(babel({
       presets: ['minify'],
     }))
