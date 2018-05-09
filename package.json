@@ -45,17 +45,17 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-minify": "^0.2.0",
     "del": "^3.0.0",
-    "eslint": "^4.8.0",
+    "eslint": "^4.19.1",
     "eslint-config-fbjs-opensource": "^1.0.0",
     "glob": "^7.1.2",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
-    "gulp-postcss": "^7.0.0",
+    "gulp-postcss": "^7.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.6.1",
-    "jest": "^21.2.1",
-    "postcss-custom-properties": "^6.2.0"
+    "jest": "^22.4.3",
+    "postcss-custom-properties": "^6.3.1"
   },
   "peerDependencies": {
     "@jurca/szn-elements": "^1.0.1",
