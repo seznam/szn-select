@@ -61,7 +61,7 @@
     }
 
     onUnmount() {
-      if (this._dropdown) {
+      if (this._dropdown && this._dropdown.parentNode) {
         this._dropdown.parentNode.removeChild(this._dropdown)
       }
 
