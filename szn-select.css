@@ -113,7 +113,6 @@ szn-select[data-szn-select--vanilla-aria] select {
 
 szn-select[data-szn-select--vanilla-aria] szn-select--ui {
   position: relative;
-  z-index: 1;
 }
 
 szn-select[data-szn-select--vanilla-aria] ul[aria-hidden='true'] {

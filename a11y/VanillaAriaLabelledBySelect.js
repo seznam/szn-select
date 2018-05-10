@@ -43,8 +43,8 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
   onMount() {
     this._updateA11yMenu()
     this._updateA11yButton()
-    this._uiContainer.appendChild(this._a11yButton)
-    this._uiContainer.appendChild(this._a11yMenu)
+    this._uiContainer.insertBefore(this._a11yButton, this._uiContainer.firstChild)
+    this._uiContainer.insertBefore(this._a11yMenu, this._a11yButton.nextSibling)
 
     this._selectObserver.observe(this.select, {
       childList: true,
