@@ -42,19 +42,19 @@
   "devDependencies": {
     "@jurca/szn-elements": "^1.1.0",
     "@jurca/szn-tethered": "^1.0.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-minify": "^0.2.0",
     "del": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-config-fbjs-opensource": "^1.0.0",
-    "glob": "^7.1.2",
+    "glob": "^7.1.3",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-postcss": "^7.0.1",
-    "gulp-rename": "^1.2.2",
+    "gulp-rename": "^1.4.0",
     "gulp-replace": "^0.6.1",
-    "jest": "^22.4.3",
+    "jest": "^22.4.4",
     "postcss-custom-properties": "^6.3.1"
   },
   "peerDependencies": {
