@@ -198,6 +198,8 @@ async function bundle(done) {
     sznElementsCustomElements,
     sznElementsMutationObserverEs3,
     sznElementsMutationObserverEs2015,
+    sznElementsNoopRuntimeES3,
+    sznElementsNoopRuntimeES2015,
   ] = await Promise.all([
     './dist/szn-select.es3.js',
     './dist/szn-select.es2016.js',
@@ -208,6 +210,8 @@ async function bundle(done) {
     '@jurca/szn-elements/szn-elements-custom-elements.js',
     '@jurca/szn-elements/szn-elements-mutation-observer.es3.js',
     '@jurca/szn-elements/szn-elements-mutation-observer.es6.js',
+    '@jurca/szn-elements/szn-elements-noop.es3.js',
+    '@jurca/szn-elements/szn-elements-noop.es6.js',
   ].map(require.resolve).map(filePath => readFile(filePath, 'utf-8')))
 
   const baseBundleEs3 = [sznTetheredEs3, sznSelectEs3, sznElementsEs3]
@@ -215,6 +219,8 @@ async function bundle(done) {
   const bundleEs3 = [...baseBundleEs3, sznElementsMutationObserverEs3]
   const bundleEs2016 = [...baseBundleEs2016, sznElementsMutationObserverEs2015]
   const bundleCe = [...baseBundleEs2016, sznElementsCustomElements]
+  const bundleNoopEs3 = [...baseBundleEs3, sznElementsNoopRuntimeES3]
+  const bundleNoopEs2016 = [...baseBundleEs2016, sznElementsNoopRuntimeES2015]
 
   await Promise.all([
     ['elements.es3', [sznTetheredEs3, sznSelectEs3]],
@@ -222,6 +228,8 @@ async function bundle(done) {
     ['full.es3', bundleEs3],
     ['full.es2016', bundleEs2016],
     ['full.ce', bundleCe],
+    ['full.noop-rt.es3', bundleNoopEs3],
+    ['full.noop-rt.es2016', bundleNoopEs2016],
   ].map(
     ([bundleName, sources]) => writeUtfFile(`./dist/szn-select.bundle-${bundleName}.js`, sources.join('\n;\n')),
   ))
