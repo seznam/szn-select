@@ -190,7 +190,7 @@ CSS selector:
 }
 ```
 
-Note that the styles used by the `<szn-select>` are applied using `<styles>`
+Note that the styles used by the `<szn-select>` are applied using `<style>`
 elements appended the document's `<head>`. You will have to use selectors with
 higher specificity or use `!important` to override the default styles.
 
