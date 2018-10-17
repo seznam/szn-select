@@ -22,6 +22,16 @@
           },
         })
       }
+      if (!rootElement.hasOwnProperty('dropdownClassName')) {
+        Object.defineProperty(rootElement, 'dropdownClassName', {
+          get: () => rootElement._broker._ui.dropdownClassName || '',
+          set: value => {
+            if (rootElement._broker._ui && rootElement._broker._ui._broker) {
+              rootElement._broker._ui.dropdownClassName = value
+            }
+          },
+        })
+      }
 
       this.isOpen = false
 
