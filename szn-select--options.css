@@ -8,11 +8,8 @@ szn-select--options {
   border-radius: var(--szn-select--options--border-radius-dropdown, 0 0 4px 4px);
   height: 100%;
   box-sizing: border-box;
-  overflow: auto;
-  overflow-x: hidden;
 
   white-space: nowrap;
-  text-overflow: ellipsis;
   color: var(--szn-select--options--text-color, #000000);
 
   background: var(--szn-select--options--background-color, #ffffff);
@@ -29,6 +26,10 @@ szn-select--options [data-szn-select--options--option] {
   display: block;
 
   padding: var(--szn-select--options--item-padding, 5px 5px 5px 12px);
+  overflow: auto;
+  overflow-x: hidden;
+
+  text-overflow: ellipsis;
 
   cursor: pointer;
 }
