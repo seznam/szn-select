@@ -22,6 +22,18 @@
           },
         })
       }
+      if (!rootElement.hasOwnProperty('dropdownClassName')) {
+        Object.defineProperty(rootElement, 'dropdownClassName', {
+          get: () => rootElement._broker._dropdownClassName,
+          set: value => {
+            const broker = rootElement._broker
+            broker._dropdownClassName = value
+            if (broker._dropdownOptions && broker._select && !broker._select.multiple) {
+              broker._dropdownOptions.className = value
+            }
+          },
+        })
+      }
 
       rootElement.setSelectElement = this.setSelectElement.bind(this)
       rootElement.setFocus = this.setFocus.bind(this)
@@ -32,6 +44,7 @@
       this._select = null
       this._button = null
       this._dropdown = null
+      this._dropdownClassName = ''
       this._dropdownPosition = null
       this._dropdownContent = SznElements.buildDom(
         '<szn- data-szn-select--ui--dropdown data-szn-tethered--content></szn->',
@@ -218,6 +231,7 @@
     initSingleSelectButton(instance)
 
     instance._dropdownOptions = document.createElement('szn-select--options')
+    instance._dropdownOptions.className = instance._dropdownClassName
     instance._dropdown = document.createElement('szn-tethered')
     instance._dropdown.appendChild(instance._dropdownContent)
     instance._dropdownContent.appendChild(instance._dropdownOptions)
