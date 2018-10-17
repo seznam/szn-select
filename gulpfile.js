@@ -6,6 +6,7 @@ const glob = require('glob')
 const gulp = require('gulp')
 const babel = require('gulp-babel')
 const concat = require('gulp-concat')
+const cssnano = require('gulp-cssnano')
 const rename = require('gulp-rename')
 const replace = require('gulp-replace')
 const postCss = require('gulp-postcss')
@@ -180,6 +181,7 @@ function compileCss() {
         preserve: true,
       }),
     ]))
+    .pipe(cssnano())
     .pipe(gulp.dest('./dist'))
 }
 
