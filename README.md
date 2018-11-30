@@ -190,6 +190,47 @@ CSS selector:
 }
 ```
 
+The appearance of the options dropdown can be customized by setting the 
+`dropdownClassName` property of the `<szn-select>` element:
+
+```html
+<szn-select id="my-select">
+  ...
+</szn-select>
+<script>
+  document.getElementById('my-select').dropdownClassName = 'my-custom-dropdown'
+</script>
+```
+
+This will configure this particular `<szn-select>` to set the 
+`my-custom-dropdown` CSS class on its own options dropdown 
+(the `<szn-select--options>` element).
+
+With the custom CSS class set, your will now be able to override the look&feel 
+of this particular select's dropdown without affecting the rest. One approach 
+you may utilize is overriding the CSS custom properties configuring the 
+look&feel - if you are not concerned about compatibility with Internet 
+Explorer. The code below shows the default configuration specified in 
+`szn-select.css`:
+
+```css
+.my-custom-dropdown {
+  --szn-select--options--border-width: var(--szn-select--border-width);
+  --szn-select--options--border-color: var(--szn-select--border-color);
+  --szn-select--options--border-radius-dropdown: 0 0 var(--szn-select--border-radius) var(--szn-select--border-radius);
+  --szn-select--options--border-radius-dropup: var(--szn-select--border-radius) var(--szn-select--border-radius) 0 0;
+  --szn-select--options--border-radius-mutli-select: var(--szn-select--border-radius);
+  --szn-select--options--item-padding: var(--szn-select--option-padding);
+  --szn-select--options--item-indent: var(--szn-select--option-indent);
+  --szn-select--options--text-color: var(--szn-select--text-color);
+  --szn-select--options--disabled-text: var(--szn-select--disabled-text-color);
+  --szn-select--options--background-color: var(--szn-select--background);
+  --szn-select--options--selected-background: var(--szn-select--selected-option-background);
+  --szn-select--ui--dropdown-offset: calc(-1 * var(--szn-select--border-width));
+  --szn-select--ui--dropdown-min-width: var(--szn-select--min-width);
+}
+```
+
 Note that the styles used by the `<szn-select>` are applied using `<style>`
 elements appended the document's `<head>`. You will have to use selectors with
 higher specificity or use `!important` to override the default styles.
