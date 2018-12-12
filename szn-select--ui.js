@@ -48,9 +48,7 @@
               return
             }
 
-            const isDropdownRebuildNeeded = (
-              [instance._dropdownContainer, value].indexOf(DEFAULT_DROPDOWN_CONTAINER) > -1
-            )
+            const isDropdownRebuildNeeded = [instance._dropdownContainer, value].includes(DEFAULT_DROPDOWN_CONTAINER)
             instance._dropdownContainer = value
             if (!instance._dropdown || !instance._dropdown.parentNode) {
               return
