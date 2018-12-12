@@ -15,10 +15,10 @@
         Object.defineProperty(rootElement, 'minBottomSpace', {
           get: () => rootElement._broker._minBottomSpace,
           set: value => {
-            rootElement._broker._minBottomSpace = value
             if (rootElement._broker._dropdown && rootElement._broker._dropdown._broker) {
               rootElement._broker._dropdown.minBottomSpace = value
             }
+            rootElement._broker._minBottomSpace = value
           },
         })
       }

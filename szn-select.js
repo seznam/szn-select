@@ -15,10 +15,10 @@
         Object.defineProperty(rootElement, 'minBottomSpace', {
           get: () => rootElement._broker._minBottomSpace,
           set: value => {
-            rootElement._broker._minBottomSpace = value
-            if (rootElement._broker._ui && rootElement._broker._ui._broker) {
+            if (rootElement._broker && rootElement._broker._ui._broker) {
               rootElement._broker._ui.minBottomSpace = value
             }
+            rootElement._broker._minBottomSpace = value
           },
         })
       }
@@ -26,7 +26,7 @@
         Object.defineProperty(rootElement, 'dropdownClassName', {
           get: () => rootElement._broker._ui.dropdownClassName || '',
           set: value => {
-            if (rootElement._broker._ui && rootElement._broker._ui._broker) {
+            if (rootElement._broker && rootElement._broker._ui._broker) {
               rootElement._broker._ui.dropdownClassName = value
             }
           },
