@@ -242,7 +242,7 @@ higher specificity or use `!important` to override the default styles.
 * Opera
 * Safari
 * Edge
-* Internet Explorer 9 - 11 (optional polyfills for IE8 are in development)
+* Internet Explorer 9 - 11 (polyfill for IE8 is possible and in consideration)
 
 ### Suppport of Microsoft Edge 16 and older, Internet Explorer 11 and older
 
@@ -264,8 +264,8 @@ if (!window.WeakSet || !window.Proxy || !Array.prototype.includes) {
 ```
 
 This will include the polyfill only if the browser needs it, therefore the
-users of modern browsers won't be slowed down by downloading more JavaScript
-that they don't need anyway.
+users of modern browsers won't be slowed down by downloading additional
+JavaScript that they don't need anyway.
 
 Next you will need to include the polyfill for missing DOM APIs for IE 9-11
 and Edge 12-16.
@@ -278,7 +278,7 @@ if (!("firstElementChild" in document.createDocumentFragment())) {
 </script>
 ```
 
-Note: It appears that MS Edge 17 will not need any of these polyfills.
+Microsoft Edge 17+ does not need any of these polyfills.
 
 ### Support for IE 9 and 10
 
