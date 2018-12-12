@@ -32,6 +32,16 @@
           },
         })
       }
+      if (!rootElement.hasOwnProperty('dropdownContainer')) {
+        Object.defineProperty(rootElement, 'dropdownContainer', {
+          get: () => rootElement._broker._ui.dropdownContainer || '',
+          set: value => {
+            if (rootElement._broker && rootElement._broker._ui._broker) {
+              rootElement._broker._ui.dropdownContainer = value
+            }
+          },
+        })
+      }
 
       this.isOpen = false
 

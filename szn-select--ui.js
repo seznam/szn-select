@@ -8,6 +8,7 @@
   const MIN_BOTTOM_SPACE = 160 // px
   const INTERACTION_DOM_EVENTS = ['mousedown', 'click', 'touchstart']
   const RESIZE_RELATED_DOM_EVENTS = ['resize', 'scroll', 'wheel', 'touchmove']
+  const DEFAULT_DROPDOWN_CONTAINER = document.body
 
   SznElements['szn-select--ui'] = class SznSelectUi {
     constructor(rootElement) {
@@ -34,6 +35,41 @@
           },
         })
       }
+      if (!rootElement.hasOwnProperty('dropdownContainer')) {
+        // typeof Node === 'function'
+        Object.defineProperty(rootElement, 'dropdownContainer', {
+          get: () => rootElement._broker._dropdownContainer,
+          set: value => {
+            if (typeof Node === 'function' /* IE8 */ && !(value instanceof Node)) {
+              throw new TypeError('The provided dropdown container is not a DOM node: ' + value)
+            }
+            const instance = rootElement._broker
+            if (!instance || value === instance._dropdownContainer) {
+              return
+            }
+
+            const isDropdownRebuildNeeded = (
+              [instance._dropdownContainer, value].indexOf(DEFAULT_DROPDOWN_CONTAINER) > -1
+            )
+            instance._dropdownContainer = value
+            if (!instance._dropdown || !instance._dropdown.parentNode) {
+              return
+            }
+
+            if (isDropdownRebuildNeeded) {
+              instance._dropdown = createDropdown(instance)
+              value.appendChild(instance._dropdown)
+              if (value === DEFAULT_DROPDOWN_CONTAINER) {
+                onDropdownPositionChange(instance, instance._dropdown.verticalAlignment)
+              } else {
+                instance._dropdownContent.style.height = ''
+              }
+            } else {
+              value.appendChild(instance._dropdown)
+            }
+          },
+        })
+      }
 
       rootElement.setSelectElement = this.setSelectElement.bind(this)
       rootElement.setFocus = this.setFocus.bind(this)
@@ -50,7 +86,7 @@
         '<szn- data-szn-select--ui--dropdown data-szn-tethered--content></szn->',
       )
       this._dropdownOptions = null
-      this._dropdownContainer = document.body
+      this._dropdownContainer = DEFAULT_DROPDOWN_CONTAINER
       this._minBottomSpace = MIN_BOTTOM_SPACE
       this._observer = new MutationObserver(onDomMutated.bind(this))
 
@@ -174,7 +210,12 @@
   }
 
   function onDropdownSizeUpdateNeeded(instance) {
-    if (!instance._dropdown || !instance._dropdown._broker || !instance._dropdownOptions._broker) {
+    if (
+      !instance._dropdown ||
+      !instance._dropdown._broker ||
+      !instance._dropdownOptions._broker ||
+      instance._dropdownContainer !== DEFAULT_DROPDOWN_CONTAINER
+    ) {
       return
     }
 
@@ -232,9 +273,19 @@
 
     instance._dropdownOptions = document.createElement('szn-select--options')
     instance._dropdownOptions.className = instance._dropdownClassName
-    instance._dropdown = document.createElement('szn-tethered')
+    instance._dropdown = createDropdown(instance)
     instance._dropdown.appendChild(instance._dropdownContent)
     instance._dropdownContent.appendChild(instance._dropdownOptions)
+  }
+
+  function createDropdown(instance) {
+    if (instance._dropdownContainer) {
+      return document.createElement('szn-tethered')
+    }
+
+    const dropdown = SznElements.buildDom('<szn- data-szn-select--dropdown></szn->')
+    dropdown._broker = {}
+    return dropdown
   }
 
   function initSingleSelectButton(instance) {
@@ -262,7 +313,9 @@
     options.setOptions(instance._select)
     dropdown.minBottomSpace = instance._minBottomSpace
     dropdown.onVerticalAlignmentChange = instance._onDropdownPositionChange
-    instance._onDropdownPositionChange(dropdown.verticalAlignment)
+    if (instance._dropdownContainer !== DEFAULT_DROPDOWN_CONTAINER) {
+      instance._onDropdownPositionChange(dropdown.verticalAlignment)
+    }
     onDropdownSizeUpdateNeeded(instance)
   }
 
