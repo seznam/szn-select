@@ -204,7 +204,8 @@ The appearance of the options dropdown can be customized by setting the
 
 This will configure this particular `<szn-select>` to set the 
 `my-custom-dropdown` CSS class on its own options dropdown 
-(the `<szn-select--options>` element).
+(the `<szn-select--options>` element). See the **Instance configuration**
+section below for all options.
 
 With the custom CSS class set, your will now be able to override the look&feel 
 of this particular select's dropdown without affecting the rest. One approach 
@@ -234,6 +235,25 @@ Explorer. The code below shows the default configuration specified in
 Note that the styles used by the `<szn-select>` are applied using `<style>`
 elements appended the document's `<head>`. You will have to use selectors with
 higher specificity or use `!important` to override the default styles.
+
+## Instance configuration
+
+Every `<szn-select>` element has several properties that configure the
+element's behavior. These options are not shared between `<szn-select>`
+elements:
+
+* `minBottomSpace: number` - the minimum height in pixels of area between the
+  bottom of the `<szn-select>` and the bottom of the viewport for the dropdown
+  to be displayed below the `<szn-select>`.
+* `dropdownClassName: string` - the CSS class(es) to set on the wrapper
+  element of the `<szn-select>`'s dropdown. This is used to apply custom
+  styling to the dropdown without affecting the dropdowns of other
+  `<szn-select>`s.
+* `dropdownContainer: Node` - the element into which the `<szn-select>` will
+  append its dropdown UI when opened. This is `document.body` by default.
+  Please note that `<szn-select>` will handle positioning the dropdown only if
+  this is set to the default value, otherwise you will have to handle the
+  positioning of the dropdown yourself.
 
 ## Supported browsers
 
