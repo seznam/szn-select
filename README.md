@@ -204,7 +204,8 @@ The appearance of the options dropdown can be customized by setting the
 
 This will configure this particular `<szn-select>` to set the 
 `my-custom-dropdown` CSS class on its own options dropdown 
-(the `<szn-select--options>` element).
+(the `<szn-select--options>` element). See the **Instance configuration**
+section below for all options.
 
 With the custom CSS class set, your will now be able to override the look&feel 
 of this particular select's dropdown without affecting the rest. One approach 
@@ -235,6 +236,25 @@ Note that the styles used by the `<szn-select>` are applied using `<style>`
 elements appended the document's `<head>`. You will have to use selectors with
 higher specificity or use `!important` to override the default styles.
 
+## Instance configuration
+
+Every `<szn-select>` element has several properties that configure the
+element's behavior. These options are not shared between `<szn-select>`
+elements:
+
+* `minBottomSpace: number` - the minimum height in pixels of area between the
+  bottom of the `<szn-select>` and the bottom of the viewport for the dropdown
+  to be displayed below the `<szn-select>`. The default value is `160`.
+* `dropdownClassName: string` - the CSS class(es) to set on the wrapper
+  element of the `<szn-select>`'s dropdown. This is used to apply custom
+  styling to the dropdown without affecting the dropdowns of other
+  `<szn-select>`s.
+* `dropdownContainer: Node` - the element into which the `<szn-select>` will
+  append its dropdown UI when opened. This is `document.body` by default.
+  Please note that `<szn-select>` will handle positioning the dropdown only if
+  this is set to the default value, otherwise you will have to handle the
+  positioning of the dropdown yourself.
+
 ## Supported browsers
 
 * Chrome/Chromium
@@ -242,7 +262,7 @@ higher specificity or use `!important` to override the default styles.
 * Opera
 * Safari
 * Edge
-* Internet Explorer 9 - 11 (optional polyfills for IE8 are in development)
+* Internet Explorer 9 - 11 (polyfill for IE8 is possible and in consideration)
 
 ### Suppport of Microsoft Edge 16 and older, Internet Explorer 11 and older
 
@@ -264,8 +284,8 @@ if (!window.WeakSet || !window.Proxy || !Array.prototype.includes) {
 ```
 
 This will include the polyfill only if the browser needs it, therefore the
-users of modern browsers won't be slowed down by downloading more JavaScript
-that they don't need anyway.
+users of modern browsers won't be slowed down by downloading additional
+JavaScript that they don't need anyway.
 
 Next you will need to include the polyfill for missing DOM APIs for IE 9-11
 and Edge 12-16.
@@ -278,7 +298,7 @@ if (!("firstElementChild" in document.createDocumentFragment())) {
 </script>
 ```
 
-Note: It appears that MS Edge 17 will not need any of these polyfills.
+Microsoft Edge 17+ does not need any of these polyfills.
 
 ### Support for IE 9 and 10
 
