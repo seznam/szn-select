@@ -36,7 +36,6 @@
         })
       }
       if (!rootElement.hasOwnProperty('dropdownContainer')) {
-        // typeof Node === 'function'
         Object.defineProperty(rootElement, 'dropdownContainer', {
           get: () => rootElement._broker._dropdownContainer,
           set: value => {
