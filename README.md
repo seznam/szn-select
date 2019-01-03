@@ -244,7 +244,7 @@ elements:
 
 * `minBottomSpace: number` - the minimum height in pixels of area between the
   bottom of the `<szn-select>` and the bottom of the viewport for the dropdown
-  to be displayed below the `<szn-select>`.
+  to be displayed below the `<szn-select>`. The default value is `160`.
 * `dropdownClassName: string` - the CSS class(es) to set on the wrapper
   element of the `<szn-select>`'s dropdown. This is used to apply custom
   styling to the dropdown without affecting the dropdowns of other
