@@ -277,7 +277,7 @@
   }
 
   function createDropdown(instance) {
-    if (instance._dropdownContainer) {
+    if (instance._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
       return document.createElement('szn-tethered')
     }
 
@@ -294,7 +294,7 @@
       }
 
       instance._button.setSelectElement(instance._select)
-      if (instance._dropdown.parentNode) {
+      if (instance._dropdown.parentNode && this._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
         instance._button.setOpen(true)
       }
       if (instance._dropdownPosition) {
@@ -307,11 +307,13 @@
   }
 
   function initDropdown(instance, dropdown, options) {
-    dropdown.setTether(instance._root)
+    if (instance._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
+      dropdown.setTether(instance._root)
+    }
     options.setOptions(instance._select)
     dropdown.minBottomSpace = instance._minBottomSpace
     dropdown.onVerticalAlignmentChange = instance._onDropdownPositionChange
-    if (instance._dropdownContainer !== DEFAULT_DROPDOWN_CONTAINER) {
+    if (instance._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
       instance._onDropdownPositionChange(dropdown.verticalAlignment)
     }
     onDropdownSizeUpdateNeeded(instance)
