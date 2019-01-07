@@ -293,7 +293,7 @@
       }
 
       instance._button.setSelectElement(instance._select)
-      if (instance._dropdown.parentNode && this._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
+      if (instance._dropdown.parentNode && instance._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
         instance._button.setOpen(true)
       }
       if (instance._dropdownPosition) {
