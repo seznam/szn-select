@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+
+    <title>Legacy seznam.cz select</title>
+
+    <style>
+      html {
+        font: 100% sans-serif;
+      }
+
+      .row {
+        display: flex;
+
+        margin: 1rem 0;
+      }
+
+      label {
+        display: block;
+
+        width: 40%;
+      }
+
+      #app {
+        width: 120px;
+        height: 24px;
+      }
+    </style>
+
+    <style>
+      .blind {
+        position: absolute;
+        left: -5000px;
+        top: auto;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* iconfont.less */
+      @font-face {
+        font-family: 'iconfont';
+        src: url('./static/iconfont.woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      [class^="iconfont-"], [class*=" iconfont-"] {
+        font-family: 'iconfont';
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+      }
+
+      .iconfont-up-bold::before {
+        content: "\5e";
+      }
+      .iconfont-down-bold::before {
+        content: "\2c7";
+      }
+
+      /*
+        https://gitlab.seznam.net/homepage/userweb/blob/next/isomorphic/css/app/shared/blocks/forms-custom-select.less#L55
+      */
+
+      .custom-select {
+        position: relative;
+        display: block;
+        height: 100%;
+      }
+
+      .custom-select__native-select {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .custom-select__select {
+        display: block;
+        height: 100%;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .custom-select__opener {
+        height: 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #fff;
+        padding: 0 8px 0 12px;
+      }
+
+      .custom-select__opener-content {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        padding-right: 18px;
+      }
+
+      .custom-select__opener-content::before {
+        content: " ";
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+        width: 0;
+      }
+
+      .custom-select__opener-text {
+        display: inline-block;
+        vertical-align: middle;
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #000;
+      }
+
+      .custom-select__opener-icon {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        margin-top: -0.4em;
+        color: #de0000;
+        font-size: 72%;
+      }
+
+      .custom-select__options {
+        position: absolute;
+        width: 100%;
+        top: 100%;
+        left: 0;
+        display: none;
+        z-index: 99;
+        border-width: 0 1px 1px 1px;
+        border-style: solid;
+        border-color: #ccc;
+        border-radius: 0 0 4px 4px;
+        background-color: #fff;
+      }
+
+      .custom-select__option {
+        width: 100%;
+        display: inline-block;
+        vertical-align: middle;
+        cursor: pointer;
+        padding: 5px 5px 5px 12px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #000;
+      }
+
+      .custom-select__option:last-child {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+
+      .custom-select__option--highlighted {
+        background-color: #eee;
+        color: #000;
+      }
+
+      .custom-select__select:hover .custom-select__opener {
+        border-color: #aaa;
+      }
+
+      .custom-select--focused .custom-select__opener,
+      .custom-select--focused:hover .custom-select__opener {
+        border-color: #7dbfff;
+        box-shadow: 0 0 3px rgba(0, 132, 255, 0.4);
+      }
+
+      .custom-select--expanded .custom-select__opener {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .custom-select--expanded .custom-select__options {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="" method="get">
+      <fieldset>
+        <legend>Example form</legend>
+
+        <div class="row">
+          <label>Select one:</label>
+          <div>
+            <div id="app"></div>
+          </div>
+        </div>
+        <div>
+          <button>
+            submit
+          </button>
+        </div>
+      </fieldset>
+    </form>
+
+    <script src="https://unpkg.com/custom-event-polyfill@1.0.6/polyfill.js"></script>
+    <script src="https://unpkg.com/@babel/polyfill@7.2.5/dist/polyfill.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.6/prop-types.js"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+    <script type="text/babel">
+      // https://gitlab.seznam.net/homepage/userweb/blob/next/isomorphic/js/app/config/common.js#L58
+      const CONFIG = {
+        KEYCODES: {
+          ENTER: 13,
+          ESC: 27,
+          LEFT: 37,
+          UP: 38,
+          RIGHT: 39,
+          DOWN: 40,
+          HOME: 36,
+          END: 35,
+        },
+      };
+
+      const logger = console;
+      const CUSTOM_OPTION_EVENT = {
+        CLICK: "custom-option-click",
+        HOVER: "custom-option-hover",
+        HOVER_OFF: "custom-option-hover-off",
+      };
+      const EVENT = {
+        CHANGE: "custom-select-change",
+      };
+
+      // https://gitlab.seznam.net/homepage/userweb/blob/next/isomorphic/js/app/providers/client/KeyControl.js
+      class KeyControl {
+        constructor() {
+          this._idGenerator = 0;
+          this._registered = [];
+        }
+
+        register(record) {
+          let id = ++this._idGenerator;
+          let recordWithId = {
+            id,
+            ...record,
+          };
+
+          this._registered.push(
+            recordWithId,
+          );
+          return id;
+        }
+
+        unregister(id) {
+          let index = this._registered.findIndex(
+            record => record.id === id,
+          );
+
+          if (index > -1) {
+            this._registered.splice(
+              index,
+              1,
+            );
+          }
+        }
+
+        handleKeyEvent(e) {
+          let interested = this._registered.filter(
+            item => (
+              item.eventType === e.type &&
+              item.keycodes.indexOf(e.keyCode) > -1
+            ),
+          );
+
+          if (!interested.length) {
+            return false;
+          }
+
+          let item = interested.pop();
+
+          item.handleEvent(e);
+
+          return true;
+        }
+      }
+
+      const keyControl = new KeyControl();
+      // https://gitlab.seznam.net/homepage/userweb/blob/next/isomorphic/js/app/ui/page-hp/client-renderer.js#L243
+      addEventListener('keyup', onKeyEvent)
+      addEventListener('keydown', onKeyEvent)
+      function onKeyEvent(event) {
+        if (keyControl.handleKeyEvent(event)) {
+          event.preventDefault();
+        }
+      }
+
+      // not a copy, only a semi-functional, modified mock without context
+      class ReactExtended extends React.Component {
+        constructor(...args) {
+          super(...args)
+
+          this.bound = {
+            handleEvent: this.handleEvent ? this.handleEvent.bind(this) : null,
+          };
+
+          this.rx_clientProviders = {
+            keyControl,
+          };
+        }
+
+        cssClasses(classNames, ...remainingClassNames) {
+          let result = classNames instanceof Object ?
+            Object.entries(classNames).filter(([_, include]) => include).map(([className]) => className).join(' ')
+          :
+            classNames;
+          if (remainingClassNames.length) {
+            return `${result} ${this.cssClasses(remainingClassNames[0], ...remainingClassNames.slice(1))}`
+          } else {
+            return result
+          }
+        }
+
+        dispatchEvent(eventType, eventDetail) {
+          const target = ReactDOM.findDOMNode(this);
+          target.dispatchEvent(new CustomEvent(eventType, {bubbles: true, cancelable: true, detail: eventDetail}))
+        }
+
+        listen(eventType) {
+          const target = ReactDOM.findDOMNode(this);
+          this.listenOn(target, eventType);
+        }
+
+        unlisten(eventType) {
+          const target = ReactDOM.findDOMNode(this);
+          this.listenOn(target, eventType)
+        }
+
+        listenOn(target, eventType) {
+          target.addEventListener(eventType, this);
+        }
+
+        unlistenOn(target, eventType) {
+          target.removeEventListener(eventType, this);
+        }
+      }
+
+      // https://gitlab.seznam.net/homepage/userweb/blob/next/isomorphic/js/app/ui/components/custom-option.js
+      class CustomOption extends ReactExtended {
+
+        static get EVENT() {
+          return CUSTOM_OPTION_EVENT;
+        }
+
+        static get propTypes() {
+          return {
+            highlighted: PropTypes.bool,
+            value: PropTypes.any,
+            children: PropTypes.node,
+          };
+        }
+
+        handleEvent(event) {
+          let type = event.type;
+
+          switch(type) {
+            case "mousedown":
+              this._sendClickEvent(event);
+              break;
+            case "mouseenter":
+              this._sendHoverEvent(event);
+              break;
+            case "mouseleave":
+              this._sendHoverOffEvent(event);
+              break;
+          }
+        }
+
+        render() {
+          let handleEvent = this.bound.handleEvent;
+
+          return (
+            <li
+              className={this.cssClasses({
+                "custom-select__option": true,
+                "custom-select__option--highlighted": this.props.highlighted,
+              })}
+              role="option"
+              tabIndex="-1"
+              onMouseDown={handleEvent}
+              onMouseEnter={handleEvent}
+              onMouseLeave={handleEvent}
+            >
+              {
+                this.props.children
+              }
+            </li>
+          );
+        }
+
+        _sendClickEvent() {
+          this.dispatchEvent(CUSTOM_OPTION_EVENT.CLICK, {
+            value: this.props.value,
+          });
+        }
+
+        _sendHoverEvent() {
+          this.dispatchEvent(CUSTOM_OPTION_EVENT.HOVER, {
+            value: this.props.value,
+          });
+        }
+
+        _sendHoverOffEvent() {
+          this.dispatchEvent(CUSTOM_OPTION_EVENT.HOVER_OFF, {
+            value: this.props.value,
+          });
+        }
+
+      }
+
+      // https://gitlab.seznam.net/homepage/userweb/blob/next/isomorphic/js/app/ui/components/custom-select.js
+      class CustomSelect extends ReactExtended {
+
+        static get EVENT() {
+          return EVENT;
+        }
+
+        static get propTypes() {
+          return {
+            className: PropTypes.string,
+            defaultValue: PropTypes.any,
+            value: PropTypes.any,
+            name: PropTypes.string,
+            blindSelectLabel: PropTypes.string.isRequired,
+            blindOpenListlabel: PropTypes.string.isRequired,
+            children: PropTypes.node,
+          };
+        }
+
+        static get defaultProps() {
+          return {
+            className: "",
+            defaultValue: null,
+            value: null,
+            name: null,
+          };
+        }
+
+        constructor(props) {
+          super(props);
+
+          let value = (
+            props.defaultValue ||
+            props.value ||
+            props.children[0].props.value
+          );
+
+          this.state = {
+            nativeSelect: true,
+            expanded: false,
+            active: false,
+            hoveredIndex: -1,
+            selectedIndex: this._getOptionIndex(value),
+            selectedValue: value,
+            id: "",
+          };
+
+          this.runtime = {
+            keyControl: null,
+            hoverLocked: false,
+          };
+        }
+
+        handleEvent(event) {
+          let type = event.type;
+
+          switch(type) {
+            case CustomOption.EVENT.CLICK:
+            {
+              event.stopPropagation();
+
+              let detail = event.detail;
+              let value = detail.value;
+
+              if (this.state.expanded) {
+                this._selectOption(
+                  this._getOptionIndex(
+                    value
+                  )
+                );
+              }
+            }
+              break;
+
+            case CustomOption.EVENT.HOVER:
+            {
+              event.stopPropagation();
+
+              if (!this.runtime.hoverLocked) {
+                let detail = event.detail;
+                let value = detail.value;
+
+                this._hoverOption(
+                  this._getOptionIndex(
+                    value
+                  )
+                );
+              }
+            }
+              break;
+
+            case CustomOption.EVENT.HOVER_OFF:
+            {
+              event.stopPropagation();
+
+              this._hoverOption(-1);
+            }
+              break;
+
+            case "change":
+            {
+              let value = event.currentTarget.value;
+
+              this._selectOption(
+                this._getOptionIndex(
+                  value
+                )
+              );
+            }
+              break;
+
+            case "mousemove":
+              this._setHoverLocked(false);
+              break;
+
+            case "click":
+            {
+              //console.log("click");
+              let currentTarget = event.currentTarget;
+
+              if (currentTarget == this.refs.customSelect) {
+
+                if (!this.state.active) {
+                  this.refs.blindInput.focus(); //aktivuje custom select
+
+                  this._setExpanded(true);
+                } else {
+                  this._toggleExpanded();
+                }
+              }
+            }
+              break;
+
+            case "mousedown":
+            {
+              let currentTarget = event.currentTarget;
+
+              if (currentTarget === this.refs.customSelect) {
+                event.preventDefault(); //zamezi bluru inputu
+              }
+
+              /*
+              //mousedown na document, nekam mimo custom select
+              let target = event.target;
+              let container = this.findDOMNode(this);
+              if (
+                  currentTarget == document &&
+                  container != target &&
+                  !container.contains(target)
+              ) {
+                  this._deactivateCustomSelect();
+              }
+              */
+            }
+              break;
+
+            case "focus":
+            {
+              //console.log("focus");
+              this._activateCustomSelect();
+            }
+              break;
+
+            case "blur":
+            {
+              //console.log("blur");
+              this._deactivateCustomSelect();
+            }
+              break;
+
+            case "keydown":
+            {
+              let keyCode = event.keyCode;
+              let isAlt = event.altKey;
+
+              event.preventDefault();
+
+              this._processKeyCode(keyCode, isAlt);
+            }
+              break;
+          }
+        }
+
+        componentDidMount() {
+          let id = "";
+          let i = 0;
+          while (i < 6) {
+            let rand = Math.floor(Math.random() * 26) + 97;
+            id += String.fromCharCode(rand);
+            i++;
+          }
+
+          if (!this.props.blindSelectLabel) {
+            logger.warn("Property 'blindSelectLabel' is empty.");
+          }
+          if (!this.props.blindOpenListlabel) {
+            logger.warn("Property 'blindOpenListlabel' is empty.");
+          }
+
+          this.setState({
+            nativeSelect: false,
+            id,
+          });
+        }
+
+        componentWillReceiveProps(nextProps) {
+          if (
+            nextProps.value !== null &&
+            this.state.selectedValue != nextProps.value
+          ) {
+            let newValue = nextProps.value;
+
+            this.setState({
+              selectedValue: newValue,
+              selectedIndex: this._getOptionIndex(newValue),
+            });
+          }
+        }
+
+        componentDidUpdate(prevProps, prevState) {
+          if (prevState.nativeSelect && !this.state.nativeSelect) {
+            this.listen(CustomOption.EVENT.CLICK);
+            this.listen(CustomOption.EVENT.HOVER);
+          } else if (!prevState.nativeSelect && this.state.nativeSelect) {
+            this.unlisten(CustomOption.EVENT.CLICK);
+            this.unlisten(CustomOption.EVENT.HOVER);
+          }
+        }
+
+
+        render() {
+          let isNative = this.state.nativeSelect;
+          let name = this.props.name;
+          let selectedIndex = this.state.selectedIndex;
+          let selectedValue = this.state.selectedValue;
+          let hoveredIndex = this.state.hoveredIndex;
+          let extClassName = this.props.className;
+
+          return (
+            <div
+              className={this.cssClasses(
+                extClassName,
+                {
+                  "custom-select": true,
+                  "custom-select--expanded": this.state.expanded,
+                  "custom-select--focused": this.state.active,
+                }
+              )}
+              role={isNative ? null : "application"}
+              tabIndex="-1"
+              data-name={name}
+              data-selected-index={selectedIndex}
+              data-value={selectedValue}
+            >
+
+              {isNative ?
+                this._renderNativeSelect(selectedValue)
+                :
+                this._renderCustomSelect(selectedValue, selectedIndex, hoveredIndex)
+              }
+
+            </div>
+          );
+        }
+
+        _renderNativeSelect(selectedValue) {
+          let elms = [];
+          let selectId = this.state.id;
+
+          elms.push(
+            <label
+              className="blind"
+              htmlFor={selectId}
+              key="label"
+            >
+              {this.props.blindSelectLabel}
+            </label>
+          );
+
+          elms.push(
+            <select
+              id={selectId}
+              className={
+                "select " +
+                "custom-select__native-select"
+              }
+              name={this.props.name}
+              value={selectedValue}
+              onChange={this.bound.handleEvent}
+              ref="nativeSelect"
+              key="select"
+            >
+              {this._renderNativeOptions()}
+            </select>
+          );
+
+          return elms;
+        }
+
+        _renderNativeOptions() {
+          return this.props.children.map((child, index) => {
+            let props = {
+              ...child.props,
+            };
+
+            return (
+              <option
+                {...props}
+                key={`originOption${index}`}
+              >
+                {props.children}
+              </option>
+            );
+          });
+        }
+
+        _renderCustomSelect(selectedValue, selectedIndex, hoveredIndex) {
+          let handleEvent = this.bound.handleEvent;
+          let expanded = this.state.expanded;
+          let selectedText = this.props.children[selectedIndex].props.children;
+          let listId = `${this.state.id}-list`;
+          let inputId = `${this.state.id}-input`;
+          let inputLabelId = `${this.state.id}-label`;
+
+          return (
+            <div
+              className="custom-select__select"
+              role="combobox"
+              aria-labelledby={inputLabelId}
+              onClick={handleEvent}
+              onMouseDown={handleEvent}
+              ref="customSelect"
+            >
+              <div
+                className="custom-select__opener"
+                aria-hidden="true"
+              >
+                    <span className="custom-select__opener-content">
+                        <span className="custom-select__opener-text">{selectedText}</span>
+                        <span className={"custom-select__opener-icon " + (expanded ? "iconfont-up-bold" : "iconfont-down-bold")} />
+                    </span>
+              </div>
+
+              <label
+                id={inputLabelId}
+                className="blind"
+                htmlFor={inputId}
+              >
+                {this.props.blindSelectLabel}
+              </label>
+
+              <input
+                id={inputId}
+                className="blind"
+                type="text"
+                value={selectedText}
+                readOnly={true}
+                aria-labelledby={inputLabelId}
+                aria-autocomplete="none"
+                aria-readonly="true"
+                onFocus={handleEvent}
+                onBlur={handleEvent}
+                ref="blindInput"
+              />
+
+              <button
+                className="blind"
+                type="button"
+                tabIndex="-1"
+                aria-controls={listId}
+              >
+                {this.props.blindOpenListlabel}
+              </button>
+
+              {/* opravdicka hodnota, ktera se pak odesle ve formulari */}
+              {this.props.name &&
+              <input
+                type="hidden"
+                name={this.props.name}
+                value={selectedValue}
+              />
+              }
+
+              <ul
+                className="custom-select__options"
+                id={listId}
+                tabIndex="-1"
+                role="listbox"
+                aria-expanded={this.state.expanded}
+              >
+                {
+                  this._renderCustomOptions(selectedValue, hoveredIndex)
+                }
+              </ul>
+            </div>
+          );
+        }
+
+        _renderCustomOptions(selectedValue, hoveredIndex) {
+          return this.props.children.map((child, index) =>
+            React.cloneElement(child, {
+              highlighted: index === hoveredIndex,
+              key: `customOption${index}`,
+            })
+          );
+        }
+
+
+        _activateCustomSelect() {
+          if (this.state.active) {
+            return;
+          }
+
+          this._activateKeyboard();
+
+          this.setState({
+            active: true,
+          });
+        }
+
+        _deactivateCustomSelect() {
+          if (!this.state.active) {
+            return;
+          }
+
+          this._deactivateKeyboard();
+
+          if (this.state.expanded) {
+            this._setExpanded(false);
+          }
+
+          this.setState({
+            active: false,
+          });
+        }
+
+        _getOptionIndex(value) {
+          return this.props.children.findIndex(
+            child => child.props.value == value
+          );
+        }
+
+        _selectOption(selectedIndex) {
+          let selected = this.props.children[selectedIndex];
+
+          if (!selected) {
+            return;
+          }
+
+          let selectedValue = selected.props.value;
+          let nativeSelect = this.refs.nativeSelect;
+
+          if (nativeSelect) {
+            nativeSelect.value = selectedValue;
+          }
+
+          this.setState({
+            selectedIndex,
+            selectedValue,
+          });
+
+          this._dispatchChangeEvent(
+            selectedValue
+          );
+        }
+
+        _selectHoveredOption() {
+          this._selectOption(this.state.hoveredIndex);
+        }
+
+        _selectNextOption() {
+          let nextIndex = this.state.selectedIndex + 1;
+          let next = this.props.children[nextIndex];
+
+          if (next) {
+            this._hoverOption(nextIndex);
+            this._selectOption(nextIndex);
+          }
+        }
+
+        _selectPreviousOption() {
+          let prevIndex = this.state.selectedIndex - 1;
+          let prev = this.props.children[prevIndex];
+
+          if (prev) {
+            this._hoverOption(prevIndex);
+            this._selectOption(prevIndex);
+          }
+        }
+
+        _hoverOption(hoveredIndex) {
+          this.setState({ hoveredIndex });
+        }
+
+        _hoverNextOption() {
+          let nextIndex = this.state.hoveredIndex + 1;
+          let next = this.props.children[nextIndex];
+
+          if (next) {
+            this._hoverOption(nextIndex);
+          }
+        }
+
+        _hoverPreviousOption() {
+          let prevIndex = this.state.hoveredIndex - 1;
+          let prev = this.props.children[prevIndex];
+
+          if (prev) {
+            this._hoverOption(prevIndex);
+          }
+        }
+
+        _toggleExpanded() {
+          let isExpanded = !this.state.expanded;
+          this._setExpanded(isExpanded);
+        }
+
+        _setExpanded(isExpanded) {
+          if (isExpanded) {
+            this._setHoverLocked(true);
+            this._activateMouseListening();
+            this.setState({
+              expanded: true,
+              hoveredIndex: this.state.selectedIndex,
+            });
+          } else {
+            this._deactivateMouseListening();
+            this.setState({
+              expanded: false,
+              hoveredIndex: -1,
+            });
+          }
+        }
+
+        _activateMouseListening() {
+          //this.listenOn(document, "mousedown");
+          this.listenOn(document, "mousemove");
+        }
+
+        _deactivateMouseListening() {
+          //this.unlistenOn(document, "mousedown");
+          this.unlistenOn(document, "mousemove");
+        }
+
+        _activateKeyboard() {
+          this.runtime.keyControl = this._registerKeyControl();
+        }
+
+        _deactivateKeyboard() {
+          if (this.runtime.keyControl) {
+            this.runtime.keyControl.unregister();
+            this.runtime.keyControl = null;
+          }
+        }
+
+        _registerKeyControl() {
+          let id = this.rx_clientProviders.keyControl.register({
+            eventType: "keydown",
+            handleEvent: this.bound.handleEvent,
+            keycodes: [
+              CONFIG.KEYCODES.ESC,
+              CONFIG.KEYCODES.DOWN,
+              CONFIG.KEYCODES.UP,
+              CONFIG.KEYCODES.ENTER,
+              CONFIG.KEYCODES.HOME,
+              CONFIG.KEYCODES.END,
+            ],
+          });
+
+          let unregister = () => {
+            this.rx_clientProviders.keyControl.unregister(
+              id
+            );
+          };
+
+          return {
+            unregister,
+          };
+        }
+
+        _processKeyCode(keyCode, isAlt) {
+          let isExpanded = this.state.expanded;
+
+          switch(keyCode) {
+            case CONFIG.KEYCODES.DOWN:
+              if (isAlt) {
+                this._toggleExpanded();
+              } else if (isExpanded) {
+                this._hoverNextOption();
+                this._selectNextOption();
+              } else {
+                this._selectNextOption();
+              }
+              break;
+
+            case CONFIG.KEYCODES.UP:
+              if (isAlt) {
+                this._toggleExpanded();
+              } else if (isExpanded) {
+                this._hoverPreviousOption();
+                this._selectPreviousOption();
+              } else {
+                this._selectPreviousOption();
+              }
+              break;
+
+            case CONFIG.KEYCODES.END:
+              if (this.props.children.length) {
+                let lastIndex = this.props.children.length - 1;
+
+                if (isExpanded) {
+                  this._hoverOption(lastIndex);
+                  this._selectOption(lastIndex);
+                } else {
+                  this._selectOption(lastIndex);
+                }
+              }
+              break;
+
+            case CONFIG.KEYCODES.HOME:
+              if (this.props.children.length) {
+                if (isExpanded) {
+                  this._hoverOption(0);
+                  this._selectOption(0);
+                } else {
+                  this._selectOption(0);
+                }
+              }
+              break;
+
+            case CONFIG.KEYCODES.ENTER:
+              if (isExpanded) {
+                this._selectHoveredOption();
+                this._setExpanded(false);
+              }
+              break;
+
+            case CONFIG.KEYCODES.ESC:
+              if (isExpanded) {
+                this._setExpanded(false);
+              }
+              break;
+          }
+        }
+
+        _setHoverLocked(value) {
+          this.runtime.hoverLocked = value;
+        }
+
+        _dispatchChangeEvent(selectedValue) {
+          /*
+          if (this.props.onChange) {
+              let e = {
+                  type: EVENT.CHANGE,
+                  detail: {
+                      selectedValue: selectedValue
+                  }
+              };
+              this.props.onChange(e);
+          }
+          */
+
+          this.dispatchEvent(
+            EVENT.CHANGE,
+            {
+              selectedValue,
+            }
+          );
+        }
+
+      }
+
+      ReactDOM.render(
+        <CustomSelect
+          className="custom-select-test"
+          defaultValue="tomato"
+          name="foo"
+          blindSelectLabel="Testing select"
+          blindOpenListlabel="Open drop-down"
+        >
+          <CustomOption value="banana">banana</CustomOption>
+          <CustomOption value="potato">potato</CustomOption>
+          <CustomOption value="onion">onion</CustomOption>
+          <CustomOption value="tomato">tomato</CustomOption>
+        </CustomSelect>,
+        document.getElementById('app'),
+      )
+    </script>
+  </body>
+</html>

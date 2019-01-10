@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+
+    <title>szn-select demo</title>
+
+    <script>
+      if (!window.WeakSet || !window.Proxy || !Array.prototype.includes) {
+        document.write('<script src="https://unpkg.com/babel-polyfill@6.26.x/browser.js"><\/script>')
+      }
+    </script>
+    <script>
+      if (!("firstElementChild" in document.createDocumentFragment())) {
+        document.write('<script src="https://unpkg.com/@jurca/szn-select@1.x/polyfill/modern-ie.js"><\/script>')
+      }
+    </script>
+    <script>
+      if (!window.MutationObserver) {
+        window.module = {} // required by the polyfill
+        document.write('<script src="https://unpkg.com/mutation-observer@1.x/index.js"><\/script>')
+      }
+    </script>
+
+    <link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@1.x/szn-select-nojs.css">
+
+    <style>
+      html {
+        font: 100% sans-serif;
+      }
+
+      .row {
+        display: flex;
+
+        margin: 1rem 0;
+      }
+
+      label {
+        display: block;
+
+        width: 40%;
+      }
+
+      span {
+        flex: 1 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+
+    <form action="" method="get">
+      <fieldset>
+        <legend>Example form</legend>
+
+        <div class="row">
+          <label for="first-select">Select one:</label>
+          <span>
+            <szn-select data-szn-select--standalone>
+              <select name="first" id="first-select">
+                <option value="banana">banana</option>
+                <option value="kiwi" disabled>kiwi</option>
+                <optgroup label="vegetables">
+                  <option value="potato">potato</option>
+                  <option value="onion">onion</option>
+                </optgroup>
+                <option value="tomato" selected>tomato</option>
+              </select>
+              <span data-szn-select--ui></span>
+            </szn-select>
+          </span>
+        </div>
+
+        <div class="row">
+          <label for="second-select">Select any:</label>
+          <span>
+            <szn-select data-szn-select--standalone>
+              <select name="second" id="second-select" multiple>
+                <option value="banana" selected>banana</option>
+                <option value="kiwi" disabled>kiwi</option>
+                <optgroup label="vegetables">
+                  <option value="potato">potato</option>
+                  <option value="onion" selected>onion</option>
+                </optgroup>
+                <optgroup label="disabled optgroup" disabled>
+                  <option value="car">car</option>
+                  <option value="bike">bike</option>
+                </optgroup>
+                <option value="tomato">tomato</option>
+              </select>
+              <span data-szn-select--ui></span>
+            </szn-select>
+          </span>
+        </div>
+
+        <div>
+          <button>
+            submit
+          </button>
+        </div>
+      </fieldset>
+    </form>
+
+    <script src="https://unpkg.com/@jurca/szn-select@1.x/loader.min.js" async></script>
+  </body>
+</html>
