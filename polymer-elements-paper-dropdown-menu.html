@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--
+  https://npm-demos.appspot.com/@polymer/paper-dropdown-menu@3.0.1/demo/index.html
+  https://www.webcomponents.org/element/@polymer/paper-dropdown-menu/demo/demo/index.html
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+
+    <title>Polymer Elements - Paper dropdown menu</title>
+
+    <style>
+      html {
+        font: 100% sans-serif;
+      }
+
+      .row {
+        display: flex;
+
+        margin: 1rem 0;
+      }
+
+      label {
+        display: block;
+
+        width: 40%;
+      }
+
+      .row > span {
+        flex: 1 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <strong>
+      Warning: The polymer elements are in maintanance.
+      <a href="https://github.com/material-components/material-components-web-components">Material Web Components</a>
+      is the current implementation.
+    </strong>
+
+    <form action="" method="get">
+      <fieldset>
+        <legend>Example form</legend>
+
+        <div class="row">
+          <label>Select one:</label>
+          <span>
+            <paper-dropdown-menu label="Select one:">
+              <paper-listbox slot="dropdown-content" selected="4">
+                <paper-item value="banana">banana</paper-item>
+                <paper-item value="kiwi" disabled>kiwi</paper-item>
+                <paper-item value="potato">potato</paper-item>
+                <paper-item value="onion">onion</paper-item>
+                <paper-item value="tomato">tomato</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+          </span>
+        </div>
+
+        <div>
+          <button>
+            submit
+          </button>
+        </div>
+      </fieldset>
+    </form>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
+    <script src="https://unpkg.com/web-animations-js@^2.0.0/web-animations-next-lite.min.js"></script>
+    <!--
+    <script src="https://unpkg.com/@polymer/paper-dropdown-menu@3.0.1/paper-dropdown-menu.js"></script>
+    <script src="https://unpkg.com/@polymer/paper-item@3.0.1/paper-item.js"></script>
+    <script src="https://unpkg.com/@polymer/paper-listbox@3.0.1/paper-listbox.js"></script>
+    -->
+    <script type="module">
+      import 'https://npm-demos.appspot.com/@polymer/paper-item/paper-item.js?@polymer/paper-dropdown-menu@3.0.1';
+      import 'https://npm-demos.appspot.com/@polymer/paper-listbox/paper-listbox.js?@polymer/paper-dropdown-menu@3.0.1';
+      import 'https://npm-demos.appspot.com/@polymer/paper-dropdown-menu/paper-dropdown-menu.js?@polymer/paper-dropdown-menu@3.0.1';
+    </script>
+  </body>
+</html>
