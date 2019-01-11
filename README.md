@@ -7,8 +7,9 @@ Accessible HTML `<select>` element replacement with customizable UI. Based on
 the patterns used by web components and easy to integrate with various
 frameworks, e.g. React or Angular.
 
-You can [check out the demo](https://jurca.github.io/szn-select/) or take a
-peek at a [fiddle](https://jsfiddle.net/Lnv95bce/21/).
+You can
+[check out the demo](https://jurca.github.io/szn-select/szn-select.html) or
+take a peek at a [fiddle](https://jsfiddle.net/Lnv95bce/21/).
 
 ## Usage
 
