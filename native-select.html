@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+
+    <title>Native select element</title>
+
+    <style>
+      html {
+        font: 100% sans-serif;
+      }
+
+      .row {
+        display: flex;
+
+        margin: 1rem 0;
+      }
+
+      label {
+        display: block;
+
+        width: 40%;
+      }
+
+      .row > span {
+        flex: 1 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="#">leading link</a>
+
+    <form action="" method="get">
+      <fieldset>
+        <legend>Example form</legend>
+
+        <div class="row">
+          <label for="first-select">Select one:</label>
+          <span>
+            <select name="first" id="first-select">
+              <option value="banana">banana</option>
+              <option value="kiwi" disabled>kiwi</option>
+              <optgroup label="vegetables">
+                <option value="potato">potato</option>
+                <option value="onion">onion</option>
+              </optgroup>
+              <option value="tomato" selected>tomato</option>
+            </select>
+          </span>
+        </div>
+
+        <div class="row">
+          <label for="second-select">Select any:</label>
+          <span>
+            <select name="second" id="second-select" multiple>
+              <option value="banana" selected>banana</option>
+              <option value="kiwi" disabled>kiwi</option>
+              <optgroup label="vegetables">
+                <option value="potato">potato</option>
+                <option value="onion" selected>onion</option>
+              </optgroup>
+              <optgroup label="disabled optgroup" disabled>
+                <option value="car">car</option>
+                <option value="bike">bike</option>
+              </optgroup>
+              <option value="tomato">tomato</option>
+            </select>
+          </span>
+        </div>
+
+        <div>
+          <button>
+            submit
+          </button>
+        </div>
+      </fieldset>
+    </form>
+
+    <a href="#">trailing link</a>
+  </body>
+</html>
