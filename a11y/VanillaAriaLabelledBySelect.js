@@ -307,6 +307,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
     for (const optionUIContainer of Array.from(menuContainer.querySelectorAll('li'))) {
       if (!options.includes(optionUIContainer.option)) {
         menuContainer.removeChild(optionUIContainer)
+        continue
       }
 
       const optionUI = optionUIContainer.firstElementChild
