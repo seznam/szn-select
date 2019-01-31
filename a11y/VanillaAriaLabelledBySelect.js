@@ -357,9 +357,10 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
   _createA11yUI() {
     const menuId = this._instanceId
 
+    const isMacOs = / Mac OS X /.test(navigator.userAgent)
     return [
       SznElements.buildDom(`
-        <szn-
+        <${isMacOs ? 'input' : 'szn-'}
           tabindex="0"
           role="combobox"
           aria-expanded="false"
@@ -370,7 +371,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
           aria-disabled="true"
           data-szn-select--vanilla-aria-button
         >
-        </szn->
+        ${isMacOs ? '' : '</szn->'}
       `),
       SznElements.buildDom(`
         <szn- id="${menuId}" data-szn-select--vanilla-aria-dropdown>

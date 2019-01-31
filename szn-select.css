@@ -125,6 +125,7 @@ szn-select[data-szn-select--vanilla-aria] [data-szn-select--vanilla-aria-dropdow
   left: 0;
   top: 0;
 
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   overflow: hidden;
