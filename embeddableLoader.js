@@ -10,7 +10,7 @@ const makeSznSelectBundleScript = (global => { // eslint-disable-line no-unused-
     ALL_ES2016: 'bundle-full.es2016',
     ALL_ES3: 'bundle-full.es3',
   }
-  const DEFAULT_PACKAGE_URL = 'https://unpkg.com/@jurca/szn-select@<VERSION>/'
+  const DEFAULT_PACKAGE_URL = 'https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/'
 
   function makeBundleLoadScript(urlsConfiguration, useAsyncLoading) {
     if (typeof self === 'undefined') {

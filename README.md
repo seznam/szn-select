@@ -39,7 +39,7 @@ More ready-to-use bundles are coming soon.
 case JavaScript is disabled or the user is using an obsolete browser:
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select-nojs.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/szn-select-nojs.css">
 ```
 
 This step is optional, but results in slightly better UX if the JavaScript
@@ -48,14 +48,14 @@ fails or is disabled.
 2. It is recommended to load the `<szn-select>` element using the loader:
 
 ```html
-<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/loader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/loader.min.js"></script>
 ```
 
 It is recommended to use a
 [semver version range](https://docs.npmjs.com/misc/semver#caret-ranges-123-025-004)
-when using unpkg or a similar JS CDN, such as `1.x` to automatically receive
-the latest compatible version with the most recent bugfixes and compatibility
-updates.
+when using jsdelivr, unpkg or a similar JS CDN, such as `1.x` to automatically
+receive the latest compatible version with the most recent bugfixes and
+compatibility updates.
 
 You may use the `async` and `defer` attributes if you want the loader to be
 loaded asynchronously. You may also bundle the loader with other JavaScript
@@ -63,7 +63,7 @@ files.
 
 The loader automatically chooses the bundle that has the best compatibility
 with the current browser (modern browsers use smaller bundles). By default the
-loader loads the implementation from `unpkg.com`. This may be overridden by
+loader loads the implementation from `jsdelivr.com`. This may be overridden by
 adding the following attributes to the `<script>` element used include the
 loader (as stated above, this may be a bundle):
 
@@ -96,14 +96,14 @@ If you do not want to use the loader for some reason, just include the
 ES3-compatible bundle (or implement the bundle selection logic yourselves):
 
 ```html
-<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/szn-select.bundle.es3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/szn-select.bundle-full.es3.min.js"></script>
 ```
 
 Please note that using the loader has great advantages: the compatibility of
 various assistive technologies may and does change over time and the loader
 will attempt to load the latest backwards-compatible version for you to get
 the best compatibility. It is also recommended to use a version range (e.g.
-`1.x`) when loading the loader from unpkg.com to get the latest compatible
+`1.x`) when loading the loader from jsdelivr.com to get the latest compatible
 version of the loader itself.
 
 3. You may turn any ordinary `<select>` into a `<szn-select>` by wrapping it
@@ -279,7 +279,7 @@ following code in the `<head>` element **before** including the
 ```html
 <script>
 if (!window.WeakSet || !window.Proxy || !Array.prototype.includes) {
-  document.write('<script src="https://unpkg.com/babel-polyfill@6.26.x/browser.js"><\/script>')
+  document.write('<script src="https://cdn.jsdelivr.net/npm/babel-polyfill@6.26.x/browser.js"><\/script>')
 }
 </script>
 ```
@@ -294,7 +294,7 @@ and Edge 12-16.
 ```html
 <script>
 if (!("firstElementChild" in document.createDocumentFragment())) {
-  document.write('<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/polyfill/modern-ie.min.js"><\/script>')
+  document.write('<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/polyfill/modern-ie.min.js"><\/script>')
 }
 </script>
 ```
@@ -310,7 +310,7 @@ use the unminified version:
 ```html
 <script>
 if (!("firstElementChild" in document.createDocumentFragment())) {
-  document.write('<script src="https://unpkg.com/@jurca/szn-select@<VERSION>/polyfill/modern-ie.js"><\/script>')
+  document.write('<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/polyfill/modern-ie.js"><\/script>')
 }
 </script>
 ```
@@ -327,7 +327,7 @@ enable support for IE 9 and 10. Add the following code to the `<head>` element
 <script>
   if (!window.MutationObserver) {
     window.module = {} // required by the polyfill
-    document.write('<script src="https://unpkg.com/mutation-observer@1.x/index.js"><\/script>')
+    document.write('<script src="https://cdn.jsdelivr.net/npm/mutation-observer@1.x/index.js"><\/script>')
   }
 </script>
 ```
