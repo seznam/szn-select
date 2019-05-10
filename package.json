@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jurca/szn-select.git"
+    "url": "git+https://github.com/seznam/szn-select.git"
   },
   "keywords": [
     "html",
@@ -36,9 +36,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jurca/szn-select/issues"
+    "url": "https://github.com/seznam/szn-select/issues"
   },
-  "homepage": "https://github.com/jurca/szn-select#readme",
+  "homepage": "https://github.com/seznam/szn-select#readme",
   "devDependencies": {
     "@jurca/szn-elements": "^1.2.2",
     "@jurca/szn-tethered": "^1.0.0",
