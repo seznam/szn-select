@@ -1,5 +1,5 @@
 {
-  "name": "@jurca/szn-select",
+  "name": "@seznam/szn-select",
   "version": "1.4.4",
   "description": "Accessible HTML selectbox with customizable UI. Based on web components and easy to integrate with various frameworks like React or Angular.",
   "main": "szn-select.es6.js",
