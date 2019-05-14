@@ -10,6 +10,7 @@ const cssnano = require('gulp-cssnano')
 const rename = require('gulp-rename')
 const replace = require('gulp-replace')
 const postCss = require('gulp-postcss')
+const uglifyEs = require('gulp-uglify-es').default
 const postCustomProperties = require('postcss-custom-properties')
 const util = require('util')
 const packageInfo = require('./package.json')
@@ -98,7 +99,7 @@ function compileJSSelectEs3() {
   return gulp
     .src('./dist/szn-select.es2016.js')
     .pipe(babel({
-      presets: [['env', {
+      presets: [['@babel/preset-env', {
         targets: {
           browsers: ['ie 8'],
         },
@@ -112,7 +113,7 @@ function compileJSEmbeddableLoader() {
   return gulp
     .src('./embeddableLoader.js')
     .pipe(babel({
-      presets: [['env', {
+      presets: [['@babel/preset-env', {
         targets: {
           browsers: ['ie 8'],
         },
@@ -138,7 +139,7 @@ function compileJSLoader() {
   return gulp
     .src('./dist/loader.js')
     .pipe(babel({
-      presets: [['env', {
+      presets: [['@babel/preset-env', {
         targets: {
           browsers: ['ie 8'],
         },
@@ -205,15 +206,15 @@ async function bundle(done) {
   ] = await Promise.all([
     './dist/szn-select.es3.js',
     './dist/szn-select.es2016.js',
-    '@jurca/szn-tethered/szn-tethered.es3.js',
-    '@jurca/szn-tethered/szn-tethered.es6.js',
-    '@jurca/szn-elements/szn-elements.es3.js',
-    '@jurca/szn-elements/szn-elements.es6.js',
-    '@jurca/szn-elements/szn-elements-custom-elements.js',
-    '@jurca/szn-elements/szn-elements-mutation-observer.es3.js',
-    '@jurca/szn-elements/szn-elements-mutation-observer.es6.js',
-    '@jurca/szn-elements/szn-elements-noop.es3.js',
-    '@jurca/szn-elements/szn-elements-noop.es6.js',
+    '@seznam/szn-tethered/szn-tethered.es3.js',
+    '@seznam/szn-tethered/szn-tethered.es6.js',
+    '@seznam/szn-elements/szn-elements.es3.js',
+    '@seznam/szn-elements/szn-elements.es6.js',
+    '@seznam/szn-elements/szn-elements-custom-elements.js',
+    '@seznam/szn-elements/szn-elements-mutation-observer.es3.js',
+    '@seznam/szn-elements/szn-elements-mutation-observer.es6.js',
+    '@seznam/szn-elements/szn-elements-noop.es3.js',
+    '@seznam/szn-elements/szn-elements-noop.es6.js',
   ].map(require.resolve).map(filePath => readFile(filePath, 'utf-8')))
 
   const baseBundleEs3 = [sznTetheredEs3, sznSelectEs3, sznElementsEs3]
@@ -242,9 +243,7 @@ async function bundle(done) {
 function minify() {
   return gulp
     .src('./dist/**/*.js')
-    .pipe(babel({
-      presets: ['minify'],
-    }))
+    .pipe(uglifyEs())
     .pipe(rename({
       suffix: '.min',
     }))

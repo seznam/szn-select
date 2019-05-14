@@ -1,14 +1,14 @@
 # szn-select
 
-[![npm](http://img.shields.io/npm/v/@jurca/szn-select.svg)](https://www.npmjs.com/package/@jurca/szn-select)
-[![License](https://img.shields.io/npm/l/@jurca/szn-select.svg)](https://github.com/jurca/szn-select/blob/master/LICENSE)
+[![npm](http://img.shields.io/npm/v/@seznam/szn-select.svg)](https://www.npmjs.com/package/@seznam/szn-select)
+[![License](https://img.shields.io/npm/l/@seznam/szn-select.svg)](https://github.com/seznam/szn-select/blob/master/LICENSE)
 
 Accessible HTML `<select>` element replacement with customizable UI. Based on
 the patterns used by web components and easy to integrate with various
 frameworks, e.g. React or Angular.
 
 You can
-[check out the demo](https://jurca.github.io/szn-select/szn-select.html) or
+[check out the demo](https://seznam.github.io/szn-select/szn-select.html) or
 take a peek at a [fiddle](https://jsfiddle.net/Lnv95bce/21/).
 
 ## Usage
@@ -24,10 +24,10 @@ If you absolutely do need a fully styleable `<select>`, you may choose from
 the following integration-ready bundles based on the front-end technology you
 use:
 
-* [szn-select for react](https://www.npmjs.com/package/@jurca/szn-select-react)
-  ([GitHub](https://github.com/jurca/szn-select-react))
-* [szn-select for vue](https://www.npmjs.com/package/@jurca/szn-select-vue)
-  ([GitHub](https://github.com/jurca/szn-select-vue))
+* [szn-select for react](https://www.npmjs.com/package/@seznam/szn-select-react)
+  ([GitHub](https://github.com/seznam/szn-select-react))
+* [szn-select for vue](https://www.npmjs.com/package/@seznam/szn-select-vue)
+  ([GitHub](https://github.com/seznam/szn-select-vue))
 * jQuery / Prototype / MooTools / Dojo Toolkit / script.aculo.us / JAK: use
   the deployment steps for static sites (see bellow)
 
@@ -39,7 +39,7 @@ More ready-to-use bundles are coming soon.
 case JavaScript is disabled or the user is using an obsolete browser:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/szn-select-nojs.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@seznam/szn-select@<VERSION>/szn-select-nojs.css">
 ```
 
 This step is optional, but results in slightly better UX if the JavaScript
@@ -48,7 +48,7 @@ fails or is disabled.
 2. It is recommended to load the `<szn-select>` element using the loader:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/loader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@seznam/szn-select@<VERSION>/loader.min.js"></script>
 ```
 
 It is recommended to use a
@@ -96,7 +96,7 @@ If you do not want to use the loader for some reason, just include the
 ES3-compatible bundle (or implement the bundle selection logic yourselves):
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/szn-select.bundle-full.es3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@seznam/szn-select@<VERSION>/szn-select.bundle-full.es3.min.js"></script>
 ```
 
 Please note that using the loader has great advantages: the compatibility of
@@ -294,7 +294,7 @@ and Edge 12-16.
 ```html
 <script>
 if (!("firstElementChild" in document.createDocumentFragment())) {
-  document.write('<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/polyfill/modern-ie.min.js"><\/script>')
+  document.write('<script src="https://cdn.jsdelivr.net/npm/@seznam/szn-select@<VERSION>/polyfill/modern-ie.min.js"><\/script>')
 }
 </script>
 ```
@@ -310,7 +310,7 @@ use the unminified version:
 ```html
 <script>
 if (!("firstElementChild" in document.createDocumentFragment())) {
-  document.write('<script src="https://cdn.jsdelivr.net/npm/@jurca/szn-select@<VERSION>/polyfill/modern-ie.js"><\/script>')
+  document.write('<script src="https://cdn.jsdelivr.net/npm/@seznam/szn-select@<VERSION>/polyfill/modern-ie.js"><\/script>')
 }
 </script>
 ```
