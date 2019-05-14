@@ -40,8 +40,8 @@
   },
   "homepage": "https://github.com/seznam/szn-select#readme",
   "devDependencies": {
-    "@jurca/szn-elements": "^1.2.2",
-    "@jurca/szn-tethered": "^1.0.0",
+    "@seznam/szn-elements": "^1.2.3",
+    "@seznam/szn-tethered": "^1.0.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-minify": "^0.2.0",
     "del": "^3.0.0",
