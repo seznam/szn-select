@@ -44,7 +44,6 @@
     "@babel/preset-env": "^7.4.4",
     "@seznam/szn-elements": "^1.2.3",
     "@seznam/szn-tethered": "^1.0.1",
-    "babel-preset-minify": "^0.5.0",
     "del": "^3.0.0",
     "eslint": "^5.16.0",
     "eslint-config-fbjs-opensource": "^2.0.0",
