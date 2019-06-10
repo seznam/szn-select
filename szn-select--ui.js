@@ -174,7 +174,6 @@
   function addEventListeners(instance) {
     for (const eventType of INTERACTION_DOM_EVENTS) {
       instance._root.addEventListener(eventType, instance._onUiInteracted)
-      instance._dropdownContent.addEventListener(eventType, instance._onUiInteracted)
     }
     for (const eventType of RESIZE_RELATED_DOM_EVENTS) {
       addEventListener(eventType, instance._onDropdownSizeUpdateNeeded)
@@ -185,6 +184,7 @@
     for (const eventType of INTERACTION_DOM_EVENTS) {
       instance._root.removeEventListener(eventType, instance._onUiInteracted)
       instance._dropdownContent.removeEventListener(eventType, instance._onUiInteracted)
+      instance._dropdownContainer.removeEventListener(eventType, instance._onUiInteracted)
     }
     for (const eventType of RESIZE_RELATED_DOM_EVENTS) {
       removeEventListener(eventType, instance._onDropdownSizeUpdateNeeded)
@@ -277,7 +277,12 @@
 
   function createDropdown(instance) {
     if (instance._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
+      instance._dropdownContent.addEventListener(eventType, instance._onUiInteracted)
       return document.createElement('szn-tethered')
+    }
+
+    for (const eventType of INTERACTION_DOM_EVENTS) {
+      instance._dropdownContainer.addEventListener(eventType, instance._onUiInteracted)
     }
 
     const dropdown = SznElements.buildDom('<szn- data-szn-select--dropdown></szn->')
