@@ -277,7 +277,9 @@
 
   function createDropdown(instance) {
     if (instance._dropdownContainer === DEFAULT_DROPDOWN_CONTAINER) {
-      instance._dropdownContent.addEventListener(eventType, instance._onUiInteracted)
+      for (const eventType of INTERACTION_DOM_EVENTS) {
+        instance._dropdownContent.addEventListener(eventType, instance._onUiInteracted)
+      }
       return document.createElement('szn-tethered')
     }
 
