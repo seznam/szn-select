@@ -233,7 +233,7 @@ class VanillaAriaLabelledBySelect extends AccessibilityBroker {
 
     if (newlySelectedOption && newlySelectedOption !== enabledOptions[selectedIndex]) {
       newlySelectedOption.selected = true
-      this.select.dispatchEvent(new CustomEvent('change'))
+      this.select.dispatchEvent(new CustomEvent('change', {bubbles: true, cancelable: true}))
     }
   }
 
